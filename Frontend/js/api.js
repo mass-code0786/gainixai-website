@@ -1,5 +1,5 @@
 // API Base URL
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://gainixai-backend.orender.com/api';
 
 // Helper function for API calls
 async function apiCall(endpoint, method = 'GET', data = null, requiresAuth = true) {
