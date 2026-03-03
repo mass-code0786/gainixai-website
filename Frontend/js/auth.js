@@ -8,7 +8,7 @@ async function loginUser(userId, password, remember) {
             ? { email: userId, password } 
             : { userId: userId, password };
         
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('https://gainixai-backend.onrender.com/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(loginData)
