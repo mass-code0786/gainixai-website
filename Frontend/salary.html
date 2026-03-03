@@ -316,11 +316,6 @@
             font-weight: 600;
         }
 
-        .sunday-warning i {
-            font-size: 24px;
-        }
-
-        /* Rules Section */
         .rules-section {
             background: rgba(12,18,28,0.95);
             border-radius: 28px;
@@ -398,10 +393,6 @@
                 gap: 10px;
                 text-align: center;
             }
-            
-            .rules-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -444,7 +435,7 @@
             
             <div class="salary-scroll-container">
                 <div class="salary-grid" id="salaryGrid">
-                    <!-- Ranks will be loaded here by JavaScript -->
+                    <!-- Ranks will be loaded here -->
                     <div style="color: #8899aa; text-align: center; padding: 40px; width: 100%;">
                         <i class="fas fa-spinner fa-spin"></i> Loading ranks...
                     </div>
@@ -488,14 +479,13 @@
         <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
-    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script>
         // ============================================
-        // SALARY PAGE JAVASCRIPT - HORIZONTAL SCROLL DESIGN
+        // SALARY PAGE JAVASCRIPT - UPDATED RANKS
         // ============================================
 
-        // Rank data (as per your image)
+        // Rank data (as per new plan)
         const salaryRanks = [
             { rank: 1, stars: '⭐', direct: 750, team: 2500, requirement: 'None', salary: 25 },
             { rank: 2, stars: '⭐⭐', direct: 1500, team: 7500, requirement: '2 members at ⭐ Rank 1', salary: 60 },
@@ -508,11 +498,10 @@
             { rank: 9, stars: '⭐⭐⭐⭐⭐⭐⭐⭐⭐', direct: 300000, team: 25000000, requirement: '2 members at ⭐⭐⭐⭐⭐⭐⭐⭐ Rank 8', salary: 30000 }
         ];
 
-        // User data (will be updated from API)
-        let currentUserRank = 2;
-        let directBusiness = 1500;
-        let teamBusiness = 25000;
-        let qualifiedMembers = 1;
+        let currentUserRank = 1;
+        let directBusiness = 0;
+        let teamBusiness = 0;
+        let qualifiedMembers = 0;
 
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Salary page initializing...');
@@ -546,11 +535,11 @@
                 const result = await getMyRank();
                 if (result?.success) {
                     const data = result.data;
-                    currentUserRank = data.currentRank?.rank || 2;
-                    directBusiness = data.progress?.directVolume?.current || 1500;
-                    teamBusiness = data.progress?.teamVolume?.current || 25000;
-                    qualifiedMembers = data.progress?.qualifiedMembers?.current || 1;
-                    console.log('✅ Real rank data loaded:', { currentUserRank, directBusiness, teamBusiness, qualifiedMembers });
+                    currentUserRank = data.currentRank?.rank || 1;
+                    directBusiness = data.progress?.directVolume?.current || 0;
+                    teamBusiness = data.progress?.teamVolume?.current || 0;
+                    qualifiedMembers = data.progress?.qualifiedMembers?.current || 0;
+                    console.log('✅ Real rank data loaded');
                 }
             } catch (error) {
                 console.error('Failed to load rank data, using defaults:', error);
@@ -637,7 +626,6 @@
             grid.innerHTML = html;
         }
 
-        // Toast notification function
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.style.cssText = `
@@ -655,14 +643,9 @@
             `;
             toast.innerHTML = message;
             document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // Add animation styles
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -675,7 +658,6 @@
                     opacity: 1;
                 }
             }
-            
             @keyframes slideOut {
                 from {
                     transform: translateX(0);

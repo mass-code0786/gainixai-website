@@ -2,22 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GAINIX AI - Premium Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>GAINIX AI - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- TradingView Library -->
-    <script src="https://s3.tradingview.com/tv.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background: #03050a; color: #fff; overflow-x: hidden; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #03050a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .premium-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(0, 255, 209, 0.12), transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 153, 255, 0.12), transparent 50%),
+                        radial-gradient(circle at 40% 50%, rgba(139, 92, 246, 0.08), transparent 60%),
+                        linear-gradient(135deg, #030507 0%, #0a121c 100%);
+            z-index: -1;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 209, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 209, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
         .dashboard {
-            position: relative;
-            z-index: 2;
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 14px;
             padding-bottom: 80px;
+            position: relative;
+            z-index: 1;
         }
 
         .premium-header {
@@ -33,7 +68,12 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
 
-        .logo-3d { display: flex; align-items: center; gap: 10px; }
+        .logo-3d {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
 
         .logo-cube-small {
             width: 42px; height: 42px;
@@ -50,7 +90,9 @@
             50% { transform: rotate(45deg) translateY(-4px); }
         }
 
-        .logo-cube-small i { transform: rotate(-45deg); }
+        .logo-cube-small i {
+            transform: rotate(-45deg);
+        }
 
         .logo-text h1 {
             font-size: 22px; font-weight: 800;
@@ -154,7 +196,22 @@
             width: 100%;
             margin-bottom: 6px;
         }
-        .profile-info p { font-size: 12px; color: #8899aa; }
+        .profile-info p { 
+            font-size: 12px; 
+            color: #8899aa;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .profile-info p i {
+            width: 16px;
+            color: #00ffd9;
+        }
+        .profile-info p span {
+            color: #fff;
+            font-weight: 500;
+        }
 
         .wallet-address-mini {
             display: flex; align-items: center; gap: 8px;
@@ -486,363 +543,132 @@
             color: #030507; font-weight: 600; width: 100%; cursor: pointer;
         }
 
-        /* Salary Page Styles */
-        .salary-system {
-            background: rgba(12,18,28,0.95);
-            border-radius: 28px; padding: 22px;
-            margin: 16px 0;
-            border: 1px solid rgba(255,215,0,0.3);
-            overflow-x: auto;
+        /* Level Income Table */
+        .income-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .income-table th, .income-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #1e2a3a;
+        }
+        .income-table th {
+            background: #1e2a3a;
+            color: #00ffd9;
+            font-weight: 600;
+        }
+        .income-table td { color: #cbd5e0; }
+        .text-success { color: #2ecc71; }
+        .text-muted { color: #8899aa; }
+
+        /* Rank Progress */
+        .rank-progress p {
+            margin: 10px 0;
+            color: #cbd5e0;
         }
 
-        .salary-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; min-width: 800px;
+        .members-list {
+            margin-top: 15px;
         }
-        .salary-header h2 { font-size: 22px; color: #ffd700; }
-        .current-rank {
-            background: linear-gradient(145deg, #ffd700, #ffaa00);
-            color: #030507; padding: 8px 20px;
-            border-radius: 36px; font-weight: 700; font-size: 16px;
-        }
-
-        .salary-scroll-container { overflow-x: auto; padding-bottom: 10px; }
-        .salary-grid {
-            display: flex; gap: 16px; min-width: max-content; padding: 5px;
-        }
-        .salary-rank-card {
-            width: 320px;
-            background: rgba(255,215,0,0.05);
-            border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 24px; padding: 18px;
-            transition: all 0.3s; flex-shrink: 0;
-        }
-        .salary-rank-card.achieved { border-color: #2ecc71; background: rgba(46,204,113,0.1); }
-        .salary-rank-card.current { border: 2px solid #ffd700; background: rgba(255,215,0,0.15); box-shadow: 0 0 20px rgba(255,215,0,0.3); }
-        .salary-rank-card.future { border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); opacity: 0.7; }
-
-        .rank-header {
-            display: flex; align-items: center; gap: 12px; margin-bottom: 15px;
-        }
-        .rank-stars { font-size: 20px; color: #ffd700; }
-        .rank-name { font-size: 18px; font-weight: 700; }
-        .rank-status {
-            margin-left: auto; padding: 4px 12px;
-            border-radius: 30px; font-size: 12px; font-weight: 600;
-        }
-        .achieved .rank-status { background: rgba(46,204,113,0.2); color: #2ecc71; }
-        .current .rank-status { background: rgba(255,215,0,0.2); color: #ffd700; }
-
-        .rank-conditions {
-            display: grid; grid-template-columns: 1fr; gap: 12px; margin: 15px 0;
-        }
-        .condition-item {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px; padding: 12px;
-        }
-        .condition-label { font-size: 12px; color: #8899aa; margin-bottom: 5px; }
-        .condition-value { font-size: 16px; font-weight: 600; }
-        .condition-progress {
-            margin-top: 8px; height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px; overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ffd9, #ffd700);
-            border-radius: 3px;
-        }
-        .rank-salary {
-            margin-top: 12px; padding: 10px;
-            background: rgba(0,255,209,0.1);
-            border-radius: 16px; text-align: center;
-        }
-        .salary-amount { font-size: 20px; font-weight: 700; color: #00ffd9; }
-        .salary-period { font-size: 11px; color: #8899aa; }
-
-        /* Team Page */
-        .level-search { margin-bottom: 20px; }
-        .search-box {
-            display: flex; gap: 10px; margin: 15px 0;
-        }
-        .search-input {
-            flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px; padding: 14px;
-            color: #fff; font-size: 15px;
-        }
-        .search-btn {
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none; border-radius: 18px; padding: 0 25px;
-            color: #030507; font-weight: 600; cursor: pointer;
-        }
-
-        .team-section {
-            background: rgba(12,18,28,0.95);
-            border-radius: 28px; padding: 22px;
-            margin: 16px 0;
-        }
-        .team-tabs {
-            display: flex; gap: 10px; margin: 20px 0;
-            padding: 4px; background: rgba(8,12,20,0.6);
-            border-radius: 36px; overflow-x: auto;
-        }
-        .team-tab {
-            padding: 10px 20px; border-radius: 36px;
-            font-size: 13px; cursor: pointer; white-space: nowrap;
-        }
-        .team-tab.active {
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            color: #030507;
-        }
-
         .member-item {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
-            border-radius: 18px; padding: 15px;
-            margin-bottom: 10px;
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .member-info {
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .member-details {
-            display: flex; align-items: center; gap: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .member-avatar {
-            width: 40px; height: 40px;
+            width: 35px;
+            height: 35px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            color: #030507; font-weight: 700;
-        }
-        .member-contribution {
-            color: #00ffd9; font-weight: 600;
-        }
-
-        .level-income-item {
-            background: rgba(0,255,209,0.05);
-            border-radius: 16px; padding: 12px;
-            margin-bottom: 8px;
-            display: flex; justify-content: space-between;
-        }
-        .level-income-percent { color: #00ffd9; }
-        .level-income-locked { color: #8899aa; font-style: italic; }
-
-        /* P2P Page */
-        .p2p-section {
-            background: rgba(12,18,28,0.95);
-            border-radius: 28px; padding: 22px;
-            margin: 16px 0;
-        }
-        .p2p-form {
-            background: rgba(0,255,209,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 22px; padding: 18px;
-            margin-bottom: 20px;
-        }
-        .pin-input {
-            display: flex; gap: 10px; margin: 15px 0; justify-content: center;
-        }
-        .pin-field {
-            width: 50px; height: 50px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 12px; color: #fff;
-            font-size: 20px; text-align: center;
-        }
-
-        /* History Page */
-        .history-page {
-            background: rgba(12,18,28,0.95);
-            border-radius: 28px; padding: 22px;
-            margin: 16px 0;
-        }
-        .history-filters {
-            display: flex; gap: 10px; margin: 20px 0;
-            padding: 4px; background: rgba(8,12,20,0.6);
-            border-radius: 36px; overflow-x: auto;
-        }
-        .history-filter {
-            padding: 10px 20px; border-radius: 36px;
-            font-size: 13px; cursor: pointer; white-space: nowrap;
-        }
-        .history-filter.active {
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #030507;
+            font-weight: 700;
         }
-
-        .history-list-enhanced {
-            display: flex; flex-direction: column; gap: 12px;
+        .member-details {
+            font-size: 13px;
         }
-        .history-item-enhanced {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(0,255,209,0.1);
-            border-radius: 20px; padding: 15px;
-            cursor: pointer; transition: all 0.3s;
+        .member-name {
+            font-weight: 600;
         }
-        .history-item-enhanced:hover {
-            background: rgba(0,255,209,0.05);
-            transform: translateX(5px);
+        .member-id {
+            font-size: 11px;
+            color: #8899aa;
         }
-        .history-item-header {
-            display: flex; justify-content: space-between; margin-bottom: 8px;
+        .member-stats {
+            text-align: right;
+            font-size: 12px;
         }
-        .history-item-type {
-            display: flex; align-items: center; gap: 8px;
-        }
-        .history-type-icon {
-            width: 30px; height: 30px;
-            background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-        }
-        .history-type-name { font-weight: 600; }
-        .history-amount { font-weight: 700; }
-        .history-amount.positive { color: #2ecc71; }
-        .history-amount.negative { color: #ff6b6b; }
-
-        .history-details {
-            display: flex; flex-wrap: wrap; gap: 15px;
-            margin-top: 8px; padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            font-size: 12px; color: #8899aa;
-        }
-        .history-detail-item {
-            display: flex; align-items: center; gap: 5px;
-        }
-
-        .back-btn {
-            background: rgba(0,255,209,0.1);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 36px; padding: 10px 22px;
-            display: inline-flex; align-items: center; gap: 8px;
-            color: #00ffd9; cursor: pointer;
-            margin-bottom: 16px; font-size: 13px;
-            transition: all 0.3s;
-        }
-        .back-btn:hover {
-            background: rgba(0,255,209,0.2);
-            transform: translateX(-4px);
+        .member-rank {
+            color: #ffd700;
+            font-size: 11px;
         }
 
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: rgba(8,12,20,0.95);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(0,255,209,0.2);
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0 18px; z-index: 100;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 10px 0 18px;
+            z-index: 100;
         }
 
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            color: #8899aa; font-size: 10px; cursor: pointer;
-            padding: 6px; transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #8899aa;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 6px;
+            transition: all 0.3s;
         }
+
         .nav-item i { font-size: 18px; }
         .nav-item.active { color: #00ffd9; transform: translateY(-3px); }
 
-        .chart-modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            z-index: 3000;
-            justify-content: center; align-items: center;
-            padding: 16px;
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #8899aa;
+            font-style: italic;
         }
 
-        .chart-content {
-            background: rgba(12,18,28,0.95);
-            border: 2px solid #00ffd9;
-            border-radius: 36px; padding: 22px;
-            width: 100%; max-width: 550px;
+        @media (max-width: 768px) {
+            .premium-header {
+                flex-direction: row;
+                gap: 10px;
+            }
         }
-
-        .chart-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-        }
-        .chart-header h3 { color: #00ffd9; font-size: 20px; }
-        .close-chart { font-size: 32px; color: #8899aa; cursor: pointer; }
-        .close-chart:hover { color: #ff6b6b; }
-
-        #tradingview-widget { height: 350px; border-radius: 18px; overflow: hidden; }
-        .trade-message {
-            background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
-            border-radius: 18px; padding: 20px; text-align: center;
-            margin: 16px 0; color: #00ffd9; font-weight: bold; font-size: 18px;
-            animation: pulse 2s infinite;
-        }
-
-        .modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center; align-items: center;
-            padding: 16px;
-        }
-
-        .modal-content {
-            background: rgba(12,18,28,0.95);
-            border: 1px solid rgba(0,255,209,0.3);
-            border-radius: 36px; padding: 22px;
-            width: 100%; max-width: 360px;
-        }
-
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-        }
-        .modal-header h3 { color: #00ffd9; font-size: 20px; }
-        .close-modal { font-size: 26px; cursor: pointer; color: #8899aa; transition: color 0.3s; }
-        .close-modal:hover { color: #ff6b6b; }
-
-        .modal-input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px; padding: 14px;
-            color: #fff; font-size: 15px; margin: 12px 0;
-        }
-
-        .modal-btn {
-            width: 100%;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none; border-radius: 30px; padding: 14px;
-            color: #030507; font-weight: 700; font-size: 15px;
-            cursor: pointer; transition: all 0.3s;
-        }
-        .modal-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(0,255,209,0.4);
-        }
-        .modal-btn.secondary {
-            background: transparent; border: 1px solid #00ffd9; color: #00ffd9;
-        }
-
-        .withdraw-step { display: none; }
-        .withdraw-step.active { display: block; }
-
-        .wallet-preview {
-            background: rgba(0,255,209,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 20px; padding: 15px;
-            margin: 15px 0; display: flex; align-items: center; gap: 10px;
-        }
-        .wallet-preview i { font-size: 24px; color: #00ffd9; }
-        .wallet-preview-address { font-family: monospace; color: #00ffd9; word-break: break-all; }
-
-        .page { display: none; min-height: 100vh; background: transparent; }
-        .page.active { display: block; }
-        #dashboard { display: block; }
     </style>
 </head>
 <body>
-    <!-- Main Dashboard -->
-    <div id="dashboard" class="dashboard">
-        <!-- Header -->
+    <div class="premium-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="dashboard">
+        <!-- Header with clickable logo for logout -->
         <div class="premium-header">
-            <div class="logo-3d">
+            <div class="logo-3d" onclick="logout()" style="cursor: pointer;">
                 <div class="logo-cube-small">
                     <i class="fas fa-brain"></i>
                 </div>
@@ -859,7 +685,7 @@
         <!-- Current Rank Banner -->
         <div class="current-rank-banner">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
-            <span class="rank-badge" id="topCurrentRank">2 ⭐⭐</span>
+            <span class="rank-badge" id="topCurrentRank">1 ⭐</span>
         </div>
 
         <!-- Profile Section -->
@@ -872,7 +698,7 @@
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                 </div>
                 <div class="profile-info">
-                    <input type="text" id="userName" value="Gainix100001" onchange="updateUserName()">
+                    <input type="text" id="userName" value="User" onchange="updateUserName()">
                     <p><i class="fas fa-id-card"></i> ID: <span id="userId">Gainix100001</span></p>
                     <p><i class="fas fa-envelope"></i> <span id="userEmail">user@example.com</span></p>
                 </div>
@@ -889,19 +715,20 @@
             <div class="referral-box">
                 <div style="font-size: 11px; color: #8899aa; margin-bottom: 6px;">Referral Link</div>
                 <div class="referral-link">
-                    <span>gainixai.live/ref/Gainix100001</span>
-                    <button class="copy-btn" onclick="copyReferral()">Copy</button>
+                    <span id="refLinkDisplay">gainixai.live/ref/User</span>
+                    <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
                 </div>
+                <input type="text" id="refLink" style="position: absolute; opacity: 0;" readonly>
             </div>
 
             <!-- Staking Stats -->
             <div class="staking-stats">
                 <div class="stat-box">
-                    <div class="stat-value" id="totalStaked">$2,500</div>
+                    <div class="stat-value" id="totalStaked">$0</div>
                     <div class="stat-label">Total Staked</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-value" id="stakingCount">5</div>
+                    <div class="stat-value" id="stakingCount">0</div>
                     <div class="stat-label">Positions</div>
                 </div>
             </div>
@@ -914,14 +741,14 @@
                     <i class="fas fa-wallet"></i>
                     <span class="wallet-title">FUND</span>
                 </div>
-                <div class="wallet-balance" id="fundWallet">$5,000</div>
+                <div class="wallet-balance" id="fundWallet">$0</div>
             </div>
             <div class="withdraw-wallet">
                 <div class="wallet-header">
                     <i class="fas fa-arrow-up"></i>
                     <span class="wallet-title">WITHDRAW</span>
                 </div>
-                <div class="wallet-balance" id="withdrawWallet">$2,346</div>
+                <div class="wallet-balance" id="withdrawWallet">$0</div>
             </div>
         </div>
 
@@ -932,16 +759,16 @@
                     <div class="summary-icon"><i class="fas fa-sitemap" style="color: #00ffd9;"></i></div>
                     <div class="summary-title">Total Level Income</div>
                 </div>
-                <div class="summary-total" id="totalLevelIncome">$45,890</div>
-                <div class="today-plus" id="levelIncomeToday">+$45.60 today</div>
+                <div class="summary-total" id="totalLevelIncome">$0</div>
+                <div class="today-plus" id="levelIncomeToday">+$0 today</div>
             </div>
             <div class="summary-box" onclick="showHistoryWithFilter('salary')">
                 <div class="summary-header">
                     <div class="summary-icon"><i class="fas fa-star" style="color: #ffd700;"></i></div>
                     <div class="summary-title">Total Salary Income</div>
                 </div>
-                <div class="summary-total" id="totalSalaryIncome">$5,000</div>
-                <div class="today-plus" id="salaryIncomeToday">+$50 today</div>
+                <div class="summary-total" id="totalSalaryIncome">$0</div>
+                <div class="today-plus" id="salaryIncomeToday">+$0 today</div>
             </div>
         </div>
 
@@ -949,31 +776,33 @@
         <div class="balance-grid-premium">
             <div class="balance-card-3d" onclick="showHistoryWithFilter('direct')">
                 <div class="balance-icon-3d"><i class="fas fa-hand-holding-usd"></i></div>
-                <div class="balance-amount" id="directIncome">$12.4k</div>
+                <div class="balance-amount" id="directIncome">$0</div>
                 <div class="balance-label">Direct Income</div>
-                <div class="today-plus">+$124 today</div>
+                <div class="today-plus">+$0 today</div>
             </div>
             <div class="balance-card-3d" onclick="showHistoryWithFilter('staking')">
                 <div class="balance-icon-3d"><i class="fas fa-coins"></i></div>
-                <div class="balance-amount" id="stakingIncome">$23.7k</div>
+                <div class="balance-amount" id="stakingIncome">$0</div>
                 <div class="balance-label">Staking Income</div>
-                <div class="today-plus" id="stakingIncomeToday">+$237 today</div>
+                <div class="today-plus" id="stakingIncomeToday">+$0 today</div>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="quick-actions">
-            <div class="action-btn" onclick="openModal('depositModal')">
-                <i class="fas fa-arrow-down"></i>
-                <span>Deposit</span>
-            </div>
-            <div class="action-btn" onclick="openWithdrawModal()">
-                <i class="fas fa-arrow-up"></i>
-                <span>Withdraw</span>
-            </div>
-            <div class="action-btn" onclick="openP2PModal()">
-                <i class="fas fa-handshake"></i>
-                <span>P2P</span>
+        <div style="display: flex; gap: 10px;">
+            <div class="quick-actions" style="flex: 4;">
+                <div class="action-btn" onclick="openDepositModal()">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>Deposit</span>
+                </div>
+                <div class="action-btn" onclick="openWithdrawModal()">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Withdraw</span>
+                </div>
+                <div class="action-btn" onclick="openP2PModal()">
+                    <i class="fas fa-handshake"></i>
+                    <span>P2P</span>
+                </div>
             </div>
         </div>
 
@@ -1016,19 +845,21 @@
             <div class="package-card" onclick="selectPackage(1)" id="package1">
                 <div class="package-name">BASIC</div>
                 <div class="package-days">90 Days</div>
-                <div class="package-roi">0.9-1.2%</div>
+                <div class="package-roi">1-1.3%</div>
+                <div class="referral-bonus">5% Ref</div>
                 <div class="package-min">$20</div>
             </div>
             <div class="package-card" onclick="selectPackage(2)" id="package2">
                 <div class="package-name">PRO</div>
                 <div class="package-days">180 Days</div>
-                <div class="package-roi">1.1-1.4%</div>
+                <div class="package-roi">1.3-1.6%</div>
+                <div class="referral-bonus">7% Ref</div>
                 <div class="package-min">$150</div>
             </div>
             <div class="package-card" onclick="selectPackage(3)" id="package3">
                 <div class="package-name">ELITE</div>
                 <div class="package-days">450 Days</div>
-                <div class="package-roi">1.3-1.6%</div>
+                <div class="package-roi">1.5-2%</div>
                 <div class="referral-bonus">10% Ref + $100 Bonus</div>
                 <div class="package-min">$300</div>
             </div>
@@ -1036,34 +867,59 @@
 
         <!-- Package Input -->
         <div class="package-input">
-            <input type="number" id="packageAmount" placeholder="Amount" min="20">
+            <input type="number" id="packageAmount" placeholder="Amount" min="20" oninput="showBonusMessage()">
             <input type="text" id="referralId" placeholder="Sponsor ID (Optional)">
-            <div id="bonusMessage" style="color: #00ffd9; font-size: 13px; margin-bottom: 10px;"></div>
-            <button class="confirm-btn" onclick="confirmPackage()">STAKE NOW</button>
+            <div id="bonusMessage" class="bonus-msg"></div>
+            <button class="confirm-btn" onclick="createNewStaking()">STAKE NOW</button>
         </div>
 
         <!-- Active Stakings -->
         <div class="section-title"><i class="fas fa-clock"></i> ACTIVE STAKINGS</div>
-        <div class="active-stakings" id="activeStakingsList"></div>
+        <div class="active-stakings" id="activeStakingsList">
+            <div class="no-data">No active stakings</div>
+        </div>
+
+        <!-- Level Income Table -->
+        <div class="section-title"><i class="fas fa-sitemap"></i> LEVEL INCOME</div>
+        <div class="wallet-settings" style="margin-bottom: 16px;">
+            <table class="income-table">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>% of Team ROI</th>
+                        <th>Today's Estimate</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="levelIncomeBody">
+                    <tr>
+                        <td colspan="4" class="no-data">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="note">*Levels unlock with direct referrals: 1,2,3,4,5 respectively.</p>
+        </div>
 
         <!-- Salary Rank Progress -->
         <div class="section-title"><i class="fas fa-star"></i> SALARY RANK</div>
         <div class="wallet-settings" style="margin-bottom: 16px;">
             <div class="rank-progress">
-                <p><strong>Current Rank:</strong> <span id="currentRank">Rank 2</span></p>
-                <span id="salaryCurrentRank" style="display: none;">2 ⭐⭐</span>
-                <p><strong>Direct Business:</strong> <span id="directBusiness">$4,350 / $5,000</span></p>
-                <p><strong>Team Business:</strong> <span id="teamBusiness">$12,450 / $30,000</span></p>
-                <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">1 / 2</span></p>
-                <p><strong>Next Rank:</strong> <span id="nextRank">Rank 3 ($100/week)</span></p>
+                <p><strong>Current Rank:</strong> <span id="currentRank">Rank 1</span></p>
+                <span id="salaryCurrentRank" style="display: none;">1 ⭐</span>
+                <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $750</span></p>
+                <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $2,500</span></p>
+                <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 2</span></p>
+                <p><strong>Next Rank:</strong> <span id="nextRank">Rank 2 ($60/week)</span></p>
             </div>
         </div>
 
         <!-- Direct Members -->
-        <div class="team-section">
-            <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS</div>
-            <p><strong>Total Direct:</strong> <span id="directCount">3</span></p>
-            <div id="directMembersList"></div>
+        <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS</div>
+        <div class="wallet-settings" style="margin-bottom: 16px;">
+            <p><strong>Total Direct:</strong> <span id="directCount">0</span></p>
+            <div id="directMembersList" class="members-list">
+                <div class="no-data">No direct referrals yet</div>
+            </div>
         </div>
 
         <!-- Wallet Settings -->
@@ -1080,1077 +936,296 @@
         </div>
     </div>
 
-    <!-- Salary Page -->
-    <div id="salary-page" class="page">
-        <div class="dashboard">
-            <div class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back to Dashboard</div>
-            <div class="salary-system">
-                <div class="salary-header">
-                    <h2><i class="fas fa-star"></i> SALARY RANKS</h2>
-                    <span class="current-rank" id="salaryCurrentRank">2 ⭐⭐</span>
-                </div>
-                <div class="salary-scroll-container">
-                    <div class="salary-grid" id="salaryGrid"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Page -->
-    <div id="team-page" class="page">
-        <div class="dashboard">
-            <div class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back to Dashboard</div>
-            
-            <div class="level-search">
-                <div class="section-title"><i class="fas fa-search"></i> SEARCH LEVEL (1-10000)</div>
-                <div class="search-box">
-                    <input type="number" id="levelSearchInput" class="search-input" placeholder="Enter level number (1-10000)" min="1" max="10000">
-                    <button class="search-btn" onclick="searchLevel()">GO</button>
-                </div>
-            </div>
-
-            <div class="team-section">
-                <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS (3)</div>
-                <div id="directMembersList"></div>
-            </div>
-
-            <div class="team-section">
-                <div class="section-title"><i class="fas fa-chart-line"></i> LEVEL INCOME</div>
-                <div id="levelIncomeList"></div>
-            </div>
-
-            <div class="team-section">
-                <div class="section-title"><i class="fas fa-sitemap"></i> TEAM STRUCTURE</div>
-                <div class="team-tabs" id="levelTabs">
-                    <div class="team-tab active" onclick="showTeamLevel(1)">Level 1</div>
-                    <div class="team-tab" onclick="showTeamLevel(2)">Level 2</div>
-                    <div class="team-tab" onclick="showTeamLevel(3)">Level 3</div>
-                    <div class="team-tab" onclick="showTeamLevel(4)">Level 4</div>
-                    <div class="team-tab" onclick="showTeamLevel(5)">Level 5</div>
-                </div>
-                <div id="levelContents"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- P2P Page -->
-    <div id="p2p-page" class="page">
-        <div class="dashboard">
-            <div class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back to Dashboard</div>
-            <div class="p2p-section">
-                <div class="section-title"><i class="fas fa-handshake"></i> P2P TRANSFER</div>
-                <div class="p2p-form">
-                    <input type="text" id="p2pUserId" placeholder="Recipient GAINIX AI ID" class="modal-input" style="margin-bottom:15px">
-                    <input type="number" id="p2pAmountPage" placeholder="Amount" class="modal-input" style="margin-bottom:15px">
-                    <div style="margin:20px 0">
-                        <div style="color:#8899aa; font-size:12px; margin-bottom:10px">Enter 4-digit PIN</div>
-                        <div class="pin-input">
-                            <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'p2pModal')">
-                            <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'p2pModal')">
-                            <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'p2pModal')">
-                            <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'p2pModal')">
-                        </div>
-                    </div>
-                    <button class="modal-btn" onclick="processP2PPage()">SEND NOW</button>
-                </div>
-                <div class="section-title" style="margin-top:25px">RECENT P2P TRANSACTIONS</div>
-                <div class="history-list-enhanced" id="p2pHistoryList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- History Page -->
-    <div id="history-page" class="page">
-        <div class="dashboard">
-            <div class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back to Dashboard</div>
-            <div class="history-page">
-                <div class="section-title"><i class="fas fa-history"></i> TRANSACTION HISTORY</div>
-                <div class="history-filters">
-                    <div class="history-filter active" onclick="filterHistory('all')">All</div>
-                    <div class="history-filter" onclick="filterHistory('income')">Income</div>
-                    <div class="history-filter" onclick="filterHistory('staking')">Staking</div>
-                    <div class="history-filter" onclick="filterHistory('p2p')">P2P</div>
-                    <div class="history-filter" onclick="filterHistory('withdraw')">Withdraw</div>
-                </div>
-                <div class="history-list-enhanced" id="fullHistoryList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chart Modal -->
-    <div id="chartModal" class="chart-modal">
-        <div class="chart-content">
-            <div class="chart-header">
-                <h3><i class="fas fa-chart-line"></i> BTC/USDT - 1 Min</h3>
-                <span class="close-chart" onclick="closeChartModal()">&times;</span>
-            </div>
-            <div id="tradingview-widget"></div>
-            <div class="trade-message" id="tradeMessage" style="display:none">✅ TRADE PLACED SUCCESSFULLY!</div>
-        </div>
-    </div>
-
-    <!-- Withdrawal Modal -->
-    <div id="withdrawModal" class="modal">
+    <!-- Invest Modal -->
+    <div id="investModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Withdraw Funds</h3>
-                <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
+                <h3>Make a New Investment</h3>
+                <span class="close-modal" onclick="closeInvestModal()">&times;</span>
             </div>
-            <div id="withdrawStep1" class="withdraw-step active">
-                <input type="number" id="withdrawAmount" placeholder="Amount (Min $20)" class="modal-input">
-                <div class="wallet-preview">
-                    <i class="fab fa-bitcoin"></i>
-                    <div>
-                        <div style="font-size:11px; color:#8899aa">BEP20 Wallet</div>
-                        <div class="wallet-preview-address" id="previewWallet">0x5f3a...8e2b</div>
-                    </div>
-                </div>
-                <button class="modal-btn" onclick="withdrawStep2()">NEXT</button>
-            </div>
-            <div id="withdrawStep2" class="withdraw-step">
-                <div style="text-align:center; margin-bottom:20px">
-                    <div style="font-size:24px; font-weight:700; color:#00ffd9" id="withdrawAmountDisplay">$50</div>
-                    <div style="font-size:12px; color:#8899aa">will be sent to</div>
-                    <div style="font-size:12px; color:#fff; margin-top:5px" id="withdrawWalletDisplay">0x5f3a...8e2b</div>
-                </div>
-                <div class="pin-input">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'withdrawModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'withdrawModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'withdrawModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'withdrawModal')">
-                </div>
-                <button class="modal-btn" onclick="processWithdrawFinal()" style="margin-top:20px">VERIFY & WITHDRAW</button>
-                <button class="modal-btn secondary" onclick="backToStep1()" style="margin-top:10px">BACK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- P2P Modal -->
-    <div id="p2pModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>P2P Transfer</h3>
-                <span class="close-modal" onclick="closeModal('p2pModal')">&times;</span>
-            </div>
-            <input type="text" id="recipientId" placeholder="Recipient GAINIX AI ID" class="modal-input">
-            <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
-            <div style="margin:15px 0">
-                <div style="color:#8899aa; font-size:12px; margin-bottom:8px">Enter 4-digit PIN</div>
-                <div class="pin-input">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'p2pModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'p2pModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'p2pModal')">
-                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'p2pModal')">
-                </div>
-            </div>
-            <button class="modal-btn" onclick="processP2P()">SEND NOW</button>
-        </div>
-    </div>
-
-    <!-- Deposit Modal -->
-    <div id="depositModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Deposit Funds</h3>
-                <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
-            </div>
-            <input type="number" id="depositAmount" placeholder="Min $20" class="modal-input">
-            <button onclick="processDeposit()" class="modal-btn">DEPOSIT NOW</button>
+            <select id="packageSelect" class="modal-input" onchange="showBonusMessage()">
+                <option value="BASIC">BASIC ($20 min, 90 days, 1-1.3% daily)</option>
+                <option value="PRO">PRO ($150 min, 180 days, 1.3-1.6% daily)</option>
+                <option value="ELITE">ELITE ($300 min, 450 days, 1.5-2% daily)</option>
+            </select>
+            <input type="number" id="modalAmount" class="modal-input" placeholder="Amount" min="20" oninput="showBonusMessage()">
+            <div id="modalBonusMessage" class="bonus-msg"></div>
+            <button class="modal-btn" onclick="createNewStaking()">STAKE NOW</button>
         </div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="showDashboard()"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showSalaryPage()"><i class="fas fa-star"></i><span>Salary</span></div>
-        <div class="nav-item" onclick="showTeamPage()"><i class="fas fa-users"></i><span>Team</span></div>
-        <div class="nav-item" onclick="showP2PPage()"><i class="fas fa-handshake"></i><span>P2P</span></div>
-        <div class="nav-item" onclick="showHistoryPage()"><i class="fas fa-history"></i><span>History</span></div>
+        <div class="nav-item active" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item" onclick="window.location.href='salary.html'"><i class="fas fa-star"></i><span>Salary</span></div>
+        <div class="nav-item" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><span>Team</span></div>
+        <div class="nav-item" onclick="window.location.href='p2p.html'"><i class="fas fa-handshake"></i><span>P2P</span></div>
+        <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
     <script>
-        // ==================== GLOBAL VARIABLES ====================
-        let currentUser = {
-            id: 'Gainix100001',
-            name: 'Gainix100001',
-            walletAddress: '0x5f3a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a',
-            walletShort: '0x5f3a...8e2b'
-        };
-
-        let fundWallet = 5000;
-        let withdrawWallet = 2345.50;
-        let totalStaked = 2500;
-        let stakingCount = 3;
-        let selectedPackage = 1;
-
-        let directIncome = 12450;
-        let stakingIncome = 23750;
-        let totalLevelIncome = 45890;
-        let totalSalaryIncome = 5000;
-
-        let currentRank = 2; // 1-9
-        let directBusiness = 4350;
-        let teamBusiness = 12450;
-        let directReferrals = 3;
-
-        // Salary Ranks Data (as per your requirement)
-        const salaryRanks = [
-            { stars: 1, name: '1⭐', direct: 750, team: 2500, referral: 'None', salary: 15, achieved: true, current: false },
-            { stars: 2, name: '2⭐⭐', direct: 1500, team: 10000, referral: '2 members at 1⭐', salary: 50, achieved: true, current: true },
-            { stars: 3, name: '3⭐⭐⭐', direct: 2000, team: 30000, referral: '2 members at 2⭐⭐', salary: 100, achieved: false, current: false },
-            { stars: 4, name: '4⭐⭐⭐⭐', direct: 2500, team: 100000, referral: '2 members at 3⭐⭐⭐', salary: 200, achieved: false, current: false },
-            { stars: 5, name: '5⭐⭐⭐⭐⭐', direct: 5000, team: 300000, referral: '2 members at 4⭐⭐⭐⭐', salary: 500, achieved: false, current: false },
-            { stars: 6, name: '6⭐⭐⭐⭐⭐⭐', direct: 10000, team: 1000000, referral: '2 members at 5⭐⭐⭐⭐⭐', salary: 1000, achieved: false, current: false },
-            { stars: 7, name: '7⭐⭐⭐⭐⭐⭐⭐', direct: 20000, team: 3000000, referral: '2 members at 6⭐⭐⭐⭐⭐⭐', salary: 2000, achieved: false, current: false },
-            { stars: 8, name: '8⭐⭐⭐⭐⭐⭐⭐⭐', direct: 50000, team: 10000000, referral: '2 members at 7⭐⭐⭐⭐⭐⭐⭐', salary: 5000, achieved: false, current: false },
-            { stars: 9, name: '9⭐⭐⭐⭐⭐⭐⭐⭐⭐', direct: 100000, team: 30000000, referral: '2 members at 8⭐⭐⭐⭐⭐⭐⭐⭐', salary: 10000, achieved: false, current: false }
-        ];
-
-        // Team Data
-        let teamData = {
-            1: [
-                { id: 'Gainix100002', name: 'Alice Johnson', contribution: 1200, avatar: 'A' },
-                { id: 'Gainix100003', name: 'Bob Smith', contribution: 850, avatar: 'B' },
-                { id: 'Gainix100004', name: 'Charlie Brown', contribution: 2300, avatar: 'C' }
-            ],
-            2: [
-                { id: 'Gainix100005', name: 'David Miller', contribution: 750, avatar: 'D' },
-                { id: 'Gainix100006', name: 'Emma Wilson', contribution: 1100, avatar: 'E' }
-            ],
-            3: [
-                { id: 'Gainix100007', name: 'Frank Thomas', contribution: 450, avatar: 'F' }
-            ],
-            4: [
-                { id: 'Gainix100008', name: 'Grace Lee', contribution: 320, avatar: 'G' }
-            ],
-            5: [
-                { id: 'Gainix100009', name: 'Henry Clark', contribution: 280, avatar: 'H' }
-            ]
-        };
-
-        // History Data
-        let historyData = {
-            all: [
-                { type: 'staking', date: '2024-01-15', time: '10:30', package: 'BASIC', amount: 4.50, details: 'Daily ROI - Basic' },
-                { type: 'staking', date: '2024-01-14', time: '10:30', package: 'PRO', amount: 11.50, details: 'Daily ROI - Pro' },
-                { type: 'staking', date: '2024-01-13', time: '10:30', package: 'ELITE', amount: 29.00, details: 'Daily ROI - Elite' },
-                { type: 'direct', date: '2024-01-15', time: '09:45', amount: 124, from: 'Alice Johnson', details: 'Direct Referral' },
-                { type: 'salary', date: '2024-01-15', time: '00:05', amount: 50, rank: '2⭐⭐', details: 'Weekly Salary' },
-                { type: 'level', date: '2024-01-15', time: '10:10', amount: 32.40, level: 1, details: 'Level 1 Commission' },
-                { type: 'p2p', date: '2024-01-14', time: '15:20', amount: -100, to: 'Bob Smith', details: 'P2P Transfer Sent' },
-                { type: 'p2p', date: '2024-01-13', time: '09:30', amount: 50, from: 'Alice Johnson', details: 'P2P Received' },
-                { type: 'withdraw', date: '2024-01-13', time: '11:10', amount: -50, details: 'Withdrawal' }
-            ],
-            income: [], staking: [], direct: [], salary: [], level: [], p2p: [], withdraw: []
-        };
-        historyData.income = historyData.all.filter(h => ['direct','staking','level','salary'].includes(h.type));
-        historyData.staking = historyData.all.filter(h => h.type === 'staking');
-        historyData.direct = historyData.all.filter(h => h.type === 'direct');
-        historyData.salary = historyData.all.filter(h => h.type === 'salary');
-        historyData.level = historyData.all.filter(h => h.type === 'level');
-        historyData.p2p = historyData.all.filter(h => h.type === 'p2p');
-        historyData.withdraw = historyData.all.filter(h => h.type === 'withdraw');
-
-        // Active Stakings
-        let activeStakings = [
-            { id: 1, package: 'BASIC', amount: 500, startDate: '2024-01-01', endDate: '2024-03-31',
-              startDateTime: '2024-01-01 10:30 UTC', endDateTime: '2024-03-31 10:30 UTC', daily: 0.9, period: 90, completed: false },
-            { id: 2, package: 'PRO', amount: 1000, startDate: '2024-01-10', endDate: '2024-07-08',
-              startDateTime: '2024-01-10 14:20 UTC', endDateTime: '2024-07-08 14:20 UTC', daily: 1.2, period: 180, completed: false },
-            { id: 3, package: 'ELITE', amount: 2000, startDate: '2023-11-15', endDate: '2025-02-07',
-              startDateTime: '2023-11-15 09:15 UTC', endDateTime: '2025-02-07 09:15 UTC', daily: 1.5, period: 450, completed: false }
-        ];
-
-        // ==================== INITIALIZATION ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            updateUI();
-            initActiveStakings();
-            initSalaryGrid();
-            initTeamStructure();
-            loadP2PHistory();
-            loadFullHistory('all');
-            startTimeUpdates();
-            checkSunday();
-        });
-
-        function updateUI() {
-            document.getElementById('fundWallet').innerHTML = '$' + fundWallet.toLocaleString();
-            document.getElementById('withdrawWallet').innerHTML = '$' + withdrawWallet.toLocaleString();
-            document.getElementById('totalStaked').innerHTML = '$' + totalStaked.toLocaleString();
-            document.getElementById('stakingCount').innerHTML = stakingCount;
-            
-            document.getElementById('totalLevelIncome').innerHTML = '$' + totalLevelIncome.toLocaleString();
-            document.getElementById('totalSalaryIncome').innerHTML = '$' + totalSalaryIncome.toLocaleString();
-            document.getElementById('directIncome').innerHTML = '$' + (directIncome/1000).toFixed(1) + 'k';
-            document.getElementById('stakingIncome').innerHTML = '$' + (stakingIncome/1000).toFixed(1) + 'k';
-            
-            document.getElementById('topCurrentRank').innerHTML = currentRank + ' ' + salaryRanks[currentRank-1].name;
-            document.getElementById('salaryCurrentRank').innerHTML = currentRank + ' ' + salaryRanks[currentRank-1].name;
-        }
-
-        function checkSunday() {
-            const today = new Date().getUTCDay();
-            if (today === 0) { // Sunday
-                const warningDiv = document.createElement('div');
-                warningDiv.className = 'window-status';
-                warningDiv.style.background = 'rgba(255,107,107,0.2)';
-                warningDiv.style.color = '#ff6b6b';
-                warningDiv.innerHTML = '⚠️ Sunday - Bot Closed (No Income Today)';
-                document.querySelector('.unique-bot').prepend(warningDiv);
+        // ============================================
+        // LOGOUT FUNCTION (called when logo is clicked)
+        // ============================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
             }
         }
 
-        // ==================== TIME FUNCTIONS ====================
-        function startTimeUpdates() {
-            updateUTCTime();
-            setInterval(updateUTCTime, 1000);
-            updateBotTimer();
-            setInterval(updateBotTimer, 1000);
-        }
-
-        function updateUTCTime() {
-            const now = new Date();
-            const hours = now.getUTCHours().toString().padStart(2, '0');
-            const minutes = now.getUTCMinutes().toString().padStart(2, '0');
-            document.getElementById('utcDisplay').innerHTML = hours + ':' + minutes + ' UTC';
-        }
-
-        function updateBotTimer() {
-            const now = new Date();
-            const target = new Date();
-            target.setUTCHours(9, 0, 0, 0); // 9:00 UTC
-            
-            if (now > target) {
-                target.setUTCDate(target.getUTCDate() + 1);
-            }
-            
-            const diff = target - now;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('botTimer').innerHTML = 
-                hours.toString().padStart(2,'0') + ':' + 
-                minutes.toString().padStart(2,'0') + ':' + 
-                seconds.toString().padStart(2,'0');
-            
-            // Check if trading window is open (9:00-10:00 UTC)
-            const currentHour = now.getUTCHours();
-            if (currentHour === 9) {
-                document.getElementById('windowStatus').innerHTML = '✅ Trading window OPEN!';
-                document.getElementById('botButton').disabled = false;
-            } else {
-                document.getElementById('windowStatus').innerHTML = '⏳ Window closed - Next: 9:00 UTC';
-                document.getElementById('botButton').disabled = true;
+        // ============================================
+        // COPY FUNCTIONS
+        // ============================================
+        function copyReferralLink() {
+            const refLinkInput = document.getElementById('refLink');
+            if (refLinkInput) {
+                refLinkInput.select();
+                document.execCommand('copy');
+                showToast('✅ Referral link copied!', 'success');
             }
         }
 
-        // ==================== NAVIGATION ====================
-        function showDashboard() {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('dashboard').style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach((item,i) => item.classList.toggle('active', i===0));
+        function copyWalletAddress() {
+            const walletDisplay = document.getElementById('walletAddressDisplay');
+            if (walletDisplay) {
+                const address = walletDisplay.innerText;
+                navigator.clipboard.writeText(address);
+                showToast('✅ Wallet address copied!', 'success');
+            }
         }
 
-        function showSalaryPage() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('salary-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach((item,i) => item.classList.toggle('active', i===1));
-            initSalaryGrid();
+        // ============================================
+        // MODAL FUNCTIONS
+        // ============================================
+        function showInvestModal() {
+            document.getElementById('investModal').style.display = 'flex';
+            showBonusMessage();
         }
 
-        function showTeamPage() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('team-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach((item,i) => item.classList.toggle('active', i===2));
-            initTeamStructure();
+        function closeInvestModal() {
+            document.getElementById('investModal').style.display = 'none';
         }
 
-        function showP2PPage() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('p2p-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach((item,i) => item.classList.toggle('active', i===3));
-            loadP2PHistory();
-        }
-
-        function showHistoryPage() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('history-page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach((item,i) => item.classList.toggle('active', i===4));
-            filterHistory('all');
-        }
-
-        // ==================== SALARY RANKS ====================
-        function initSalaryGrid() {
-            const grid = document.getElementById('salaryGrid');
-            let html = '';
-            
-            salaryRanks.forEach((rank, index) => {
-                let rankClass = 'future';
-                if (rank.achieved) rankClass = 'achieved';
-                if (rank.current) rankClass = 'current';
-                
-                html += `
-                    <div class="salary-rank-card ${rankClass}">
-                        <div class="rank-header">
-                            <span class="rank-stars">${'⭐'.repeat(rank.stars)}</span>
-                            <span class="rank-name">${rank.name}</span>
-                            <span class="rank-status">${rank.current ? 'CURRENT' : (rank.achieved ? 'ACHIEVED' : 'LOCKED')}</span>
-                        </div>
-                        <div class="rank-conditions">
-                            <div class="condition-item">
-                                <div class="condition-label">Direct Business</div>
-                                <div class="condition-value">$${rank.direct.toLocaleString()}</div>
-                                ${index < currentRank ? 
-                                    `<div class="condition-progress"><div class="progress-fill" style="width:100%"></div></div>` : 
-                                    (index === currentRank ? 
-                                        `<div class="condition-progress"><div class="progress-fill" style="width:${Math.min(100, (directBusiness/rank.direct)*100)}%"></div></div>` : 
-                                        '')}
-                            </div>
-                            <div class="condition-item">
-                                <div class="condition-label">Team Business</div>
-                                <div class="condition-value">$${rank.team.toLocaleString()}</div>
-                                ${index < currentRank ? 
-                                    `<div class="condition-progress"><div class="progress-fill" style="width:100%"></div></div>` : 
-                                    (index === currentRank ? 
-                                        `<div class="condition-progress"><div class="progress-fill" style="width:${Math.min(100, (teamBusiness/rank.team)*100)}%"></div></div>` : 
-                                        '')}
-                            </div>
-                            <div class="condition-item">
-                                <div class="condition-label">Requirement</div>
-                                <div class="condition-value">${rank.referral}</div>
-                            </div>
-                        </div>
-                        <div class="rank-salary">
-                            <div class="salary-amount">$${rank.salary}</div>
-                            <div class="salary-period">Weekly Salary</div>
-                        </div>
-                    </div>
-                `;
+        function selectPackage(packageNum) {
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
             });
+            const selectedCard = document.getElementById(`package${packageNum}`);
+            if (selectedCard) selectedCard.classList.add('selected');
             
-            grid.innerHTML = html;
-        }
-
-        // ==================== TEAM STRUCTURE ====================
-        function initTeamStructure() {
-            // Direct members
-            const directDiv = document.getElementById('directMembersList');
-            let directHtml = '';
-            teamData[1].forEach(member => {
-                directHtml += `
-                    <div class="member-item">
-                        <div class="member-info">
-                            <div class="member-details">
-                                <div class="member-avatar">${member.avatar}</div>
-                                <div>
-                                    <div style="font-weight:600">${member.name}</div>
-                                    <div style="font-size:11px; color:#8899aa">${member.id}</div>
-                                </div>
-                            </div>
-                            <div class="member-contribution">$${member.contribution}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            directDiv.innerHTML = directHtml || '<p style="color:#8899aa">No direct members yet.</p>';
-
-            // Level Income
-            const levelDiv = document.getElementById('levelIncomeList');
-            const percentages = [10, 7, 5, 3, 1];
-            let levelHtml = '';
-            for (let i = 0; i < 5; i++) {
-                const level = i + 1;
-                const unlocked = directReferrals >= level;
-                levelHtml += `
-                    <div class="level-income-item">
-                        <span>Level ${level} (${percentages[i]}% of team ROI)</span>
-                        <span class="${unlocked ? 'level-income-percent' : 'level-income-locked'}">
-                            ${unlocked ? 'Active' : 'Locked (need ' + level + ' direct)'}
-                        </span>
-                    </div>
-                `;
+            const packageSelect = document.getElementById('packageSelect');
+            if (packageSelect) {
+                const packages = ['BASIC', 'PRO', 'ELITE'];
+                packageSelect.value = packages[packageNum - 1];
             }
-            levelDiv.innerHTML = levelHtml;
-
-            // Show Level 1 by default
-            showTeamLevel(1);
-        }
-
-        function showTeamLevel(level) {
-            // Update tabs
-            document.querySelectorAll('.team-tab').forEach((tab, idx) => {
-                tab.classList.toggle('active', idx+1 === level);
-            });
-            
-            const contentDiv = document.getElementById('levelContents');
-            let html = '';
-            
-            if (teamData[level] && teamData[level].length > 0) {
-                teamData[level].forEach(member => {
-                    html += `
-                        <div class="member-item">
-                            <div class="member-info">
-                                <div class="member-details">
-                                    <div class="member-avatar">${member.avatar}</div>
-                                    <div>
-                                        <div style="font-weight:600">${member.name}</div>
-                                        <div style="font-size:11px; color:#8899aa">${member.id}</div>
-                                    </div>
-                                </div>
-                                <div class="member-contribution">$${member.contribution}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                html = '<p style="color:#8899aa; padding:20px; text-align:center">No members in this level.</p>';
-            }
-            
-            contentDiv.innerHTML = html;
-        }
-
-        function searchLevel() {
-            const level = parseInt(document.getElementById('levelSearchInput').value);
-            if (level && level >= 1 && level <= 5) {
-                showTeamLevel(level);
-            } else {
-                alert('Please enter a valid level (1-5)');
-            }
-        }
-
-        // ==================== STAKING FUNCTIONS ====================
-        function selectPackage(pkg) {
-            selectedPackage = pkg;
-            document.querySelectorAll('.package-card').forEach((card, idx) => {
-                card.classList.toggle('selected', idx+1 === pkg);
-            });
             showBonusMessage();
         }
 
         function showBonusMessage() {
-            const amount = parseFloat(document.getElementById('packageAmount').value) || 0;
+            const packageSelect = document.getElementById('packageSelect');
+            const amount = parseFloat(document.getElementById('packageAmount')?.value) || 0;
             const msgDiv = document.getElementById('bonusMessage');
-            if (selectedPackage === 3 && amount >= 500) {
-                msgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
+            const modalMsgDiv = document.getElementById('modalBonusMessage');
+            
+            if (packageSelect && packageSelect.value === 'ELITE' && amount >= 500) {
+                if (msgDiv) msgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
+                if (modalMsgDiv) modalMsgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
             } else {
-                msgDiv.innerHTML = '';
+                if (msgDiv) msgDiv.innerHTML = '';
+                if (modalMsgDiv) modalMsgDiv.innerHTML = '';
             }
         }
 
-        function confirmPackage() {
-            const amount = parseFloat(document.getElementById('packageAmount').value);
-            const referralId = document.getElementById('referralId').value;
-            
-            let minAmount, pkgName;
-            if (selectedPackage === 1) { minAmount = 20; pkgName = 'BASIC'; }
-            else if (selectedPackage === 2) { minAmount = 150; pkgName = 'PRO'; }
-            else { minAmount = 300; pkgName = 'ELITE'; }
-            
-            if (!amount || amount < minAmount) {
-                alert(`Minimum amount for ${pkgName} is $${minAmount}`);
-                return;
-            }
-            
-            if (amount > fundWallet) {
-                alert('Insufficient balance in Fund Wallet');
-                return;
-            }
-            
-            // Process stake
-            fundWallet -= amount;
-            totalStaked += amount;
-            stakingCount++;
-            
-            let dailyROI;
-            if (selectedPackage === 1) dailyROI = amount * 0.0095;
-            else if (selectedPackage === 2) dailyROI = amount * 0.012;
-            else dailyROI = amount * 0.014;
-            
-            const now = new Date();
-            const startDate = now.toISOString().split('T')[0];
-            let endDate;
-            if (selectedPackage === 1) endDate = new Date(now.setDate(now.getDate() + 90)).toISOString().split('T')[0];
-            else if (selectedPackage === 2) endDate = new Date(now.setDate(now.getDate() + 180)).toISOString().split('T')[0];
-            else endDate = new Date(now.setDate(now.getDate() + 450)).toISOString().split('T')[0];
-            
-            activeStakings.push({
-                id: activeStakings.length + 1,
-                package: pkgName,
-                amount: amount,
-                startDate: startDate,
-                endDate: endDate,
-                startDateTime: startDate + ' ' + new Date().getUTCHours() + ':' + new Date().getUTCMinutes() + ' UTC',
-                endDateTime: endDate + ' ' + new Date().getUTCHours() + ':' + new Date().getUTCMinutes() + ' UTC',
-                daily: (dailyROI / amount * 100).toFixed(1),
-                period: selectedPackage === 1 ? 90 : (selectedPackage === 2 ? 180 : 450),
-                completed: false
-            });
-            
-            updateUI();
-            initActiveStakings();
-            alert(`Successfully staked $${amount} in ${pkgName} package!`);
-            
-            document.getElementById('packageAmount').value = '';
-            document.getElementById('bonusMessage').innerHTML = '';
-        }
-
-        function initActiveStakings() {
-            const container = document.getElementById('activeStakingsList');
-            let html = '';
-            
-            activeStakings.forEach(stake => {
-                const today = new Date();
-                const end = new Date(stake.endDate);
-                const canUnstake = today >= end;
-                
-                html += `
-                    <div class="staking-item">
-                        <div class="staking-header">
-                            <span class="staking-package">${stake.package}</span>
-                            <span class="staking-amount">$${stake.amount}</span>
-                        </div>
-                        <div class="staking-dates">
-                            <span>Start: ${stake.startDateTime}</span>
-                            <span>End: ${stake.endDateTime}</span>
-                        </div>
-                        <div class="staking-roi">Daily ROI: ~$${(stake.amount * stake.daily / 100).toFixed(2)} (${stake.daily}%)</div>
-                        <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
-                                onclick="unstakeStake(${stake.id})"
-                                ${!canUnstake ? 'disabled' : ''}>
-                            ${canUnstake ? 'UNSTAKE NOW' : 'Locked until ' + stake.endDate}
-                        </button>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function unstakeStake(id) {
-            const stake = activeStakings.find(s => s.id === id);
-            if (!stake) return;
-            
-            // Add to withdraw wallet
-            withdrawWallet += stake.amount;
-            totalStaked -= stake.amount;
-            stakingCount--;
-            
-            // Remove from active stakings
-            activeStakings = activeStakings.filter(s => s.id !== id);
-            
-            updateUI();
-            initActiveStakings();
-            alert(`Successfully unstaked $${stake.amount} from ${stake.package}!`);
-        }
-
-        // ==================== HISTORY FUNCTIONS ====================
-        function filterHistory(type) {
-            document.querySelectorAll('.history-filter').forEach(f => f.classList.remove('active'));
-            const btns = document.querySelectorAll('.history-filter');
-            for (let btn of btns) {
-                if (btn.textContent.toLowerCase() === type || 
-                    (type === 'all' && btn.textContent === 'All')) {
-                    btn.classList.add('active');
-                    break;
-                }
-            }
-            
-            loadFullHistory(type);
-        }
-
-        function loadFullHistory(type) {
-            const container = document.getElementById('fullHistoryList');
-            let data = type === 'all' ? historyData.all : historyData[type] || [];
-            
-            let html = '';
-            data.forEach(item => {
-                const isPositive = item.amount > 0;
-                html += `
-                    <div class="history-item-enhanced" onclick="showHistoryDetail(this)">
-                        <div class="history-item-header">
-                            <div class="history-item-type">
-                                <div class="history-type-icon"><i class="fas ${getIconForType(item.type)}"></i></div>
-                                <span class="history-type-name">${item.type.toUpperCase()}</span>
-                            </div>
-                            <span class="history-amount ${isPositive ? 'positive' : 'negative'}">
-                                ${isPositive ? '+' : ''}$${Math.abs(item.amount).toFixed(2)}
-                            </span>
-                        </div>
-                        <div class="history-details">
-                            <div class="history-detail-item"><i class="far fa-calendar"></i> ${item.date}</div>
-                            <div class="history-detail-item"><i class="far fa-clock"></i> ${item.time}</div>
-                            ${item.from ? '<div class="history-detail-item"><i class="fas fa-user"></i> From: ' + item.from + '</div>' : ''}
-                            ${item.to ? '<div class="history-detail-item"><i class="fas fa-user"></i> To: ' + item.to + '</div>' : ''}
-                            ${item.package ? '<div class="history-detail-item"><i class="fas fa-box"></i> ' + item.package + '</div>' : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html || '<p style="color:#8899aa; text-align:center; padding:20px">No history found.</p>';
-        }
-
-        function getIconForType(type) {
-            switch(type) {
-                case 'staking': return 'fa-coins';
-                case 'direct': return 'fa-hand-holding-usd';
-                case 'salary': return 'fa-star';
-                case 'level': return 'fa-sitemap';
-                case 'p2p': return 'fa-handshake';
-                case 'withdraw': return 'fa-arrow-up';
-                default: return 'fa-history';
-            }
-        }
-
-        function showHistoryWithFilter(filter) {
-            showHistoryPage();
-            filterHistory(filter);
-        }
-
-        function loadP2PHistory() {
-            const container = document.getElementById('p2pHistoryList');
-            const p2pData = historyData.p2p;
-            
-            let html = '';
-            p2pData.forEach(item => {
-                html += `
-                    <div class="history-item-enhanced">
-                        <div class="history-item-header">
-                            <div class="history-item-type">
-                                <div class="history-type-icon"><i class="fas fa-handshake"></i></div>
-                                <span class="history-type-name">P2P</span>
-                            </div>
-                            <span class="history-amount ${item.amount > 0 ? 'positive' : 'negative'}">
-                                ${item.amount > 0 ? '+' : ''}$${Math.abs(item.amount)}
-                            </span>
-                        </div>
-                        <div class="history-details">
-                            <div class="history-detail-item"><i class="far fa-calendar"></i> ${item.date}</div>
-                            <div class="history-detail-item"><i class="far fa-clock"></i> ${item.time}</div>
-                            ${item.from ? '<div class="history-detail-item"><i class="fas fa-user"></i> From: ' + item.from + '</div>' : ''}
-                            ${item.to ? '<div class="history-detail-item"><i class="fas fa-user"></i> To: ' + item.to + '</div>' : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html || '<p style="color:#8899aa; text-align:center; padding:20px">No P2P transactions yet.</p>';
-        }
-
-        // ==================== MODAL FUNCTIONS ====================
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        function openDepositModal() {
+            showToast('Deposit feature coming soon', 'info');
         }
 
         function openWithdrawModal() {
-            openModal('withdrawModal');
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('withdrawStep1').classList.add('active');
-            document.getElementById('withdrawStep2').classList.remove('active');
+            showToast('Withdraw feature coming soon', 'info');
         }
 
-        function withdrawStep2() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            if (!amount || amount < 20) {
-                alert('Minimum withdrawal amount is $20');
-                return;
-            }
-            if (amount > withdrawWallet) {
-                alert('Insufficient balance in Withdraw Wallet');
-                return;
-            }
-            
-            document.getElementById('withdrawAmountDisplay').innerHTML = '$' + amount.toFixed(2);
-            document.getElementById('withdrawWalletDisplay').innerHTML = currentUser.walletShort;
-            document.getElementById('withdrawStep1').classList.remove('active');
-            document.getElementById('withdrawStep2').classList.add('active');
+        function openP2PModal() {
+            showToast('P2P transfer coming soon', 'info');
         }
 
-        function processWithdrawFinal() {
-            // Check if all PIN fields are filled
-            const pins = document.querySelectorAll('#withdrawStep2 .pin-field');
-            let pinComplete = true;
-            pins.forEach(pin => { if (pin.value.length === 0) pinComplete = false; });
-            
-            if (!pinComplete) {
-                alert('Please enter complete PIN');
-                return;
-            }
-            
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            withdrawWallet -= amount;
-            
-            // Add to history
-            const today = new Date();
-            historyData.all.unshift({
-                type: 'withdraw',
-                date: today.toISOString().split('T')[0],
-                time: today.getUTCHours() + ':' + today.getUTCMinutes().toString().padStart(2,'0'),
-                amount: -amount,
-                to: 'BEP20 Wallet',
-                details: 'Withdrawal to ' + currentUser.walletShort
-            });
-            
-            updateUI();
-            closeModal('withdrawModal');
-            alert('Withdrawal successful!');
+        function openTradeModal() {
+            showToast('Trading window opens at 9:00 UTC', 'info');
         }
 
-        function processP2P() {
-            const recipient = document.getElementById('recipientId').value;
-            const amount = parseFloat(document.getElementById('p2pAmount').value);
+        function attachWallet() {
+            const address = document.getElementById('bep20Address')?.value;
+            const pin = document.getElementById('walletPin')?.value;
             
-            if (!recipient) {
-                alert('Please enter recipient ID');
+            if (!address || address.length < 20) {
+                showToast('Please enter a valid BEP20 address', 'error');
                 return;
             }
-            if (!amount || amount < 1) {
-                alert('Please enter valid amount');
+            if (!pin || pin.length !== 4) {
+                showToast('Please enter 4-digit PIN', 'error');
                 return;
             }
-            if (amount > withdrawWallet) {
-                alert('Insufficient balance in Withdraw Wallet');
-                return;
-            }
-            
-            // Check PIN
-            const pins = document.querySelectorAll('#p2pModal .pin-field');
-            let pinComplete = true;
-            pins.forEach(pin => { if (pin.value.length === 0) pinComplete = false; });
-            
-            if (!pinComplete) {
-                alert('Please enter complete PIN');
-                return;
-            }
-            
-            withdrawWallet -= amount;
-            
-            // Add to history
-            const today = new Date();
-            historyData.all.unshift({
-                type: 'p2p',
-                date: today.toISOString().split('T')[0],
-                time: today.getUTCHours() + ':' + today.getUTCMinutes().toString().padStart(2,'0'),
-                amount: -amount,
-                to: recipient,
-                details: 'P2P Transfer to ' + recipient
-            });
-            
-            updateUI();
-            closeModal('p2pModal');
-            alert('P2P Transfer successful!');
-        }
-
-        function processP2PPage() {
-            const recipient = document.getElementById('p2pUserId').value;
-            const amount = parseFloat(document.getElementById('p2pAmountPage').value);
-            
-            if (!recipient) {
-                alert('Please enter recipient ID');
-                return;
-            }
-            if (!amount || amount < 1) {
-                alert('Please enter valid amount');
-                return;
-            }
-            if (amount > withdrawWallet) {
-                alert('Insufficient balance in Withdraw Wallet');
-                return;
-            }
-            
-            // Check PIN
-            const pins = document.querySelectorAll('#p2p-page .pin-field');
-            let pinComplete = true;
-            pins.forEach(pin => { if (pin.value.length === 0) pinComplete = false; });
-            
-            if (!pinComplete) {
-                alert('Please enter complete PIN');
-                return;
-            }
-            
-            withdrawWallet -= amount;
-            
-            // Add to history
-            const today = new Date();
-            historyData.all.unshift({
-                type: 'p2p',
-                date: today.toISOString().split('T')[0],
-                time: today.getUTCHours() + ':' + today.getUTCMinutes().toString().padStart(2,'0'),
-                amount: -amount,
-                to: recipient,
-                details: 'P2P Transfer to ' + recipient
-            });
-            
-            updateUI();
-            alert('P2P Transfer successful!');
-            
-            // Clear fields
-            document.getElementById('p2pUserId').value = '';
-            document.getElementById('p2pAmountPage').value = '';
-            document.querySelectorAll('#p2p-page .pin-field').forEach(p => p.value = '');
-        }
-
-        function processDeposit() {
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            if (!amount || amount < 20) {
-                alert('Minimum deposit amount is $20');
-                return;
-            }
-            
-            fundWallet += amount;
-            
-            // Add to history
-            const today = new Date();
-            historyData.all.unshift({
-                type: 'deposit',
-                date: today.toISOString().split('T')[0],
-                time: today.getUTCHours() + ':' + today.getUTCMinutes().toString().padStart(2,'0'),
-                amount: amount,
-                details: 'Deposit to Fund Wallet'
-            });
-            
-            updateUI();
-            closeModal('depositModal');
-            alert('Deposit successful!');
-        }
-
-        // ==================== UTILITY FUNCTIONS ====================
-        function moveToNext(current, index, modalId) {
-            if (current.value.length === 1) {
-                const next = document.querySelectorAll(`#${modalId} .pin-field`)[index + 1];
-                if (next) next.focus();
-            }
-        }
-
-        function backToStep1() {
-            document.getElementById('withdrawStep1').classList.add('active');
-            document.getElementById('withdrawStep2').classList.remove('active');
-        }
-
-        function copyWalletAddress() {
-            navigator.clipboard.writeText(currentUser.walletAddress);
-            alert('Wallet address copied!');
-        }
-
-        function copyReferral() {
-            navigator.clipboard.writeText('gainixai.live/ref/Gainix100001');
-            alert('Referral link copied!');
+            showToast('Wallet attached successfully!', 'success');
         }
 
         function uploadAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('avatarIcon').style.display = 'none';
-                    document.getElementById('avatarImage').style.display = 'block';
-                    document.getElementById('avatarImage').src = e.target.result;
+                    const avatarIcon = document.getElementById('avatarIcon');
+                    const avatarImage = document.getElementById('avatarImage');
+                    if (avatarIcon) avatarIcon.style.display = 'none';
+                    if (avatarImage) {
+                        avatarImage.style.display = 'block';
+                        avatarImage.src = e.target.result;
+                    }
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
         function updateUserName() {
-            const newName = document.getElementById('userName').value;
-            currentUser.name = newName;
-            alert('Username updated!');
-        }
-
-        function attachWallet() {
-            const address = document.getElementById('bep20Address').value;
-            const pin = document.getElementById('walletPin').value;
-            
-            if (!address || address.length < 20) {
-                alert('Please enter a valid BEP20 address');
-                return;
-            }
-            if (!pin || pin.length !== 4) {
-                alert('Please enter 4-digit PIN');
-                return;
-            }
-            
-            currentUser.walletAddress = address;
-            currentUser.walletShort = address.substring(0,6) + '...' + address.substring(address.length-4);
-            document.getElementById('walletAddressDisplay').innerHTML = currentUser.walletShort;
-            
-            alert('Wallet attached successfully!');
-        }
-
-        function openTradeModal() {
-            const now = new Date();
-            if (now.getUTCHours() !== 9) {
-                alert('Trading window is only open from 9:00-10:00 UTC');
-                return;
-            }
-            
-            document.getElementById('chartModal').style.display = 'flex';
-            
-            // Initialize TradingView widget if not already
-            if (!window.tvWidget) {
-                new TradingView.widget({
-                    "container_id": "tradingview-widget",
-                    "symbol": "BINANCE:BTCUSDT",
-                    "interval": "1",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "en",
-                    "toolbar_bg": "#f1f3f6",
-                    "enable_publishing": false,
-                    "hide_top_toolbar": false,
-                    "hide_legend": false,
-                    "save_image": false,
-                    "studies": ["MACD@tv-basicstudies"],
-                    "show_popup_button": true,
-                    "popup_width": "1000",
-                    "popup_height": "650"
-                });
-                window.tvWidget = true;
+            const newName = document.getElementById('userName')?.value;
+            if (newName) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                user.name = newName;
+                localStorage.setItem('user', JSON.stringify(user));
+                showToast('Username updated!', 'success');
             }
         }
 
-        function closeChartModal() {
-            document.getElementById('chartModal').style.display = 'none';
-            document.getElementById('tradeMessage').style.display = 'none';
+        function showHistoryWithFilter(filter) {
+            localStorage.setItem('historyFilter', filter);
+            window.location.href = 'history.html';
         }
 
-        // Export functions to global scope
-        window.showDashboard = showDashboard;
-        window.showSalaryPage = showSalaryPage;
-        window.showTeamPage = showTeamPage;
-        window.showP2PPage = showP2PPage;
-        window.showHistoryPage = showHistoryPage;
-        window.showHistoryWithFilter = showHistoryWithFilter;
-        window.filterHistory = filterHistory;
-        window.selectPackage = selectPackage;
-        window.confirmPackage = confirmPackage;
-        window.openModal = openModal;
-        window.closeModal = closeModal;
-        window.openWithdrawModal = openWithdrawModal;
-        window.withdrawStep2 = withdrawStep2;
-        window.processWithdrawFinal = processWithdrawFinal;
-        window.processP2P = processP2P;
-        window.processP2PPage = processP2PPage;
-        window.processDeposit = processDeposit;
-        window.backToStep1 = backToStep1;
-        window.moveToNext = moveToNext;
-        window.copyWalletAddress = copyWalletAddress;
-        window.copyReferral = copyReferral;
-        window.uploadAvatar = uploadAvatar;
-        window.updateUserName = updateUserName;
-        window.attachWallet = attachWallet;
-        window.openTradeModal = openTradeModal;
-        window.closeChartModal = closeChartModal;
-        window.unstakeStake = unstakeStake;
-        window.showTeamLevel = showTeamLevel;
-        window.searchLevel = searchLevel;
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#ff6b6b' : '#00ffd9'};
+                color: ${type === 'success' || type === 'error' ? '#fff' : '#030507'};
+                padding: 12px 24px;
+                border-radius: 40px;
+                font-weight: 600;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            `;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            .bonus-msg {
+                color: #00ffd9;
+                font-size: 13px;
+                margin: 10px 0;
+                text-align: center;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(10px);
+                z-index: 2000;
+                justify-content: center;
+                align-items: center;
+                padding: 16px;
+            }
+            .modal-content {
+                background: rgba(12,18,28,0.95);
+                border: 1px solid rgba(0,255,209,0.3);
+                border-radius: 36px;
+                padding: 22px;
+                width: 100%;
+                max-width: 360px;
+            }
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+            .modal-header h3 {
+                color: #00ffd9;
+                font-size: 20px;
+            }
+            .close-modal {
+                font-size: 26px;
+                cursor: pointer;
+                color: #8899aa;
+                transition: color 0.3s;
+            }
+            .close-modal:hover {
+                color: #ff6b6b;
+            }
+            .modal-input {
+                width: 100%;
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(0,255,209,0.2);
+                border-radius: 18px;
+                padding: 14px;
+                color: #fff;
+                font-size: 15px;
+                margin: 12px 0;
+            }
+            .modal-btn {
+                width: 100%;
+                background: linear-gradient(145deg, #00ffd9, #0099ff);
+                border: none;
+                border-radius: 30px;
+                padding: 14px;
+                color: #030507;
+                font-weight: 700;
+                font-size: 15px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+            .modal-btn:hover {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(0,255,209,0.4);
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
