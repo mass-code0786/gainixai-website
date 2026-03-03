@@ -1,4 +1,4 @@
-const Staking = require('../models/Staking');
+const Staking = require('../models/staking');
 const User = require('../models/User');
 
 // Package configurations with referral bonuses
