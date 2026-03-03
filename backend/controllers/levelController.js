@@ -1,6 +1,6 @@
 const User = require('../models/User');
-const Staking = require('../models/Staking');
-const LevelIncome = require('../models/LevelIncome');
+const Staking = require('../models/staking');
+const LevelIncome = require('../models/levelIncome');
 
 // Level percentages (as per your plan)
 const LEVEL_PERCENTAGES = {
