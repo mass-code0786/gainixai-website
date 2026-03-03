@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const SalaryRank = require('../models/SalaryRank');
+const SalaryRank = require('../models/salaryRank');
 
 // @desc    Get all salary ranks
 // @route   GET /api/salary/ranks

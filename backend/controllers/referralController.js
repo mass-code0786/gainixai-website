@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Staking = require('../models/Staking');
+const Staking = require('../models/staking');
 
 // Package configurations (same as staking controller)
 const packages = {
