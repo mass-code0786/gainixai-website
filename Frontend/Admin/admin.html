@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>GAINIX AI - Enhanced Admin Panel</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="admin-style.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-bg"></div>
+
+    <!-- Mobile Menu Button (3 Dots) -->
+    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-ellipsis-v"></i>
+    </div>
+
+    <!-- Admin Login Page -->
+    <div id="admin-login-page" class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-login-logo">
+                <div class="admin-logo-cube">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1>GAINIX AI</h1>
+                <p>Admin Panel</p>
+            </div>
+            
+            <div class="admin-login-form">
+                <input type="text" id="adminUsername" class="admin-login-input" placeholder="Admin Username" value="admin">
+                <input type="password" id="adminPassword" class="admin-login-input" placeholder="Password" value="admin123">
+                <button class="admin-login-btn" onclick="adminLogin()">ACCESS PANEL</button>
+            </div>
+            
+            <div class="admin-login-domain">
+                <span>gainixai.live</span> • Admin Access
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="admin-dashboard">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="admin-sidebar-logo">
+                <div class="admin-logo-small">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="admin-logo-text">
+                    <h2>GAINIX AI</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+            
+            <div class="admin-sidebar-menu">
+                <div class="admin-menu-item active" onclick="switchAdminPage('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('users')">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('withdrawals')">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Withdrawals</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('unstake')">
+                    <i class="fas fa-clock"></i>
+                    <span>Unstake Requests</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('transactions')">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('staking')">
+                    <i class="fas fa-coins"></i>
+                    <span>Staking</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('bot-settings')">
+                    <i class="fas fa-robot"></i>
+                    <span>Bot Settings</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('roi-settings')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ROI Settings</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('salary-settings')">
+                    <i class="fas fa-star"></i>
+                    <span>Salary Settings</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('wallet')">
+                    <i class="fas fa-wallet"></i>
+                    <span>Wallet Transfer</span>
+                </div>
+                <div class="admin-menu-item" onclick="switchAdminPage('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>System Settings</span>
+                </div>
+            </div>
+            
+            <div class="admin-sidebar-footer">
+                <div class="admin-user-info">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+                <div class="admin-logout" onclick="adminLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main-content">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="admin-header-title">
+                    <h1 id="adminPageTitle">Dashboard</h1>
+                </div>
+                <div class="admin-header-right">
+                    <div class="admin-date">
+                        <i class="far fa-calendar-alt"></i>
+                        <span id="adminCurrentDate"></span>
+                    </div>
+                    <div class="admin-notification">
+                        <i class="far fa-bell"></i>
+                        <span class="admin-notification-badge" id="notificationBadge">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="admin-dashboard-page" class="admin-page active">
+                <!-- Stats Cards -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="admin-stat-info">
+                            <h3>Total Users</h3>
+                            <p class="stat-value-large" id="totalUsers">0</p>
+                            <span class="stat-change" id="userChange">+0 this week</span>
+                            <div class="stat-breakdown">
+                                <span>Active: <span id="activeUsers">0</span></span>
+                                <span>Inactive: <span id="inactiveUsers">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon green">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="admin-stat-info">
+                            <h3>Total Staked</h3>
+                            <p class="stat-value" id="totalStakedAdmin">$0</p>
+                            <span class="stat-change" id="stakedChange">+$0 today</span>
+                            <div class="stat-breakdown">
+                                <span>Active: <span id="activeStaked">$0</span></span>
+                                <span>Unstaked: <span id="unstakedTotal">$0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon orange">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="admin-stat-info">
+                            <h3>Total Withdrawn</h3>
+                            <p class="stat-value" id="totalWithdrawn">$0</p>
+                            <span class="stat-change" id="withdrawChange">+$0 today</span>
+                            <div class="stat-breakdown">
+                                <span>Pending: <span id="pendingWithdrawals">$0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon purple">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="admin-stat-info">
+                            <h3>Bot Status</h3>
+                            <p class="stat-value" id="botStatus">Active</p>
+                            <span class="stat-change" id="botWindow">9:00-10:00 UTC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="admin-charts-row">
+                    <div class="admin-chart-card">
+                        <h3>User Growth</h3>
+                        <div class="chart-container">
+                            <canvas id="userGrowthChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="admin-chart-card">
+                        <h3>Staking Volume</h3>
+                        <div class="chart-container">
+                            <canvas id="stakingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Unstake Requests -->
+                <div class="admin-recent-card">
+                    <div class="admin-card-header">
+                        <h3>Pending Unstake Requests</h3>
+                        <button class="admin-view-all" onclick="switchAdminPage('unstake')">View All</button>
+                    </div>
+                    <div class="admin-activity-list" id="recentUnstakeRequests">
+                        <div class="admin-activity-item">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div id="admin-users-page" class="admin-page">
+                <div class="admin-table-card">
+                    <div class="admin-card-header">
+                        <h3>All Users</h3>
+                        <div class="admin-search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="userSearch" placeholder="Search users..." onkeyup="searchUsers()">
+                        </div>
+                    </div>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Wallet Address</th>
+                                    <th>PIN</th>
+                                    <th>Fund Wallet</th>
+                                    <th>Withdraw Wallet</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="9">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawals Page -->
+            <div id="admin-withdrawals-page" class="admin-page">
+                <div class="admin-table-card">
+                    <div class="admin-card-header">
+                        <h3>Withdrawal Requests</h3>
+                        <div class="admin-filters">
+                            <select id="withdrawFilter" onchange="filterWithdrawals()">
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Fee (10%)</th>
+                                    <th>Net Amount</th>
+                                    <th>Wallet</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawalsTableBody">
+                                <tr><td colspan="8">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unstake Requests Page -->
+            <div id="admin-unstake-page" class="admin-page">
+                <div class="admin-table-card">
+                    <div class="admin-card-header">
+                        <h3>Unstake Requests</h3>
+                    </div>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>User</th>
+                                    <th>Package</th>
+                                    <th>Amount</th>
+                                    <th>Earnings</th>
+                                    <th>Total Return</th>
+                                    <th>Wallet</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unstakeTableBody">
+                                <tr><td colspan="9">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Page -->
+            <div id="admin-transactions-page" class="admin-page">
+                <div class="admin-table-card">
+                    <div class="admin-card-header">
+                        <h3>All Transactions</h3>
+                        <select id="transactionFilter" onchange="filterTransactions()">
+                            <option value="all">All</option>
+                            <option value="deposit">Deposit</option>
+                            <option value="withdraw">Withdrawal</option>
+                            <option value="unstake">Unstake</option>
+                            <option value="staking">Staking</option>
+                        </select>
+                    </div>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Fee</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody">
+                                <tr><td colspan="6">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staking Page -->
+            <div id="admin-staking-page" class="admin-page">
+                <div class="admin-stats-grid small">
+                    <div class="admin-stat-card mini">
+                        <div class="admin-stat-icon blue"><i class="fas fa-box"></i></div>
+                        <div class="admin-stat-info">
+                            <h3>BASIC</h3>
+                            <p class="stat-value-small" id="basicStakers">0</p>
+                            <span id="basicAmount">$0</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card mini">
+                        <div class="admin-stat-icon green"><i class="fas fa-box"></i></div>
+                        <div class="admin-stat-info">
+                            <h3>PRO</h3>
+                            <p class="stat-value-small" id="proStakers">0</p>
+                            <span id="proAmount">$0</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card mini">
+                        <div class="admin-stat-icon orange"><i class="fas fa-box"></i></div>
+                        <div class="admin-stat-info">
+                            <h3>ELITE</h3>
+                            <p class="stat-value-small" id="eliteStakers">0</p>
+                            <span id="eliteAmount">$0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-table-card">
+                    <div class="admin-card-header">
+                        <h3>Active Stakings</h3>
+                    </div>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Package</th>
+                                    <th>Amount</th>
+                                    <th>Daily ROI</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stakingTableBody">
+                                <tr><td colspan="7">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Settings Page -->
+            <div id="admin-bot-settings-page" class="admin-page">
+                <div class="admin-settings-grid">
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-robot"></i> Bot Timing Settings</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Trading Window Start (UTC)</label>
+                                <input type="time" id="botStartTime" value="09:00">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Trading Window End (UTC)</label>
+                                <input type="time" id="botEndTime" value="10:00">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Level Distribution Delay (minutes)</label>
+                                <input type="number" id="levelDelay" value="10" min="1" max="60">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Bot Status</label>
+                                <select id="botStatusSelect">
+                                    <option value="active">Active</option>
+                                    <option value="paused">Paused</option>
+                                    <option value="maintenance">Maintenance</option>
+                                </select>
+                            </div>
+                            <button class="admin-btn-primary" onclick="saveBotSettings()">Save Bot Settings</button>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-chart-line"></i> Bot Performance</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Total Bot Trades</label>
+                                <input type="text" id="totalBotTrades" value="1,247" readonly>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Win Rate (%)</label>
+                                <input type="text" id="botWinRate" value="78" readonly>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Total Bot Profit</label>
+                                <input type="text" id="totalBotProfit" value="$3,250" readonly>
+                            </div>
+                            <button class="admin-btn-primary" onclick="resetBotStats()">Reset Bot Stats</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROI Settings Page -->
+            <div id="admin-roi-settings-page" class="admin-page">
+                <div class="admin-settings-grid">
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-box"></i> BASIC Package</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Minimum Amount ($)</label>
+                                <input type="number" id="basicMin" value="20" min="1">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Minimum ROI (%)</label>
+                                <input type="number" id="basicMinROI" value="0.9" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Maximum ROI (%)</label>
+                                <input type="number" id="basicMaxROI" value="1.2" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Duration (days)</label>
+                                <input type="number" id="basicDays" value="90" min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-box"></i> PRO Package</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Minimum Amount ($)</label>
+                                <input type="number" id="proMin" value="150" min="1">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Minimum ROI (%)</label>
+                                <input type="number" id="proMinROI" value="1.1" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Maximum ROI (%)</label>
+                                <input type="number" id="proMaxROI" value="1.4" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Duration (days)</label>
+                                <input type="number" id="proDays" value="180" min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-box"></i> ELITE Package</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Minimum Amount ($)</label>
+                                <input type="number" id="eliteMin" value="300" min="1">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Minimum ROI (%)</label>
+                                <input type="number" id="eliteMinROI" value="1.4" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Maximum ROI (%)</label>
+                                <input type="number" id="eliteMaxROI" value="2.0" step="0.1" min="0.1" max="5">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Duration (days)</label>
+                                <input type="number" id="eliteDays" value="450" min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3><i class="fas fa-save"></i> Save All ROI Settings</h3>
+                        <div class="admin-settings-form">
+                            <button class="admin-btn-primary" onclick="saveROISettings()">Save All Changes</button>
+                            <button class="admin-btn-secondary" onclick="resetROISettings()">Reset to Default</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary Settings Page -->
+            <div id="admin-salary-settings-page" class="admin-page">
+                <div class="admin-settings-grid">
+                    <div class="admin-settings-card">
+                        <h3>⭐ Rank 1 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank1Direct" value="1000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank1Team" value="2500">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank1Salary" value="8">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>⭐⭐ Rank 2 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank2Direct" value="1500">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank2Team" value="10000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Referral Members Required</label>
+                                <input type="text" id="rank2Referral" value="2 members at 1⭐" readonly>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank2Salary" value="30">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>⭐⭐⭐ Rank 3 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank3Direct" value="2000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank3Team" value="30000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank3Salary" value="60">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>⭐⭐⭐⭐ Rank 4 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank4Direct" value="2500">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank4Team" value="100000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank4Salary" value="200">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>⭐⭐⭐⭐⭐ Rank 5 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank5Direct" value="3000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank5Team" value="300000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank5Salary" value="500">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>⭐⭐⭐⭐⭐⭐ Rank 6 Salary</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Direct Business Required</label>
+                                <input type="number" id="rank6Direct" value="5000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Team Business Required</label>
+                                <input type="number" id="rank6Team" value="1000000">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Weekly Salary ($)</label>
+                                <input type="number" id="rank6Salary" value="1000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>Save Salary Settings</h3>
+                        <div class="admin-settings-form">
+                            <button class="admin-btn-primary" onclick="saveSalarySettings()">Save All Salary Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet Transfer Page -->
+            <div id="admin-wallet-page" class="admin-page">
+                <div class="admin-settings-grid">
+                    <div class="admin-settings-card">
+                        <h3>Transfer Funds</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Select User</label>
+                                <select id="transferUser" onchange="loadUserWallets()">
+                                    <option value="">Select User</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>From Wallet</label>
+                                <select id="fromWallet">
+                                    <option value="fund">Fund Wallet</option>
+                                    <option value="withdraw">Withdraw Wallet</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>To Wallet</label>
+                                <select id="toWallet">
+                                    <option value="fund">Fund Wallet</option>
+                                    <option value="withdraw">Withdraw Wallet</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Amount ($)</label>
+                                <input type="number" id="transferAmount" min="1">
+                            </div>
+                            <button class="admin-btn-primary" onclick="transferFunds()">Transfer Funds</button>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>Current Balances</h3>
+                        <div class="admin-balance-display" id="userBalanceDisplay">
+                            <p>Select a user to view balances</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings Page -->
+            <div id="admin-settings-page" class="admin-page">
+                <div class="admin-settings-grid">
+                    <div class="admin-settings-card">
+                        <h3>Withdrawal Settings</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Withdrawal Fee (%)</label>
+                                <input type="number" id="withdrawalFee" value="10" min="0" max="100">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Minimum Withdrawal ($)</label>
+                                <input type="number" id="minWithdrawal" value="20" min="1">
+                            </div>
+                            <button class="admin-btn-primary" onclick="saveWithdrawalSettings()">Save</button>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>PIN Settings</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Auto-generate PIN for new users</label>
+                                <input type="checkbox" id="autoGeneratePin" checked>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>PIN Length</label>
+                                <select id="pinLength">
+                                    <option value="4">4 digits</option>
+                                    <option value="6">6 digits</option>
+                                </select>
+                            </div>
+                            <button class="admin-btn-primary" onclick="savePinSettings()">Save</button>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>Admin Password</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentAdminPass" placeholder="Enter current password">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newAdminPass" placeholder="Enter new password">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmAdminPass" placeholder="Confirm new password">
+                            </div>
+                            <button class="admin-btn-primary" onclick="changeAdminPassword()">Change Password</button>
+                        </div>
+                    </div>
+                    <div class="admin-settings-card">
+                        <h3>System Information</h3>
+                        <div class="admin-settings-form">
+                            <div class="admin-form-group">
+                                <label>Node.js Version</label>
+                                <input type="text" id="nodeVersion" value="v24.14.0" readonly>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>MongoDB Status</label>
+                                <input type="text" id="dbStatus" value="Connected" readonly style="color:#2ecc71">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Server Uptime</label>
+                                <input type="text" id="serverUptime" value="Calculating..." readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3>Edit User</h3>
+                <span class="admin-modal-close" onclick="closeModal('editUserModal')">&times;</span>
+            </div>
+            <div class="admin-modal-body">
+                <input type="hidden" id="editUserId">
+                <div class="admin-form-group">
+                    <label>User ID</label>
+                    <input type="text" id="editUserUsername" readonly>
+                </div>
+                <div class="admin-form-group">
+                    <label>Name</label>
+                    <input type="text" id="editUserName">
+                </div>
+                <div class="admin-form-group">
+                    <label>Password</label>
+                    <input type="text" id="editUserPassword" placeholder="Leave blank to keep current">
+                </div>
+                <div class="admin-form-group">
+                    <label>Wallet Address</label>
+                    <input type="text" id="editUserWallet">
+                </div>
+                <div class="admin-form-group">
+                    <label>PIN (4 digits)</label>
+                    <input type="text" id="editUserPin" maxlength="4" pattern="\d*">
+                </div>
+                <div class="admin-form-group">
+                    <label>Fund Wallet Balance</label>
+                    <input type="number" id="editFundWallet">
+                </div>
+                <div class="admin-form-group">
+                    <label>Withdraw Wallet Balance</label>
+                    <input type="number" id="editWithdrawWallet">
+                </div>
+                <div class="admin-form-group">
+                    <label>Status</label>
+                    <select id="editUserStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="blocked">Blocked</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="admin-btn-secondary" onclick="closeModal('editUserModal')">Cancel</button>
+                <button class="admin-btn-primary" onclick="saveUserChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Withdrawal Modal -->
+    <div id="processWithdrawalModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3>Process Withdrawal</h3>
+                <span class="admin-modal-close" onclick="closeModal('processWithdrawalModal')">&times;</span>
+            </div>
+            <div class="admin-modal-body">
+                <input type="hidden" id="processWithdrawalId">
+                <p>User: <span id="processWithdrawalUser"></span></p>
+                <p>Requested Amount: $<span id="processWithdrawalAmount"></span></p>
+                <p>Fee (10%): $<span id="processWithdrawalFee"></span></p>
+                <p>Net Amount: $<span id="processWithdrawalNet"></span></p>
+                <p>Wallet: <span id="processWithdrawalWallet"></span></p>
+                <div class="admin-form-group">
+                    <label>Transaction Hash (Optional)</label>
+                    <input type="text" id="processWithdrawalTxHash" placeholder="0x...">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="admin-btn-secondary" onclick="closeModal('processWithdrawalModal')">Cancel</button>
+                <button class="admin-btn-success" onclick="approveWithdrawal()">Approve & Pay</button>
+                <button class="admin-btn-danger" onclick="rejectWithdrawal()">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Unstake Modal -->
+    <div id="processUnstakeModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3>Process Unstake</h3>
+                <span class="admin-modal-close" onclick="closeModal('processUnstakeModal')">&times;</span>
+            </div>
+            <div class="admin-modal-body">
+                <input type="hidden" id="processUnstakeId">
+                <p>User: <span id="processUnstakeUser"></span></p>
+                <p>Package: <span id="processUnstakePackage"></span></p>
+                <p>Principal: $<span id="processUnstakePrincipal"></span></p>
+                <p>Earnings: $<span id="processUnstakeEarnings"></span></p>
+                <p>Total Return: $<span id="processUnstakeTotal"></span></p>
+                <p>Wallet: <span id="processUnstakeWallet"></span></p>
+                <div class="admin-form-group">
+                    <label>Transaction Hash (Optional)</label>
+                    <input type="text" id="processUnstakeTxHash" placeholder="0x...">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="admin-btn-secondary" onclick="closeModal('processUnstakeModal')">Cancel</button>
+                <button class="admin-btn-success" onclick="approveUnstake()">Mark as Paid</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staking Modal -->
+    <div id="addStakingModal" class="admin-modal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3>Add Staking</h3>
+                <span class="admin-modal-close" onclick="closeModal('addStakingModal')">&times;</span>
+            </div>
+            <div class="admin-modal-body">
+                <div class="admin-form-group">
+                    <label>Select User</label>
+                    <select id="stakingUserId">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label>Package</label>
+                    <select id="stakingPackage">
+                        <option value="BASIC">BASIC</option>
+                        <option value="PRO">PRO</option>
+                        <option value="ELITE">ELITE</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="stakingAmount" min="20">
+                </div>
+                <div class="admin-form-group">
+                    <label>Daily ROI (%)</label>
+                    <input type="number" id="stakingROI" step="0.1" min="0.5" max="3.0">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="admin-btn-secondary" onclick="closeModal('addStakingModal')">Cancel</button>
+                <button class="admin-btn-primary" onclick="addStaking()">Add Staking</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>GAINIX AI - Premium AI Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #030507;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Premium Background */
+        .premium-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(0, 255, 209, 0.12), transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 153, 255, 0.12), transparent 50%),
+                        radial-gradient(circle at 40% 50%, rgba(139, 92, 246, 0.08), transparent 60%),
+                        linear-gradient(135deg, #030507 0%, #0a121c 100%);
+            z-index: -1;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 209, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 209, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        /* Header - Fully Responsive */
+        header {
+            padding: 15px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(12,18,28,0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(0,255,209,0.2);
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-cube {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            box-shadow: 0 10px 20px rgba(0,255,209,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(-5px); }
+        }
+
+        .logo-cube i {
+            transform: rotate(-45deg);
+            font-size: 20px;
+            color: #030507;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #00ffd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #8899aa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: #00ffd9;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 1px solid #00ffd9;
+            color: #00ffd9;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-login:hover {
+            background: rgba(0,255,209,0.1);
+        }
+
+        .btn-register {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            color: #030507;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-register:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,255,209,0.4);
+        }
+
+        /* Hero Section - Fully Responsive */
+        .hero {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-left h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #00ffd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-left p {
+            color: #8899aa;
+            font-size: clamp(14px, 2vw, 18px);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item h3 {
+            font-size: clamp(24px, 4vw, 32px);
+            color: #00ffd9;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 12px;
+            color: #8899aa;
+            margin: 0;
+        }
+
+        .trading-badge {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            border-radius: 40px;
+            padding: 12px 20px;
+            margin: 15px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        .trading-badge i {
+            font-size: 16px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            color: #030507;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0,255,209,0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00ffd9;
+            color: #00ffd9;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0,255,209,0.1);
+        }
+
+        .hero-right {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 30px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .ai-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .ai-card {
+            background: rgba(0,255,209,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 20px;
+            padding: 15px;
+        }
+
+        .ai-card h4 {
+            color: #00ffd9;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .ai-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ai-card .label {
+            color: #8899aa;
+            font-size: 11px;
+        }
+
+        .company-logos {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .company-logos span {
+            color: #8899aa;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* About Section */
+        .about {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #00ffd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 30px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-left h2 {
+            font-size: clamp(20px, 3vw, 28px);
+            margin-bottom: 15px;
+            color: #00ffd9;
+        }
+
+        .about-left p {
+            color: #8899aa;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .company-email {
+            background: rgba(0,255,209,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 40px;
+            padding: 10px 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .company-email i {
+            color: #00ffd9;
+        }
+
+        .company-email span {
+            color: #00ffd9;
+        }
+
+        .about-right h3 {
+            color: #00ffd9;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .commitment-list li {
+            color: #8899aa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .commitment-list li i {
+            color: #00ffd9;
+        }
+
+        /* Mission Vision */
+        .mission-vision {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .mission-card {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 30px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .mission-card h3 {
+            font-size: 24px;
+            color: #00ffd9;
+            margin-bottom: 15px;
+        }
+
+        .mission-card p {
+            color: #8899aa;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* AI Trends */
+        .ai-trends {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .trends-content {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 30px;
+            padding: 30px;
+        }
+
+        .trends-content h2 {
+            font-size: clamp(20px, 3vw, 28px);
+            color: #00ffd9;
+            margin-bottom: 20px;
+        }
+
+        .trends-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .trend-stat {
+            text-align: center;
+        }
+
+        .trend-stat .number {
+            font-size: clamp(20px, 3vw, 24px);
+            font-weight: 700;
+            color: #00ffd9;
+        }
+
+        .trend-stat .label {
+            color: #8899aa;
+            font-size: 12px;
+        }
+
+        .trends-text {
+            color: #8899aa;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* Packages Table */
+        .packages-table {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .table-container {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 30px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th {
+            color: #00ffd9;
+            font-size: 14px;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,255,209,0.2);
+        }
+
+        td {
+            padding: 12px;
+            color: #8899aa;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+        }
+
+        .highlight {
+            color: #00ffd9;
+            font-weight: 600;
+        }
+
+        /* Features Grid */
+        .features {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 24px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffd9;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0,255,209,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #00ffd9;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #8899aa;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .level-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .level-badge {
+            background: rgba(0,255,209,0.1);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 16px;
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .level-badge .level {
+            color: #00ffd9;
+            margin-right: 3px;
+        }
+
+        .level-badge .percent {
+            color: #fff;
+        }
+
+        /* Salary Grid */
+        .salary-table {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .salary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .salary-card {
+            background: rgba(12,18,28,0.5);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .salary-card .rank {
+            font-size: 16px;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .salary-card .requirement {
+            font-size: 12px;
+            color: #8899aa;
+            margin: 3px 0;
+        }
+
+        .salary-card .amount {
+            font-size: 18px;
+            color: #00ffd9;
+            margin-top: 8px;
+        }
+
+        /* CTA Section */
+        .cta {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .cta-card {
+            background: linear-gradient(145deg, rgba(0,255,209,0.1), rgba(0,153,255,0.1));
+            border: 1px solid rgba(0,255,209,0.3);
+            border-radius: 40px;
+            padding: 40px 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta h2 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #00ffd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .cta p {
+            color: #8899aa;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(8,12,20,0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,255,209,0.2);
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-col h4 {
+            color: #00ffd9;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #8899aa;
+            text-decoration: none;
+            margin-bottom: 8px;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: #00ffd9;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #8899aa;
+            font-size: 12px;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .hero-left {
+                text-align: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .trading-badge {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                gap: 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .ai-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 8px;
+                background: rgba(255,255,255,0.02);
+                border-radius: 30px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .trading-badge {
+                font-size: 12px;
+                padding: 10px;
+            }
+            
+            .company-logos span {
+                font-size: 11px;
+            }
+            
+            .salary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .level-badges {
+                justify-content: center;
+            }
+        }
+    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="premium-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-cube">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <span class="logo-text">GAINIX AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#packages">Packages</a>
+                <a href="#salary">Salary</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="login.html" class="btn-login">Login</a>
+                <a href="register.html" class="btn-register">Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-left">
+            <h1>AI Redefines<br>The Rules</h1>
+            <p>Traditional Tech Fades into Obscurity</p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>$2.55T</h3>
+                    <p>NVIDIA Market Cap</p>
+                </div>
+                <div class="stat-item">
+                    <h3>1M+</h3>
+                    <p>Daily Trades</p>
+                </div>
+                <div class="stat-item">
+                    <h3>80%</h3>
+                    <p>Cost Reduction</p>
+                </div>
+            </div>
+
+            <div class="trading-badge">
+                <i class="fas fa-clock"></i>
+                <span>Trading: 1:00-5:00 PM UTC (Mon-Sat)</span>
+            </div>
+            <div class="trading-badge" style="border-color:#ff6b6b; color:#ff6b6b; margin-top:10px;">
+                <i class="fas fa-ban"></i>
+                <span>Sunday: BOT CLOSED</span>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="register.html" class="btn-primary">Start Earning</a>
+                <a href="#about" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="ai-stats">
+                <div class="ai-card">
+                    <h4>High-Frequency Trading</h4>
+                    <div class="value">100,000x</div>
+                    <div class="label">Faster than humans</div>
+                </div>
+                <div class="ai-card">
+                    <h4>Risk Management</h4>
+                    <div class="value">72h</div>
+                    <div class="label">Advance prediction</div>
+                </div>
+            </div>
+            <div class="ai-card" style="width:100%; margin-bottom:20px;">
+                <h4>AI-Driven Investment Advisory</h4>
+                <div class="value">80%</div>
+                <div class="label">Lower advisory costs</div>
+            </div>
+            <div class="company-logos">
+                <span>NVIDIA</span>
+                <span>Microsoft</span>
+                <span>Apple</span>
+                <span>Google</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">About GAINIX AI</h2>
+        <div class="about-grid">
+            <div class="about-left">
+                <h2>Singapore-Based AI Trading</h2>
+                <p>Gainix AI is a Singapore-based automated trading company that provides secure and transparent daily income through advanced AI technology. Our system is built on advanced data analysis, risk management, and smart trading logic — empowering users to earn daily income without any experience.</p>
+                <p>Founded in 2022 in Jurong Town, Singapore, Gainix is powered by experienced AI scientists and global investment experts with a mission to provide financial freedom through technology.</p>
+                
+                <div class="company-email">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@gainixai.live</span>
+                </div>
+            </div>
+            <div class="about-right">
+                <h3>Our Commitment</h3>
+                <ul class="commitment-list">
+                    <li><i class="fas fa-check-circle"></i> Transparency First</li>
+                    <li><i class="fas fa-check-circle"></i> AI-Powered Growth</li>
+                    <li><i class="fas fa-check-circle"></i> Unlimited Opportunity</li>
+                    <li><i class="fas fa-check-circle"></i> User Fund Security</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Vision Section -->
+    <section class="mission-vision">
+        <div class="mission-card">
+            <h3>Our Mission</h3>
+            <p>To create the future where everyone can earn daily income through AI-powered trading — without experience, effort, or time. We aim to provide a transparent, automated, and secure platform that empowers millions to achieve financial freedom.</p>
+        </div>
+        <div class="mission-card">
+            <h3>Our Vision</h3>
+            <p>To become the world's most trusted AI income platform — where technology trades for you and growth never stops. We envision a global network where people from any background can grow wealth passively through smart automation.</p>
+        </div>
+    </section>
+
+    <!-- AI Trends Section -->
+    <section class="ai-trends">
+        <div class="trends-content">
+            <h2>AI Mega Trend: The Unstoppable Rise Of AI</h2>
+            <div class="trends-stats">
+                <div class="trend-stat">
+                    <div class="number">$2.55T</div>
+                    <div class="label">NVIDIA Market Cap</div>
+                </div>
+                <div class="trend-stat">
+                    <div class="number">4</div>
+                    <div class="label">AI Giants</div>
+                </div>
+                <div class="trend-stat">
+                    <div class="number">9,000+</div>
+                    <div class="label">Companies Surpassed</div>
+                </div>
+                <div class="trend-stat">
+                    <div class="number">100%</div>
+                    <div class="label">Growth Trajectory</div>
+                </div>
+            </div>
+            <p class="trends-text">The combined market capitalization of just four AI tech giants—NVIDIA, Microsoft, Apple, and Google—now surpasses approximately 9,000 publicly listed companies. Beneath the surface of these numbers lie a complex web of technological advancements, innovative business models, and groundbreaking research that has propelled AI to the forefront of global innovation. From the development of cutting-edge hardware to the creation of sophisticated software platforms, the impact of AI is felt across industries and sectors.</p>
+        </div>
+    </section>
+
+    <!-- Staking Packages Section -->
+    <section class="packages-table" id="packages">
+        <h2 class="section-title">Staking Packages</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Duration</th>
+                        <th>Daily ROI</th>
+                        <th>Minimum</th>
+                        <th>Referral Bonus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="highlight">BASIC</td>
+                        <td>90 Days</td>
+                        <td>1.0% - 1.3%</td>
+                        <td>$20</td>
+                        <td>0%</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">PRO</td>
+                        <td>180 Days</td>
+                        <td>1.2% - 1.6%</td>
+                        <td>$150</td>
+                        <td>0%</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight">ELITE</td>
+                        <td>450 Days</td>
+                        <td>1.4% - 2.0%</td>
+                        <td>$300</td>
+                        <td>10%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Platform Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>5-Level Income</h3>
+                <div class="level-badges">
+                    <span class="level-badge"><span class="level">L1</span> <span class="percent">10%</span></span>
+                    <span class="level-badge"><span class="level">L2</span> <span class="percent">7%</span></span>
+                    <span class="level-badge"><span class="level">L3</span> <span class="percent">5%</span></span>
+                    <span class="level-badge"><span class="level">L4</span> <span class="percent">3%</span></span>
+                    <span class="level-badge"><span class="level">L5</span> <span class="percent">1%</span></span>
+                </div>
+                <p>Commission on team's daily ROI</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-star"></i></div>
+                <h3>9 Salary Ranks</h3>
+                <p>Weekly salaries $15 to $10,000</p>
+                <p style="color:#ffd700;">Every Saturday 12:00 AM UTC</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-coins"></i></div>
+                <h3>Staking Packages</h3>
+                <p>BASIC • PRO • ELITE</p>
+                <p style="color:#00ffd9;">Daily ROI up to 2.0%</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>AI Trading Bot</h3>
+                <p>1:00-5:00 PM UTC (Mon-Sat)</p>
+                <p style="color:#ffd700;">Earn $50-$200 daily</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-handshake"></i></div>
+                <h3>P2P Transfers</h3>
+                <p>Instant transfers with 4-digit PIN</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-wallet"></i></div>
+                <h3>Dual Wallets</h3>
+                <p>Fund & Withdrawal wallets</p>
+                <p style="color:#ff6b6b;">10% withdrawal fee</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Salary Ranks Section -->
+    <section class="salary-table" id="salary">
+        <h2 class="section-title">Salary Ranks (9 Levels)</h2>
+        <div class="salary-grid">
+            <div class="salary-card">
+                <div class="rank">1⭐</div>
+                <div class="requirement">Direct: $700 | Team: $2,500</div>
+                <div class="requirement">No referral required</div>
+                <div class="amount">$15/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">2⭐⭐</div>
+                <div class="requirement">Direct: $1,500 | Team: $10,000</div>
+                <div class="requirement">2 members at 1⭐</div>
+                <div class="amount">$50/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">3⭐⭐⭐</div>
+                <div class="requirement">Direct: $2,000 | Team: $30,000</div>
+                <div class="requirement">2 members at 2⭐⭐</div>
+                <div class="amount">$100/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">4⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $2,500 | Team: $100,000</div>
+                <div class="requirement">2 members at 3⭐⭐⭐</div>
+                <div class="amount">$200/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">5⭐⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $5,000 | Team: $300,000</div>
+                <div class="requirement">2 members at 4⭐⭐⭐⭐</div>
+                <div class="amount">$500/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">6⭐⭐⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $10,000 | Team: $1,000,000</div>
+                <div class="requirement">2 members at 5⭐⭐⭐⭐⭐</div>
+                <div class="amount">$1,000/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">7⭐⭐⭐⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $20,000 | Team: $3,000,000</div>
+                <div class="requirement">2 members at 6⭐⭐⭐⭐⭐⭐</div>
+                <div class="amount">$2,000/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">8⭐⭐⭐⭐⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $50,000 | Team: $10,000,000</div>
+                <div class="requirement">2 members at 7⭐⭐⭐⭐⭐⭐⭐</div>
+                <div class="amount">$5,000/week</div>
+            </div>
+            <div class="salary-card">
+                <div class="rank">9⭐⭐⭐⭐⭐⭐⭐⭐⭐</div>
+                <div class="requirement">Direct: $100,000 | Team: $30,000,000</div>
+                <div class="requirement">2 members at 8⭐⭐⭐⭐⭐⭐⭐⭐</div>
+                <div class="amount">$10,000/week</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-card">
+            <h2>Ready to Start Your Journey?</h2>
+            <p>Join thousands of users earning daily with AI-powered trading</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn-primary">Create Free Account</a>
+                <a href="login.html" class="btn-secondary">Login</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>GAINIX AI</h4>
+                <p style="color:#8899aa; font-size:13px; line-height:1.6;">Singapore-based AI trading platform providing daily income through advanced technology.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#packages">Packages</a>
+                <a href="#salary">Salary</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:info@gainixai.live"><i class="fas fa-envelope"></i> info@gainixai.live</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Jurong Town, Singapore</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 GAINIX AI. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
