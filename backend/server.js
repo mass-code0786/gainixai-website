@@ -72,6 +72,7 @@ app.use('/api/salary', require('./routes/salaryRoutes'));
 app.use('/api/referral', sundayCheck, require('./routes/referralRoutes'));
 // Add this line with other routes
 app.use('/api/p2p', require('./routes/p2pRoutes'));
+app.use('/api/team', require('./routes/teamRoutes'));
 
 // ============================================
 // 📊 System Status Route
