@@ -75,6 +75,7 @@ app.use('/api/p2p', require('./routes/p2pRoutes'));
 app.use('/api/team', require('./routes/teamRoutes'));
 // Add this line with other routes
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/settings', require('./routes/settingRoutes'));
 
 // ============================================
 // 📊 System Status Route
