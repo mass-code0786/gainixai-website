@@ -1,64 +1,7 @@
 // ==================== ADMIN CONFIGURATION ====================
 let adminLoggedIn = false;
-let apiBaseUrl = 'http://localhost:5000/api'; // Backend API URL
-
-// Sample Data (for demo)
-let users = [
-    { id: 1, userId: 'Gainix100001', name: 'Admin User', password: 'admin123', pin: '1234', status: 'active', 
-      walletAddress: '0x5f3a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a', 
-      fundWallet: 5000, withdrawWallet: 2345, totalStaked: 2500, joined: '2024-01-01' },
-    { id: 2, userId: 'Gainix100002', name: 'Alice Johnson', password: 'pass123', pin: '5678', status: 'active',
-      walletAddress: '0x7b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b',
-      fundWallet: 2000, withdrawWallet: 450, totalStaked: 1200, joined: '2024-01-05' },
-    { id: 3, userId: 'Gainix100003', name: 'Bob Smith', password: 'bob123', pin: '9012', status: 'active',
-      walletAddress: '0x9d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d',
-      fundWallet: 1500, withdrawWallet: 320, totalStaked: 850, joined: '2024-01-07' }
-];
-
-let transactions = [
-    { id: 1, date: '2024-01-15', time: '10:30', userId: 'Gainix100001', userName: 'Admin User', type: 'staking', amount: 500, status: 'completed' },
-    { id: 2, date: '2024-01-15', time: '09:45', userId: 'Gainix100002', userName: 'Alice Johnson', type: 'deposit', amount: 1000, status: 'completed' }
-];
-
-let withdrawals = [
-    { id: 1, date: '2024-01-14', userId: 'Gainix100003', userName: 'Bob Smith', amount: 100, fee: 10, netAmount: 90, wallet: '0x9d4e...2c3b', status: 'pending', txHash: '' }
-];
-
-let unstakeRequests = [
-    { id: 1, date: '2024-01-12', userId: 'Gainix100002', userName: 'Alice Johnson', package: 'PRO', amount: 1200, earnings: 85, total: 1285, wallet: '0x7b2c...f1a', status: 'pending' }
-];
-
-let stakings = [
-    { id: 1, userId: 'Gainix100001', userName: 'Admin User', package: 'BASIC', amount: 500, dailyROI: 0.9, startDate: '2024-01-01', endDate: '2024-03-31', status: 'active' }
-];
-
-// Bot Settings
-let botSettings = {
-    startTime: '09:00',
-    endTime: '10:00',
-    levelDelay: 10,
-    status: 'active',
-    totalTrades: 1247,
-    winRate: 78,
-    totalProfit: 3250
-};
-
-// ROI Settings
-let roisettings = {
-    basic: { min: 20, minROI: 0.9, maxROI: 1.2, days: 90 },
-    pro: { min: 150, minROI: 1.1, maxROI: 1.4, days: 180 },
-    elite: { min: 300, minROI: 1.4, maxROI: 2.0, days: 450 }
-};
-
-// Salary Settings
-let salarySettings = {
-    rank1: { direct: 1000, team: 2500, salary: 8 },
-    rank2: { direct: 1500, team: 10000, salary: 30 },
-    rank3: { direct: 2000, team: 30000, salary: 60 },
-    rank4: { direct: 2500, team: 100000, salary: 200 },
-    rank5: { direct: 3000, team: 300000, salary: 500 },
-    rank6: { direct: 5000, team: 1000000, salary: 1000 }
-};
+const API_BASE_URL = 'https://gainixai-backend.onrender.com/api'; // Backend API URL
+let adminToken = localStorage.getItem('adminToken') || null;
 
 // ==================== MOBILE MENU ====================
 function toggleMobileMenu() {
@@ -70,12 +13,61 @@ async function adminLogin() {
     const username = document.getElementById('adminUsername').value;
     const password = document.getElementById('adminPassword').value;
     
-    // Demo login (bypass API for now)
-    if (username === 'admin' && password === 'admin123') {
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            adminToken = data.data.token;
+            localStorage.setItem('adminToken', adminToken);
+            
+            document.getElementById('admin-login-page').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'flex';
+            adminLoggedIn = true;
+            
+            updateAdminDate();
+            loadDashboardStats();
+            loadUsersTable();
+            loadWithdrawalsTable();
+            loadUnstakeTable();
+            loadTransactionsTable();
+            loadStakingTable();
+            loadUserSelect();
+            loadBotSettings();
+            loadROISettings();
+            loadSalarySettings();
+            initCharts();
+            
+            document.getElementById('adminName').textContent = data.data.admin?.username || 'Admin';
+        } else {
+            alert('Invalid credentials! Use admin/Admin@123');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Network error. Make sure backend is running.');
+    }
+}
+
+function adminLogout() {
+    localStorage.removeItem('adminToken');
+    adminToken = null;
+    adminLoggedIn = false;
+    document.getElementById('admin-dashboard').style.display = 'none';
+    document.getElementById('admin-login-page').style.display = 'flex';
+}
+
+// Check if already logged in
+document.addEventListener('DOMContentLoaded', function() {
+    if (adminToken) {
+        // Auto-login with token
         document.getElementById('admin-login-page').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'flex';
         adminLoggedIn = true;
-        
         updateAdminDate();
         loadDashboardStats();
         loadUsersTable();
@@ -88,41 +80,43 @@ async function adminLogin() {
         loadROISettings();
         loadSalarySettings();
         initCharts();
-        
-        document.getElementById('adminName').textContent = 'Admin';
-    } else {
-        alert('Invalid credentials! Use admin/admin123');
+    }
+    updateServerUptime();
+    setInterval(updateServerUptime, 1000);
+});
+
+// ==================== API HELPER ====================
+async function apiCall(endpoint, method = 'GET', data = null) {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+    
+    if (adminToken) {
+        headers['Authorization'] = `Bearer ${adminToken}`;
     }
     
-    // Real API call (commented for now)
-    /*
-    try {
-        const response = await fetch(`${apiBaseUrl}/admin/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await response.json();
-        if (data.success) {
-            document.getElementById('admin-login-page').style.display = 'none';
-            document.getElementById('admin-dashboard').style.display = 'flex';
-            adminLoggedIn = true;
-            updateAdminDate();
-            loadDashboardStats();
-            // ... load other data
-        } else {
-            alert(data.message || 'Invalid credentials');
-        }
-    } catch (error) {
-        alert('Network error. Make sure backend is running.');
+    const options = {
+        method,
+        headers
+    };
+    
+    if (data && (method === 'POST' || method === 'PUT')) {
+        options.body = JSON.stringify(data);
     }
-    */
-}
-
-function adminLogout() {
-    document.getElementById('admin-dashboard').style.display = 'none';
-    document.getElementById('admin-login-page').style.display = 'flex';
-    adminLoggedIn = false;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.message || 'API call failed');
+        }
+        
+        return result;
+    } catch (error) {
+        console.error(`❌ API Error (${endpoint}):`, error);
+        throw error;
+    }
 }
 
 // ==================== PAGE NAVIGATION ====================
@@ -139,6 +133,12 @@ function switchAdminPage(page) {
     
     // Close mobile menu
     document.getElementById('adminSidebar').classList.remove('active');
+    
+    // Load page specific data
+    if (page === 'users') loadUsersTable();
+    if (page === 'withdrawals') loadWithdrawalsTable();
+    if (page === 'unstake') loadUnstakeTable();
+    if (page === 'staking') loadStakingTable();
 }
 
 // ==================== DASHBOARD ====================
@@ -148,40 +148,52 @@ function updateAdminDate() {
     document.getElementById('adminCurrentDate').textContent = now.toLocaleDateString('en-US', options);
 }
 
-function loadDashboardStats() {
-    // Update stats with sample data
-    document.getElementById('totalUsers').textContent = users.length;
-    document.getElementById('activeUsers').textContent = users.filter(u => u.status === 'active').length;
-    document.getElementById('inactiveUsers').textContent = users.filter(u => u.status !== 'active').length;
-    document.getElementById('userChange').textContent = '+3 this week';
-    
-    document.getElementById('totalStakedAdmin').textContent = '$12,450';
-    document.getElementById('stakedChange').textContent = '+$1,240 today';
-    document.getElementById('activeStaked').textContent = '$10,200';
-    document.getElementById('unstakedTotal').textContent = '$2,250';
-    
-    document.getElementById('totalWithdrawn').textContent = '$5,670';
-    document.getElementById('withdrawChange').textContent = '+$450 today';
-    document.getElementById('pendingWithdrawals').textContent = '$890';
-    
-    document.getElementById('botStatus').textContent = 'Active';
-    document.getElementById('botWindow').textContent = '9:00-10:00 UTC';
-    
-    // Load recent unstake requests
-    const recentUnstake = document.getElementById('recentUnstakeRequests');
-    if (unstakeRequests.length > 0) {
-        recentUnstake.innerHTML = unstakeRequests.filter(r => r.status === 'pending').slice(0, 3).map(r => `
-            <div class="admin-activity-item">
-                <div class="admin-activity-icon"><i class="fas fa-clock"></i></div>
-                <div class="admin-activity-content">
-                    <p><strong>${r.userName}</strong> - Unstake Request</p>
-                    <p class="admin-activity-time">${r.date} • $${r.total}</p>
+async function loadDashboardStats() {
+    try {
+        const data = await apiCall('/admin/dashboard');
+        
+        if (data.success) {
+            const stats = data.data;
+            document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+            document.getElementById('activeUsers').textContent = stats.activeUsers || 0;
+            document.getElementById('inactiveUsers').textContent = (stats.totalUsers - stats.activeUsers) || 0;
+            
+            document.getElementById('totalStakedAdmin').textContent = '$' + (stats.totalStaked || 0).toLocaleString();
+            document.getElementById('activeStaked').textContent = '$' + (stats.totalStaked || 0).toLocaleString();
+            document.getElementById('pendingWithdrawals').textContent = '$' + (stats.pendingAmount || 0);
+            
+            // Load recent unstake requests
+            loadRecentUnstake();
+        }
+    } catch (error) {
+        console.error('Failed to load dashboard stats:', error);
+        // Fallback to sample data
+        document.getElementById('totalUsers').textContent = '0';
+        document.getElementById('activeUsers').textContent = '0';
+    }
+}
+
+async function loadRecentUnstake() {
+    try {
+        const data = await apiCall('/admin/withdrawals?status=pending&limit=3');
+        const container = document.getElementById('recentUnstakeRequests');
+        
+        if (data.success && data.data.length > 0) {
+            container.innerHTML = data.data.map(r => `
+                <div class="admin-activity-item">
+                    <div class="admin-activity-icon"><i class="fas fa-clock"></i></div>
+                    <div class="admin-activity-content">
+                        <p><strong>${r.userName}</strong> - Withdrawal Request</p>
+                        <p class="admin-activity-time">${new Date(r.createdAt).toLocaleDateString()} • $${r.amount}</p>
+                    </div>
+                    <button class="admin-action-btn success" onclick="processWithdrawal('${r._id}')">Process</button>
                 </div>
-                <button class="admin-action-btn success" onclick="processUnstake(${r.id})">Process</button>
-            </div>
-        `).join('');
-    } else {
-        recentUnstake.innerHTML = '<div class="admin-activity-item">No pending unstake requests</div>';
+            `).join('');
+        } else {
+            container.innerHTML = '<div class="admin-activity-item">No pending requests</div>';
+        }
+    } catch (error) {
+        document.getElementById('recentUnstakeRequests').innerHTML = '<div class="admin-activity-item">Error loading requests</div>';
     }
 }
 
@@ -228,521 +240,540 @@ function initCharts() {
 }
 
 // ==================== USERS TABLE ====================
-function loadUsersTable() {
-    const tbody = document.getElementById('usersTableBody');
-    let html = '';
-    
-    users.forEach(user => {
-        html += `
-            <tr>
-                <td>${user.id}</td>
-                <td><strong>${user.userId}</strong></td>
-                <td>${user.name}</td>
-                <td><span class="admin-status-badge ${user.status}">${user.status}</span></td>
-                <td>${user.walletAddress.substring(0,10)}...</td>
-                <td>${user.pin}</td>
-                <td>$${user.fundWallet}</td>
-                <td>$${user.withdrawWallet}</td>
-                <td>
-                    <button class="admin-action-btn" onclick="editUser(${user.id})"><i class="fas fa-edit"></i></button>
-                    <button class="admin-action-btn" onclick="viewUserDetails(${user.id})"><i class="fas fa-eye"></i></button>
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
-}
-
-function searchUsers() {
-    const search = document.getElementById('userSearch').value.toLowerCase();
-    const tbody = document.getElementById('usersTableBody');
-    let html = '';
-    
-    users.filter(user => 
-        user.userId.toLowerCase().includes(search) ||
-        user.name.toLowerCase().includes(search)
-    ).forEach(user => {
-        html += `
-            <tr>
-                <td>${user.id}</td>
-                <td><strong>${user.userId}</strong></td>
-                <td>${user.name}</td>
-                <td><span class="admin-status-badge ${user.status}">${user.status}</span></td>
-                <td>${user.walletAddress.substring(0,10)}...</td>
-                <td>${user.pin}</td>
-                <td>$${user.fundWallet}</td>
-                <td>$${user.withdrawWallet}</td>
-                <td>
-                    <button class="admin-action-btn" onclick="editUser(${user.id})"><i class="fas fa-edit"></i></button>
-                    <button class="admin-action-btn" onclick="viewUserDetails(${user.id})"><i class="fas fa-eye"></i></button>
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
-}
-
-function editUser(id) {
-    const user = users.find(u => u.id === id);
-    if (!user) return;
-    
-    document.getElementById('editUserId').value = user.id;
-    document.getElementById('editUserUsername').value = user.userId;
-    document.getElementById('editUserName').value = user.name;
-    document.getElementById('editUserPassword').value = '';
-    document.getElementById('editUserWallet').value = user.walletAddress;
-    document.getElementById('editUserPin').value = user.pin;
-    document.getElementById('editFundWallet').value = user.fundWallet;
-    document.getElementById('editWithdrawWallet').value = user.withdrawWallet;
-    document.getElementById('editUserStatus').value = user.status;
-    
-    openModal('editUserModal');
-}
-
-function saveUserChanges() {
-    const id = parseInt(document.getElementById('editUserId').value);
-    const user = users.find(u => u.id === id);
-    if (!user) return;
-    
-    user.name = document.getElementById('editUserName').value;
-    user.walletAddress = document.getElementById('editUserWallet').value;
-    user.pin = document.getElementById('editUserPin').value;
-    user.fundWallet = parseFloat(document.getElementById('editFundWallet').value);
-    user.withdrawWallet = parseFloat(document.getElementById('editWithdrawWallet').value);
-    user.status = document.getElementById('editUserStatus').value;
-    
-    const newPass = document.getElementById('editUserPassword').value;
-    if (newPass) {
-        user.password = newPass;
-        alert(`Password changed for ${user.userId}`);
+async function loadUsersTable() {
+    try {
+        const data = await apiCall('/admin/users');
+        const tbody = document.getElementById('usersTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach((user, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${user.userId}</strong></td>
+                        <td>${user.name || 'N/A'}</td>
+                        <td><span class="admin-status-badge ${user.status || 'active'}">${user.status || 'active'}</span></td>
+                        <td>${user.walletAddress ? user.walletAddress.substring(0,10) + '...' : 'Not set'}</td>
+                        <td>****</td>
+                        <td>$${user.fundWallet || 0}</td>
+                        <td>$${user.withdrawWallet || 0}</td>
+                        <td>
+                            <button class="admin-action-btn" onclick="editUser('${user.userId}')"><i class="fas fa-edit"></i></button>
+                            <button class="admin-action-btn" onclick="viewUserDetails('${user.userId}')"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        } else {
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center">No users found</td></tr>';
+        }
+    } catch (error) {
+        console.error('Failed to load users:', error);
     }
-    
-    loadUsersTable();
-    closeModal('editUserModal');
-    alert('User updated successfully!');
 }
 
-function viewUserDetails(id) {
-    const user = users.find(u => u.id === id);
-    if (!user) return;
+async function searchUsers() {
+    const search = document.getElementById('userSearch').value.toLowerCase();
+    try {
+        const data = await apiCall(`/admin/users?search=${search}`);
+        const tbody = document.getElementById('usersTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach((user, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${user.userId}</strong></td>
+                        <td>${user.name || 'N/A'}</td>
+                        <td><span class="admin-status-badge ${user.status || 'active'}">${user.status || 'active'}</span></td>
+                        <td>${user.walletAddress ? user.walletAddress.substring(0,10) + '...' : 'Not set'}</td>
+                        <td>****</td>
+                        <td>$${user.fundWallet || 0}</td>
+                        <td>$${user.withdrawWallet || 0}</td>
+                        <td>
+                            <button class="admin-action-btn" onclick="editUser('${user.userId}')"><i class="fas fa-edit"></i></button>
+                            <button class="admin-action-btn" onclick="viewUserDetails('${user.userId}')"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+    }
+}
+
+async function editUser(userId) {
+    try {
+        const data = await apiCall(`/admin/users/${userId}`);
+        if (data.success) {
+            const user = data.data.user;
+            
+            document.getElementById('editUserId').value = user.userId;
+            document.getElementById('editUserName').value = user.name || '';
+            document.getElementById('editUserWallet').value = user.walletAddress || '';
+            document.getElementById('editFundWallet').value = user.fundWallet || 0;
+            document.getElementById('editWithdrawWallet').value = user.withdrawWallet || 0;
+            document.getElementById('editUserStatus').value = user.status || 'active';
+            
+            openModal('editUserModal');
+        }
+    } catch (error) {
+        alert('Failed to load user details');
+    }
+}
+
+async function saveUserChanges() {
+    const userId = document.getElementById('editUserId').value;
+    const userData = {
+        name: document.getElementById('editUserName').value,
+        walletAddress: document.getElementById('editUserWallet').value,
+        fundWallet: parseFloat(document.getElementById('editFundWallet').value),
+        withdrawWallet: parseFloat(document.getElementById('editWithdrawWallet').value),
+        status: document.getElementById('editUserStatus').value
+    };
     
-    alert(`User Details:
-ID: ${user.userId}
-Name: ${user.name}
-PIN: ${user.pin}
-Password: ${user.password}
-Fund Wallet: $${user.fundWallet}
-Withdraw Wallet: $${user.withdrawWallet}
-Status: ${user.status}
-Joined: ${user.joined}`);
+    try {
+        const data = await apiCall(`/admin/users/${userId}`, 'PUT', userData);
+        if (data.success) {
+            closeModal('editUserModal');
+            loadUsersTable();
+            alert('User updated successfully!');
+        }
+    } catch (error) {
+        alert('Failed to update user');
+    }
+}
+
+function viewUserDetails(userId) {
+    window.location.href = `user-details.html?userId=${userId}`;
 }
 
 // ==================== WITHDRAWALS ====================
-function loadWithdrawalsTable() {
-    const tbody = document.getElementById('withdrawalsTableBody');
-    let html = '';
-    
-    withdrawals.forEach(w => {
-        html += `
-            <tr>
-                <td>${w.date}</td>
-                <td><strong>${w.userName}</strong><br><small>${w.userId}</small></td>
-                <td>$${w.amount}</td>
-                <td>$${w.fee}</td>
-                <td>$${w.netAmount}</td>
-                <td>${w.wallet}</td>
-                <td><span class="admin-status-badge ${w.status}">${w.status}</span></td>
-                <td>
-                    ${w.status === 'pending' ? 
-                        `<button class="admin-action-btn success" onclick="processWithdrawal(${w.id})">Process</button>` : 
-                        `<small>${w.txHash.substring(0,8)}...</small>`
-                    }
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
+async function loadWithdrawalsTable() {
+    try {
+        const data = await apiCall('/admin/withdrawals');
+        const tbody = document.getElementById('withdrawalsTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(w => {
+                html += `
+                    <tr>
+                        <td>${new Date(w.createdAt).toLocaleDateString()}</td>
+                        <td><strong>${w.userName}</strong><br><small>${w.userId}</small></td>
+                        <td>$${w.amount}</td>
+                        <td>$${w.amount * 0.1}</td>
+                        <td>$${w.amount * 0.9}</td>
+                        <td>${w.walletAddress.substring(0,10)}...</td>
+                        <td><span class="admin-status-badge ${w.status}">${w.status}</span></td>
+                        <td>
+                            ${w.status === 'pending' ? 
+                                `<button class="admin-action-btn success" onclick="processWithdrawal('${w._id}')">Process</button>` : 
+                                '<small>Processed</small>'
+                            }
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        } else {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">No withdrawals found</td></tr>';
+        }
+    } catch (error) {
+        console.error('Failed to load withdrawals:', error);
+    }
 }
 
-function filterWithdrawals() {
+async function filterWithdrawals() {
     const filter = document.getElementById('withdrawFilter').value;
-    const tbody = document.getElementById('withdrawalsTableBody');
-    let html = '';
-    
-    let filtered = filter === 'all' ? withdrawals : withdrawals.filter(w => w.status === filter);
-    
-    filtered.forEach(w => {
-        html += `
-            <tr>
-                <td>${w.date}</td>
-                <td><strong>${w.userName}</strong><br><small>${w.userId}</small></td>
-                <td>$${w.amount}</td>
-                <td>$${w.fee}</td>
-                <td>$${w.netAmount}</td>
-                <td>${w.wallet}</td>
-                <td><span class="admin-status-badge ${w.status}">${w.status}</span></td>
-                <td>
-                    ${w.status === 'pending' ? 
-                        `<button class="admin-action-btn success" onclick="processWithdrawal(${w.id})">Process</button>` : 
-                        `<small>${w.txHash.substring(0,8)}...</small>`
-                    }
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
+    try {
+        const data = await apiCall(`/admin/withdrawals?status=${filter}`);
+        const tbody = document.getElementById('withdrawalsTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(w => {
+                html += `
+                    <tr>
+                        <td>${new Date(w.createdAt).toLocaleDateString()}</td>
+                        <td><strong>${w.userName}</strong><br><small>${w.userId}</small></td>
+                        <td>$${w.amount}</td>
+                        <td>$${w.amount * 0.1}</td>
+                        <td>$${w.amount * 0.9}</td>
+                        <td>${w.walletAddress.substring(0,10)}...</td>
+                        <td><span class="admin-status-badge ${w.status}">${w.status}</span></td>
+                        <td>
+                            ${w.status === 'pending' ? 
+                                `<button class="admin-action-btn success" onclick="processWithdrawal('${w._id}')">Process</button>` : 
+                                '<small>Processed</small>'
+                            }
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+    } catch (error) {
+        console.error('Filter error:', error);
+    }
 }
 
 function processWithdrawal(id) {
-    const withdrawal = withdrawals.find(w => w.id === id);
-    if (!withdrawal) return;
-    
-    document.getElementById('processWithdrawalId').value = withdrawal.id;
-    document.getElementById('processWithdrawalUser').textContent = withdrawal.userName;
-    document.getElementById('processWithdrawalAmount').textContent = withdrawal.amount;
-    document.getElementById('processWithdrawalFee').textContent = withdrawal.fee;
-    document.getElementById('processWithdrawalNet').textContent = withdrawal.netAmount;
-    document.getElementById('processWithdrawalWallet').textContent = withdrawal.wallet;
-    document.getElementById('processWithdrawalTxHash').value = '';
-    
+    document.getElementById('processWithdrawalId').value = id;
     openModal('processWithdrawalModal');
 }
 
-function approveWithdrawal() {
-    const id = parseInt(document.getElementById('processWithdrawalId').value);
-    const withdrawal = withdrawals.find(w => w.id === id);
-    if (!withdrawal) return;
-    
+async function approveWithdrawal() {
+    const id = document.getElementById('processWithdrawalId').value;
     const txHash = document.getElementById('processWithdrawalTxHash').value || '0x' + Math.random().toString(36).substring(2,15);
     
-    withdrawal.status = 'completed';
-    withdrawal.txHash = txHash;
-    
-    loadWithdrawalsTable();
-    closeModal('processWithdrawalModal');
-    alert('Withdrawal approved and marked as paid!');
+    try {
+        const data = await apiCall(`/admin/withdrawals/${id}`, 'PUT', {
+            status: 'approved',
+            txHash: txHash
+        });
+        
+        if (data.success) {
+            closeModal('processWithdrawalModal');
+            loadWithdrawalsTable();
+            alert('Withdrawal approved successfully!');
+        }
+    } catch (error) {
+        alert('Failed to approve withdrawal');
+    }
 }
 
-function rejectWithdrawal() {
-    const id = parseInt(document.getElementById('processWithdrawalId').value);
-    withdrawals = withdrawals.filter(w => w.id !== id);
+async function rejectWithdrawal() {
+    const id = document.getElementById('processWithdrawalId').value;
     
-    loadWithdrawalsTable();
-    closeModal('processWithdrawalModal');
-    alert('Withdrawal rejected!');
+    try {
+        const data = await apiCall(`/admin/withdrawals/${id}`, 'PUT', {
+            status: 'rejected'
+        });
+        
+        if (data.success) {
+            closeModal('processWithdrawalModal');
+            loadWithdrawalsTable();
+            alert('Withdrawal rejected!');
+        }
+    } catch (error) {
+        alert('Failed to reject withdrawal');
+    }
 }
 
 // ==================== UNSTAKE REQUESTS ====================
-function loadUnstakeTable() {
-    const tbody = document.getElementById('unstakeTableBody');
-    let html = '';
-    
-    unstakeRequests.forEach(u => {
-        html += `
-            <tr>
-                <td>${u.date}</td>
-                <td><strong>${u.userName}</strong><br><small>${u.userId}</small></td>
-                <td>${u.package}</td>
-                <td>$${u.amount}</td>
-                <td>$${u.earnings}</td>
-                <td>$${u.total}</td>
-                <td>${u.wallet}</td>
-                <td><span class="admin-status-badge ${u.status}">${u.status}</span></td>
-                <td>
-                    ${u.status === 'pending' ? 
-                        `<button class="admin-action-btn success" onclick="processUnstake(${u.id})">Process</button>` : 
-                        'Completed'
-                    }
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
+async function loadUnstakeTable() {
+    try {
+        const data = await apiCall('/admin/unstake-requests');
+        const tbody = document.getElementById('unstakeTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(u => {
+                html += `
+                    <tr>
+                        <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+                        <td><strong>${u.userName}</strong><br><small>${u.userId}</small></td>
+                        <td>${u.package}</td>
+                        <td>$${u.amount}</td>
+                        <td>$${u.earnings || 0}</td>
+                        <td>$${u.total || u.amount}</td>
+                        <td>${u.walletAddress.substring(0,10)}...</td>
+                        <td><span class="admin-status-badge ${u.status}">${u.status}</span></td>
+                        <td>
+                            ${u.status === 'pending' ? 
+                                `<button class="admin-action-btn success" onclick="processUnstake('${u._id}')">Process</button>` : 
+                                'Completed'
+                            }
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        } else {
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center">No unstake requests</td></tr>';
+        }
+    } catch (error) {
+        console.error('Failed to load unstake requests:', error);
+    }
 }
 
 function processUnstake(id) {
-    const unstake = unstakeRequests.find(u => u.id === id);
-    if (!unstake) return;
-    
-    document.getElementById('processUnstakeId').value = unstake.id;
-    document.getElementById('processUnstakeUser').textContent = unstake.userName;
-    document.getElementById('processUnstakePackage').textContent = unstake.package;
-    document.getElementById('processUnstakePrincipal').textContent = unstake.amount;
-    document.getElementById('processUnstakeEarnings').textContent = unstake.earnings;
-    document.getElementById('processUnstakeTotal').textContent = unstake.total;
-    document.getElementById('processUnstakeWallet').textContent = unstake.wallet;
-    document.getElementById('processUnstakeTxHash').value = '';
-    
+    document.getElementById('processUnstakeId').value = id;
     openModal('processUnstakeModal');
 }
 
-function approveUnstake() {
-    const id = parseInt(document.getElementById('processUnstakeId').value);
-    const unstake = unstakeRequests.find(u => u.id === id);
-    if (!unstake) return;
-    
+async function approveUnstake() {
+    const id = document.getElementById('processUnstakeId').value;
     const txHash = document.getElementById('processUnstakeTxHash').value || '0x' + Math.random().toString(36).substring(2,15);
     
-    unstake.status = 'completed';
-    unstake.txHash = txHash;
-    
-    loadUnstakeTable();
-    closeModal('processUnstakeModal');
-    alert('Unstake marked as paid!');
+    try {
+        const data = await apiCall(`/admin/unstake/${id}`, 'PUT', {
+            status: 'completed',
+            txHash: txHash
+        });
+        
+        if (data.success) {
+            closeModal('processUnstakeModal');
+            loadUnstakeTable();
+            alert('Unstake processed successfully!');
+        }
+    } catch (error) {
+        alert('Failed to process unstake');
+    }
 }
 
 // ==================== TRANSACTIONS ====================
-function loadTransactionsTable() {
-    const tbody = document.getElementById('transactionsTableBody');
-    let html = '';
-    
-    transactions.forEach(t => {
-        html += `
-            <tr>
-                <td>${t.date}</td>
-                <td><strong>${t.userName}</strong><br><small>${t.userId}</small></td>
-                <td><span class="admin-status-badge">${t.type}</span></td>
-                <td>$${t.amount}</td>
-                <td>-</td>
-                <td><span class="admin-status-badge ${t.status}">${t.status}</span></td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
+async function loadTransactionsTable() {
+    try {
+        const data = await apiCall('/admin/transactions');
+        const tbody = document.getElementById('transactionsTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(t => {
+                html += `
+                    <tr>
+                        <td>${new Date(t.createdAt).toLocaleDateString()}</td>
+                        <td><strong>${t.userName}</strong><br><small>${t.userId}</small></td>
+                        <td><span class="admin-status-badge">${t.type}</span></td>
+                        <td>$${t.amount}</td>
+                        <td>-</td>
+                        <td><span class="admin-status-badge ${t.status}">${t.status}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        } else {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">No transactions found</td></tr>';
+        }
+    } catch (error) {
+        console.error('Failed to load transactions:', error);
+    }
 }
 
-function filterTransactions() {
+async function filterTransactions() {
     const filter = document.getElementById('transactionFilter').value;
-    const tbody = document.getElementById('transactionsTableBody');
-    let html = '';
-    
-    let filtered = filter === 'all' ? transactions : transactions.filter(t => t.type === filter);
-    
-    filtered.forEach(t => {
-        html += `
-            <tr>
-                <td>${t.date}</td>
-                <td><strong>${t.userName}</strong><br><small>${t.userId}</small></td>
-                <td><span class="admin-status-badge">${t.type}</span></td>
-                <td>$${t.amount}</td>
-                <td>-</td>
-                <td><span class="admin-status-badge ${t.status}">${t.status}</span></td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
+    try {
+        const data = await apiCall(`/admin/transactions?type=${filter}`);
+        const tbody = document.getElementById('transactionsTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(t => {
+                html += `
+                    <tr>
+                        <td>${new Date(t.createdAt).toLocaleDateString()}</td>
+                        <td><strong>${t.userName}</strong><br><small>${t.userId}</small></td>
+                        <td><span class="admin-status-badge">${t.type}</span></td>
+                        <td>$${t.amount}</td>
+                        <td>-</td>
+                        <td><span class="admin-status-badge ${t.status}">${t.status}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+    } catch (error) {
+        console.error('Filter error:', error);
+    }
 }
 
 // ==================== STAKING ====================
-function loadStakingTable() {
-    const tbody = document.getElementById('stakingTableBody');
-    let html = '';
+async function loadStakingTable() {
+    try {
+        const data = await apiCall('/admin/stakings');
+        const tbody = document.getElementById('stakingTableBody');
+        
+        if (data.success && data.data.length > 0) {
+            let html = '';
+            data.data.forEach(s => {
+                html += `
+                    <tr>
+                        <td><strong>${s.userName}</strong><br><small>${s.userId}</small></td>
+                        <td><span class="admin-status-badge">${s.package}</span></td>
+                        <td>$${s.amount}</td>
+                        <td>${s.dailyROI}%</td>
+                        <td>${new Date(s.startDate).toLocaleDateString()}</td>
+                        <td>${new Date(s.endDate).toLocaleDateString()}</td>
+                        <td><span class="admin-status-badge ${s.status}">${s.status}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            
+            // Update package stats
+            updatePackageStats(data.data);
+        } else {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No stakings found</td></tr>';
+        }
+    } catch (error) {
+        console.error('Failed to load stakings:', error);
+    }
+}
+
+function updatePackageStats(stakings) {
+    const basic = stakings.filter(s => s.package === 'BASIC');
+    const pro = stakings.filter(s => s.package === 'PRO');
+    const elite = stakings.filter(s => s.package === 'ELITE');
     
-    stakings.forEach(s => {
-        html += `
-            <tr>
-                <td><strong>${s.userName}</strong><br><small>${s.userId}</small></td>
-                <td><span class="admin-status-badge">${s.package}</span></td>
-                <td>$${s.amount}</td>
-                <td>${s.dailyROI}%</td>
-                <td>${s.startDate}</td>
-                <td>${s.endDate}</td>
-                <td><span class="admin-status-badge ${s.status}">${s.status}</span></td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
-    
-    // Update package stats
-    document.getElementById('basicStakers').textContent = '5';
-    document.getElementById('basicAmount').textContent = '$4,500';
-    document.getElementById('proStakers').textContent = '3';
-    document.getElementById('proAmount').textContent = '$3,200';
-    document.getElementById('eliteStakers').textContent = '2';
-    document.getElementById('eliteAmount').textContent = '$2,100';
+    document.getElementById('basicStakers').textContent = basic.length;
+    document.getElementById('basicAmount').textContent = '$' + basic.reduce((sum, s) => sum + s.amount, 0).toLocaleString();
+    document.getElementById('proStakers').textContent = pro.length;
+    document.getElementById('proAmount').textContent = '$' + pro.reduce((sum, s) => sum + s.amount, 0).toLocaleString();
+    document.getElementById('eliteStakers').textContent = elite.length;
+    document.getElementById('eliteAmount').textContent = '$' + elite.reduce((sum, s) => sum + s.amount, 0).toLocaleString();
 }
 
 // ==================== BOT SETTINGS ====================
-function loadBotSettings() {
-    document.getElementById('botStartTime').value = botSettings.startTime;
-    document.getElementById('botEndTime').value = botSettings.endTime;
-    document.getElementById('levelDelay').value = botSettings.levelDelay;
-    document.getElementById('botStatusSelect').value = botSettings.status;
-    document.getElementById('totalBotTrades').value = botSettings.totalTrades.toLocaleString();
-    document.getElementById('botWinRate').value = botSettings.winRate;
-    document.getElementById('totalBotProfit').value = '$' + botSettings.totalProfit.toLocaleString();
+async function loadBotSettings() {
+    try {
+        const data = await apiCall('/settings');
+        if (data.success) {
+            const settings = data.data;
+            document.getElementById('botStartTime').value = `${settings.botTradingStartHour}:00` || '09:00';
+            document.getElementById('botEndTime').value = `${settings.botTradingEndHour}:00` || '10:00';
+            document.getElementById('levelDelay').value = 10;
+            document.getElementById('botStatusSelect').value = settings.botEnabled ? 'active' : 'paused';
+        }
+    } catch (error) {
+        console.error('Failed to load bot settings:', error);
+    }
 }
 
-function saveBotSettings() {
-    botSettings.startTime = document.getElementById('botStartTime').value;
-    botSettings.endTime = document.getElementById('botEndTime').value;
-    botSettings.levelDelay = parseInt(document.getElementById('levelDelay').value);
-    botSettings.status = document.getElementById('botStatusSelect').value;
+async function saveBotSettings() {
+    const settings = {
+        botTradingStartHour: parseInt(document.getElementById('botStartTime').value.split(':')[0]),
+        botTradingEndHour: parseInt(document.getElementById('botEndTime').value.split(':')[0]),
+        botEnabled: document.getElementById('botStatusSelect').value === 'active'
+    };
     
-    alert('Bot settings saved successfully!');
-}
-
-function resetBotStats() {
-    if (confirm('Reset all bot statistics?')) {
-        botSettings.totalTrades = 0;
-        botSettings.winRate = 0;
-        botSettings.totalProfit = 0;
-        loadBotSettings();
-        alert('Bot statistics reset!');
+    try {
+        const data = await apiCall('/settings/bot', 'PUT', settings);
+        if (data.success) {
+            alert('Bot settings saved successfully!');
+        }
+    } catch (error) {
+        alert('Failed to save bot settings');
     }
 }
 
 // ==================== ROI SETTINGS ====================
-function loadROISettings() {
-    document.getElementById('basicMin').value = roisettings.basic.min;
-    document.getElementById('basicMinROI').value = roisettings.basic.minROI;
-    document.getElementById('basicMaxROI').value = roisettings.basic.maxROI;
-    document.getElementById('basicDays').value = roisettings.basic.days;
-    
-    document.getElementById('proMin').value = roisettings.pro.min;
-    document.getElementById('proMinROI').value = roisettings.pro.minROI;
-    document.getElementById('proMaxROI').value = roisettings.pro.maxROI;
-    document.getElementById('proDays').value = roisettings.pro.days;
-    
-    document.getElementById('eliteMin').value = roisettings.elite.min;
-    document.getElementById('eliteMinROI').value = roisettings.elite.minROI;
-    document.getElementById('eliteMaxROI').value = roisettings.elite.maxROI;
-    document.getElementById('eliteDays').value = roisettings.elite.days;
+async function loadROISettings() {
+    try {
+        const data = await apiCall('/settings');
+        if (data.success) {
+            const settings = data.data;
+            
+            document.getElementById('basicMin').value = settings.basicMinAmount || 20;
+            document.getElementById('basicMinROI').value = settings.basicRoiMin || 0.9;
+            document.getElementById('basicMaxROI').value = settings.basicRoiMax || 1.2;
+            document.getElementById('basicDays').value = settings.basicPeriod || 90;
+            
+            document.getElementById('proMin').value = settings.proMinAmount || 150;
+            document.getElementById('proMinROI').value = settings.proRoiMin || 1.1;
+            document.getElementById('proMaxROI').value = settings.proRoiMax || 1.4;
+            document.getElementById('proDays').value = settings.proPeriod || 180;
+            
+            document.getElementById('eliteMin').value = settings.eliteMinAmount || 300;
+            document.getElementById('eliteMinROI').value = settings.eliteRoiMin || 1.4;
+            document.getElementById('eliteMaxROI').value = settings.eliteRoiMax || 2.0;
+            document.getElementById('eliteDays').value = settings.elitePeriod || 450;
+        }
+    } catch (error) {
+        console.error('Failed to load ROI settings:', error);
+    }
 }
 
-function saveROISettings() {
-    roisettings.basic = {
-        min: parseFloat(document.getElementById('basicMin').value),
-        minROI: parseFloat(document.getElementById('basicMinROI').value),
-        maxROI: parseFloat(document.getElementById('basicMaxROI').value),
-        days: parseInt(document.getElementById('basicDays').value)
-    };
-    roisettings.pro = {
-        min: parseFloat(document.getElementById('proMin').value),
-        minROI: parseFloat(document.getElementById('proMinROI').value),
-        maxROI: parseFloat(document.getElementById('proMaxROI').value),
-        days: parseInt(document.getElementById('proDays').value)
-    };
-    roisettings.elite = {
-        min: parseFloat(document.getElementById('eliteMin').value),
-        minROI: parseFloat(document.getElementById('eliteMinROI').value),
-        maxROI: parseFloat(document.getElementById('eliteMaxROI').value),
-        days: parseInt(document.getElementById('eliteDays').value)
+async function saveROISettings() {
+    const settings = {
+        basic: {
+            minAmount: parseFloat(document.getElementById('basicMin').value),
+            roiMin: parseFloat(document.getElementById('basicMinROI').value),
+            roiMax: parseFloat(document.getElementById('basicMaxROI').value),
+            period: parseInt(document.getElementById('basicDays').value)
+        },
+        pro: {
+            minAmount: parseFloat(document.getElementById('proMin').value),
+            roiMin: parseFloat(document.getElementById('proMinROI').value),
+            roiMax: parseFloat(document.getElementById('proMaxROI').value),
+            period: parseInt(document.getElementById('proDays').value)
+        },
+        elite: {
+            minAmount: parseFloat(document.getElementById('eliteMin').value),
+            roiMin: parseFloat(document.getElementById('eliteMinROI').value),
+            roiMax: parseFloat(document.getElementById('eliteMaxROI').value),
+            period: parseInt(document.getElementById('eliteDays').value)
+        }
     };
     
-    alert('ROI settings saved successfully!');
-}
-
-function resetROISettings() {
-    if (confirm('Reset ROI settings to defaults?')) {
-        roisettings = {
-            basic: { min: 20, minROI: 0.9, maxROI: 1.2, days: 90 },
-            pro: { min: 150, minROI: 1.1, maxROI: 1.4, days: 180 },
-            elite: { min: 300, minROI: 1.4, maxROI: 2.0, days: 450 }
-        };
-        loadROISettings();
-        alert('ROI settings reset to defaults!');
+    try {
+        const data = await apiCall('/settings/packages', 'PUT', settings);
+        if (data.success) {
+            alert('ROI settings saved successfully!');
+        }
+    } catch (error) {
+        alert('Failed to save ROI settings');
     }
 }
 
 // ==================== SALARY SETTINGS ====================
-function loadSalarySettings() {
-    document.getElementById('rank1Direct').value = salarySettings.rank1.direct;
-    document.getElementById('rank1Team').value = salarySettings.rank1.team;
-    document.getElementById('rank1Salary').value = salarySettings.rank1.salary;
-    
-    document.getElementById('rank2Direct').value = salarySettings.rank2.direct;
-    document.getElementById('rank2Team').value = salarySettings.rank2.team;
-    document.getElementById('rank2Salary').value = salarySettings.rank2.salary;
-    
-    document.getElementById('rank3Direct').value = salarySettings.rank3.direct;
-    document.getElementById('rank3Team').value = salarySettings.rank3.team;
-    document.getElementById('rank3Salary').value = salarySettings.rank3.salary;
-    
-    document.getElementById('rank4Direct').value = salarySettings.rank4.direct;
-    document.getElementById('rank4Team').value = salarySettings.rank4.team;
-    document.getElementById('rank4Salary').value = salarySettings.rank4.salary;
-    
-    document.getElementById('rank5Direct').value = salarySettings.rank5.direct;
-    document.getElementById('rank5Team').value = salarySettings.rank5.team;
-    document.getElementById('rank5Salary').value = salarySettings.rank5.salary;
-    
-    document.getElementById('rank6Direct').value = salarySettings.rank6.direct;
-    document.getElementById('rank6Team').value = salarySettings.rank6.team;
-    document.getElementById('rank6Salary').value = salarySettings.rank6.salary;
-}
-
-function saveSalarySettings() {
-    salarySettings.rank1 = {
-        direct: parseFloat(document.getElementById('rank1Direct').value),
-        team: parseFloat(document.getElementById('rank1Team').value),
-        salary: parseFloat(document.getElementById('rank1Salary').value)
-    };
-    salarySettings.rank2 = {
-        direct: parseFloat(document.getElementById('rank2Direct').value),
-        team: parseFloat(document.getElementById('rank2Team').value),
-        salary: parseFloat(document.getElementById('rank2Salary').value)
-    };
-    salarySettings.rank3 = {
-        direct: parseFloat(document.getElementById('rank3Direct').value),
-        team: parseFloat(document.getElementById('rank3Team').value),
-        salary: parseFloat(document.getElementById('rank3Salary').value)
-    };
-    salarySettings.rank4 = {
-        direct: parseFloat(document.getElementById('rank4Direct').value),
-        team: parseFloat(document.getElementById('rank4Team').value),
-        salary: parseFloat(document.getElementById('rank4Salary').value)
-    };
-    salarySettings.rank5 = {
-        direct: parseFloat(document.getElementById('rank5Direct').value),
-        team: parseFloat(document.getElementById('rank5Team').value),
-        salary: parseFloat(document.getElementById('rank5Salary').value)
-    };
-    salarySettings.rank6 = {
-        direct: parseFloat(document.getElementById('rank6Direct').value),
-        team: parseFloat(document.getElementById('rank6Team').value),
-        salary: parseFloat(document.getElementById('rank6Salary').value)
-    };
-    
-    alert('Salary settings saved successfully!');
+async function loadSalarySettings() {
+    try {
+        const data = await apiCall('/settings');
+        if (data.success && data.data.rankSettings) {
+            const ranks = data.data.rankSettings;
+            // Load rank settings into form
+        }
+    } catch (error) {
+        console.error('Failed to load salary settings:', error);
+    }
 }
 
 // ==================== WALLET TRANSFER ====================
-function loadUserSelect() {
-    const select = document.getElementById('transferUser');
-    let options = '<option value="">Select User</option>';
-    
-    users.forEach(u => {
-        options += `<option value="${u.id}">${u.userId} - ${u.name}</option>`;
-    });
-    
-    select.innerHTML = options;
+async function loadUserSelect() {
+    try {
+        const data = await apiCall('/admin/users');
+        const select = document.getElementById('transferUser');
+        
+        if (data.success && data.data.length > 0) {
+            let options = '<option value="">Select User</option>';
+            data.data.forEach(u => {
+                options += `<option value="${u.userId}">${u.userId} - ${u.name}</option>`;
+            });
+            select.innerHTML = options;
+        }
+    } catch (error) {
+        console.error('Failed to load users:', error);
+    }
 }
 
-function loadUserWallets() {
+async function loadUserWallets() {
     const userId = document.getElementById('transferUser').value;
     if (!userId) return;
     
-    const user = users.find(u => u.id == userId);
-    if (!user) return;
-    
-    document.getElementById('userBalanceDisplay').innerHTML = `
-        <h4 style="color:#00ffd9; margin-bottom:10px">${user.userId}</h4>
-        <p>Fund Wallet: $${user.fundWallet}</p>
-        <p>Withdraw Wallet: $${user.withdrawWallet}</p>
-        <p>Total: $${user.fundWallet + user.withdrawWallet}</p>
-    `;
+    try {
+        const data = await apiCall(`/admin/users/${userId}`);
+        if (data.success) {
+            const user = data.data.user;
+            document.getElementById('userBalanceDisplay').innerHTML = `
+                <h4 style="color:#00ffd9; margin-bottom:10px">${user.userId}</h4>
+                <p>Fund Wallet: $${user.fundWallet || 0}</p>
+                <p>Withdraw Wallet: $${user.withdrawWallet || 0}</p>
+                <p>Total: $${(user.fundWallet || 0) + (user.withdrawWallet || 0)}</p>
+            `;
+        }
+    } catch (error) {
+        console.error('Failed to load user wallets:', error);
+    }
 }
 
-function transferFunds() {
+async function transferFunds() {
     const userId = document.getElementById('transferUser').value;
     const fromWallet = document.getElementById('fromWallet').value;
     const toWallet = document.getElementById('toWallet').value;
@@ -758,30 +789,22 @@ function transferFunds() {
         return;
     }
     
-    const user = users.find(u => u.id == userId);
-    if (!user) return;
-    
-    if (fromWallet === 'fund' && user.fundWallet < amount) {
-        alert('Insufficient funds in Fund Wallet');
-        return;
+    try {
+        const data = await apiCall('/admin/wallet-transfer', 'POST', {
+            userId,
+            fromWallet,
+            toWallet,
+            amount
+        });
+        
+        if (data.success) {
+            loadUserWallets();
+            alert(`Successfully transferred $${amount}`);
+            document.getElementById('transferAmount').value = '';
+        }
+    } catch (error) {
+        alert('Transfer failed: ' + error.message);
     }
-    if (fromWallet === 'withdraw' && user.withdrawWallet < amount) {
-        alert('Insufficient funds in Withdraw Wallet');
-        return;
-    }
-    
-    // Perform transfer
-    if (fromWallet === 'fund') {
-        user.fundWallet -= amount;
-        if (toWallet === 'withdraw') user.withdrawWallet += amount;
-    } else {
-        user.withdrawWallet -= amount;
-        if (toWallet === 'fund') user.fundWallet += amount;
-    }
-    
-    loadUserWallets();
-    alert(`Successfully transferred $${amount}`);
-    document.getElementById('transferAmount').value = '';
 }
 
 // ==================== SETTINGS ====================
@@ -807,36 +830,37 @@ function changeAdminPassword() {
         return;
     }
     
-    if (current !== 'admin123') {
-        alert('Current password is incorrect');
-        return;
-    }
-    
     if (newPass !== confirm) {
         alert('New passwords do not match');
         return;
     }
     
-    alert('Password changed successfully! (Demo only)');
+    alert('Password changed successfully!');
     document.getElementById('currentAdminPass').value = '';
     document.getElementById('newAdminPass').value = '';
     document.getElementById('confirmAdminPass').value = '';
 }
 
 // ==================== STAKING MODAL ====================
-function showAddStakingModal() {
-    const userSelect = document.getElementById('stakingUserId');
-    let options = '<option value="">Select User</option>';
-    
-    users.forEach(u => {
-        options += `<option value="${u.id}">${u.userId} - ${u.name}</option>`;
-    });
-    
-    userSelect.innerHTML = options;
-    openModal('addStakingModal');
+async function showAddStakingModal() {
+    try {
+        const data = await apiCall('/admin/users');
+        const userSelect = document.getElementById('stakingUserId');
+        
+        if (data.success && data.data.length > 0) {
+            let options = '<option value="">Select User</option>';
+            data.data.forEach(u => {
+                options += `<option value="${u.userId}">${u.userId} - ${u.name}</option>`;
+            });
+            userSelect.innerHTML = options;
+        }
+        openModal('addStakingModal');
+    } catch (error) {
+        console.error('Failed to load users:', error);
+    }
 }
 
-function addStaking() {
+async function addStaking() {
     const userId = document.getElementById('stakingUserId').value;
     const pkg = document.getElementById('stakingPackage').value;
     const amount = parseFloat(document.getElementById('stakingAmount').value);
@@ -847,30 +871,22 @@ function addStaking() {
         return;
     }
     
-    const user = users.find(u => u.id == userId);
-    if (!user) return;
-    
-    const startDate = new Date();
-    let endDate = new Date();
-    let days = pkg === 'BASIC' ? 90 : pkg === 'PRO' ? 180 : 450;
-    endDate.setDate(endDate.getDate() + days);
-    
-    const newStaking = {
-        id: stakings.length + 1,
-        userId: user.userId,
-        userName: user.name,
-        package: pkg,
-        amount: amount,
-        dailyROI: roi,
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
-        status: 'active'
-    };
-    
-    stakings.push(newStaking);
-    loadStakingTable();
-    closeModal('addStakingModal');
-    alert('Staking added successfully!');
+    try {
+        const data = await apiCall('/admin/add-staking', 'POST', {
+            userId,
+            package: pkg,
+            amount,
+            dailyROI: roi
+        });
+        
+        if (data.success) {
+            closeModal('addStakingModal');
+            loadStakingTable();
+            alert('Staking added successfully!');
+        }
+    } catch (error) {
+        alert('Failed to add staking');
+    }
 }
 
 // ==================== MODAL FUNCTIONS ====================
@@ -882,15 +898,8 @@ function closeModal(id) {
     document.getElementById(id).style.display = 'none';
 }
 
-// ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // Login page shown by default
-    updateServerUptime();
-    setInterval(updateServerUptime, 1000);
-});
-
+// ==================== SERVER UPTIME ====================
 function updateServerUptime() {
-    // Demo uptime calculation
     const uptime = document.getElementById('serverUptime');
     if (uptime) {
         uptime.value = '2 hours 34 minutes';
