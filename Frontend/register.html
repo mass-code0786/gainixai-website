@@ -773,5 +773,61 @@
             window.location.href = 'login.html';
         }
     </script>
+    <!-- Scripts -->
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    // Registration form handler
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+        const confirm = document.getElementById('confirmPassword').value;
+        const sponsorId = document.getElementById('referralId').value;
+        
+        // Validation
+        if (password !== confirm) {
+            alert('❌ Passwords do not match!');
+            return;
+        }
+        
+        if (password.length < 6) {
+            alert('❌ Password must be at least 6 characters');
+            return;
+        }
+        
+        try {
+            // Call register API
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    password,
+                    sponsorId: sponsorId || null
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Show OTP modal
+                document.getElementById('otpEmailDisplay').textContent = email;
+                document.getElementById('register-page').style.display = 'none';
+                document.getElementById('otpModal').style.display = 'flex';
+                startOTPTimer();
+            } else {
+                alert('❌ Registration failed: ' + data.message);
+            }
+        } catch (error) {
+            alert('❌ Server error. Please try again.');
+        }
+    });
+</script>
 </body>
 </html>
