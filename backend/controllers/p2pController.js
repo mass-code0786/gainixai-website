@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
-const P2PTransaction = require('../models/P2PTransaction');
+const P2PTransaction = require('../models/p2pTransaction');
 
 // ============================================
 // SEND P2P TRANSFER
