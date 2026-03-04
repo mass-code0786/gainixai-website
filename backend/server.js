@@ -70,6 +70,8 @@ app.use('/api/salary', require('./routes/salaryRoutes'));
 
 // ✅ Referral Routes - With Sunday check (YE LINE IMPORTANT HAI)
 app.use('/api/referral', sundayCheck, require('./routes/referralRoutes'));
+// Add this line with other routes
+app.use('/api/p2p', require('./routes/p2pRoutes'));
 
 // ============================================
 // 📊 System Status Route
