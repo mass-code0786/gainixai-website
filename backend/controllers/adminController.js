@@ -1,6 +1,6 @@
 const Admin = require('../models/Admin');
 const User = require('../models/User');
-const Staking = require('../models/staking');
+const Staking = require('../models/Staking');
 const Withdrawal = require('../models/Withdrawal');
 const Transaction = require('../models/Transaction');
 const jwt = require('jsonwebtoken');
@@ -427,7 +427,7 @@ const getStakings = async (req, res) => {
 };
 
 // ============================================
-// GET UNSTAKE REQUESTS
+// GET UNSTAKE REQUESTS (FIXED: unstake, not unstable)
 // ============================================
 const getUnstakeRequests = async (req, res) => {
     try {
@@ -747,7 +747,7 @@ module.exports = {
     getWithdrawals,
     processWithdrawal,
     getStakings,
-    getUnstakeRequests,
+    getUnstakeRequests,  // Fixed: unstake (not unstable)
     processUnstake,
     getTransactions,
     createAdmin,

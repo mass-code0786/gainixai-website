@@ -6,15 +6,22 @@ const {
     getDashboardStats,
     getUsers,
     getUserDetails,
+    updateUser,
     getWithdrawals,
     processWithdrawal,
-    createAdmin
+    getStakings,
+    getUnstakeRequests,
+    processUnstake,
+    getTransactions,
+    createAdmin,
+    walletTransfer,
+    addStaking
 } = require('../controllers/adminController');
 
 // Public route
 router.post('/login', adminLogin);
 
-// Protected routes (require admin auth)
+// Protected routes
 router.get('/dashboard', adminProtect, getDashboardStats);
 router.get('/users', adminProtect, getUsers);
 router.get('/users/:userId', adminProtect, getUserDetails);
@@ -29,6 +36,6 @@ router.post('/wallet-transfer', adminProtect, walletTransfer);
 router.post('/add-staking', adminProtect, addStaking);
 
 // Superadmin only
-router.post('/create', adminProtect, createAdmin); // Add check for superadmin
+router.post('/create', adminProtect, createAdmin);
 
 module.exports = router;
