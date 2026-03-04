@@ -1,6 +1,6 @@
 const Admin = require('../models/Admin');
 const User = require('../models/User');
-const Staking = require('../models/Staking');
+const Staking = require('../models/staking');
 const Withdrawal = require('../models/Withdrawal');
 const Transaction = require('../models/Transaction');
 const jwt = require('jsonwebtoken');
