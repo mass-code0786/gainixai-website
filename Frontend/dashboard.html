@@ -49,38 +49,43 @@
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 14px;
+            padding: 12px;
             padding-bottom: 80px;
             position: relative;
             z-index: 1;
         }
 
+        /* Header - Slightly Smaller */
         .premium-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 14px 18px;
+            margin-bottom: 14px;
+            padding: 10px 16px;
             background: rgba(8,12,20,0.8);
             backdrop-filter: blur(20px);
-            border-radius: 36px;
+            border-radius: 30px;
             border: 1px solid rgba(0,255,209,0.2);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
         }
 
         .logo-3d {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
         }
 
         .logo-cube-small {
-            width: 42px; height: 42px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(145deg, #00ffd9, #0099ff, #8b5cf6);
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: #030507;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #030507;
             transform: rotate(45deg);
             animation: float3d 3s ease-in-out infinite;
         }
@@ -95,7 +100,8 @@
         }
 
         .logo-text h1 {
-            font-size: 22px; font-weight: 800;
+            font-size: 20px;
+            font-weight: 800;
             background: linear-gradient(135deg, #fff, #00ffd9, #8b5cf6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -103,18 +109,19 @@
 
         .utc-time {
             background: rgba(0,255,209,0.1);
-            padding: 6px 14px;
-            border-radius: 36px;
-            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
             color: #00ffd9;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             border: 1px solid rgba(0,255,209,0.3);
         }
 
         .live-dot {
-            width: 8px; height: 8px;
+            width: 6px;
+            height: 6px;
             background: #00ffd9;
             border-radius: 50%;
             animation: pulseLive 1.2s infinite;
@@ -126,497 +133,856 @@
             100% { opacity:1; transform:scale(1); }
         }
 
+        /* Current Rank Banner - Smaller */
         .current-rank-banner {
             background: linear-gradient(145deg, #ffd700, #ffaa00);
-            border-radius: 40px;
-            padding: 12px 20px;
-            margin-bottom: 16px;
+            border-radius: 36px;
+            padding: 10px 18px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: #030507;
             font-weight: 700;
-            box-shadow: 0 10px 25px rgba(255,215,0,0.3);
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
         }
 
         .rank-badge {
             background: rgba(0,0,0,0.2);
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 12px;
         }
 
+        /* Profile Section - Compact */
         .profile-section {
             background: linear-gradient(145deg, rgba(0,255,209,0.1), rgba(0,153,255,0.05));
-            border-radius: 28px;
-            padding: 18px;
-            margin-bottom: 16px;
+            border-radius: 24px;
+            padding: 14px;
+            margin-bottom: 14px;
             border: 1px solid rgba(0,255,209,0.2);
         }
 
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 12px;
+            gap: 14px;
+            margin-bottom: 10px;
         }
 
         .profile-avatar {
-            width: 70px; height: 70px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
-            align-items: center; justify-content: center;
+            align-items: center;
+            justify-content: center;
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,255,209,0.3);
+            box-shadow: 0 6px 15px rgba(0,255,209,0.3);
         }
 
-        .profile-avatar i { font-size: 32px; color: #030507; }
-        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .profile-avatar i {
+            font-size: 28px;
+            color: #030507;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
 
         .avatar-upload {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: rgba(0,0,0,0.7); color: white;
-            font-size: 10px; text-align: center; padding: 4px;
-            opacity: 0; transition: opacity 0.3s;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 9px;
+            text-align: center;
+            padding: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .profile-avatar:hover .avatar-upload { opacity: 1; }
+        .profile-avatar:hover .avatar-upload {
+            opacity: 1;
+        }
 
-        .profile-info { flex: 1; }
+        .profile-info {
+            flex: 1;
+        }
+
         .profile-info input {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 10px;
-            padding: 8px 12px;
+            border-radius: 8px;
+            padding: 6px 10px;
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
             width: 100%;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
-        .profile-info p { 
-            font-size: 12px; 
+
+        .profile-info p {
+            font-size: 11px;
             color: #8899aa;
-            margin: 5px 0;
+            margin: 3px 0;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
+
         .profile-info p i {
-            width: 16px;
+            width: 14px;
             color: #00ffd9;
         }
+
         .profile-info p span {
             color: #fff;
             font-weight: 500;
         }
 
+        .save-profile-btn {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 16px;
+            padding: 6px 12px;
+            color: #030507;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: fit-content;
+        }
+
+        .save-profile-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0,255,209,0.3);
+        }
+
         .wallet-address-mini {
-            display: flex; align-items: center; gap: 8px;
-            margin-top: 8px; padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            padding: 6px 10px;
             background: rgba(0,255,209,0.05);
-            border-radius: 30px;
-            font-size: 11px; color: #00ffd9;
+            border-radius: 24px;
+            font-size: 10px;
+            color: #00ffd9;
             border: 1px solid rgba(0,255,209,0.2);
         }
 
         .referral-box {
             background: rgba(0,0,0,0.3);
-            border-radius: 18px;
-            padding: 12px;
-            margin-top: 8px;
+            border-radius: 16px;
+            padding: 10px;
+            margin-top: 6px;
         }
 
         .referral-link {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: rgba(255,255,255,0.05);
-            padding: 8px 12px; border-radius: 12px;
-            font-size: 13px; color: #00ffd9;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #00ffd9;
             word-break: break-all;
         }
 
         .copy-btn {
             background: rgba(0,255,209,0.2);
-            border: none; color: #00ffd9;
-            padding: 5px 10px; border-radius: 8px;
-            font-size: 11px; cursor: pointer;
+            border: none;
+            color: #00ffd9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            cursor: pointer;
         }
 
         .staking-stats {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .stat-box {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
-            border-radius: 18px; padding: 12px; text-align: center;
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
         }
 
-        .stat-value { font-size: 22px; font-weight: 700; color: #00ffd9; margin-bottom: 4px; }
-        .stat-label { font-size: 11px; color: #8899aa; }
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00ffd9;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #8899aa;
+        }
 
         .wallet-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
         }
 
-        .fund-wallet, .withdraw-wallet {
+        .fund-wallet,
+        .withdraw-wallet {
             background: linear-gradient(145deg, #1a3f3a, #0d2a25);
             border: 1px solid #00ffd9;
-            border-radius: 24px; padding: 16px;
+            border-radius: 20px;
+            padding: 14px;
         }
 
         .wallet-header {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
         }
-        .wallet-title { font-size: 12px; color: #8899aa; }
-        .wallet-balance { font-size: 28px; font-weight: 700; color: #00ffd9; }
+
+        .wallet-title {
+            font-size: 11px;
+            color: #8899aa;
+        }
+
+        .wallet-balance {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00ffd9;
+        }
 
         .income-summary {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
         }
 
         .summary-box {
             background: rgba(12,18,28,0.9);
-            border-radius: 24px; padding: 16px;
+            border-radius: 20px;
+            padding: 14px;
             border: 1px solid rgba(0,255,209,0.2);
-            cursor: pointer; transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
         .summary-box:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: #00ffd9;
-            box-shadow: 0 15px 30px rgba(0,255,209,0.2);
+            box-shadow: 0 10px 20px rgba(0,255,209,0.2);
         }
 
         .summary-header {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
         }
+
         .summary-icon {
-            width: 40px; height: 40px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
-        .summary-title { font-size: 14px; color: #8899aa; }
-        .summary-total { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+
+        .summary-title {
+            font-size: 12px;
+            color: #8899aa;
+        }
+
+        .summary-total {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
 
         .today-plus {
-            display: flex; align-items: center; gap: 4px;
-            font-size: 12px; color: #2ecc71;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: #2ecc71;
             background: rgba(46,204,113,0.1);
-            padding: 4px 10px; border-radius: 20px;
+            padding: 3px 8px;
+            border-radius: 16px;
             width: fit-content;
         }
 
         .balance-grid-premium {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
         }
 
         .balance-card-3d {
             background: rgba(12,18,28,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 24px; padding: 16px;
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 14px;
             border: 1px solid rgba(0,255,209,0.2);
-            cursor: pointer; transition: all 0.3s;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
         .balance-card-3d:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: #00ffd9;
-            box-shadow: 0 15px 30px rgba(0,255,209,0.2);
+            box-shadow: 0 10px 20px rgba(0,255,209,0.2);
         }
 
         .balance-icon-3d {
-            width: 40px; height: 40px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 8px;
             border: 1px solid rgba(0,255,209,0.3);
         }
-        .balance-amount { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-        .balance-label { font-size: 12px; color: #8899aa; margin-bottom: 6px; }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .balance-label {
+            font-size: 10px;
+            color: #8899aa;
+            margin-bottom: 4px;
+        }
 
         .quick-actions {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 14px 0;
         }
 
         .action-btn {
             background: rgba(0,255,209,0.1);
             border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px; padding: 12px 5px;
-            text-align: center; cursor: pointer;
+            border-radius: 16px;
+            padding: 10px 3px;
+            text-align: center;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
         .action-btn:hover {
             background: rgba(0,255,209,0.2);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
-        .action-btn i { font-size: 20px; color: #00ffd9; margin-bottom: 4px; }
-        .action-btn span { display: block; font-size: 11px; }
+
+        .action-btn i {
+            font-size: 16px;
+            color: #00ffd9;
+            margin-bottom: 2px;
+        }
+
+        .action-btn span {
+            display: block;
+            font-size: 10px;
+        }
 
         .unique-bot {
             background: linear-gradient(145deg, #1a2f3f, #0d1a24);
-            border-radius: 36px; padding: 22px;
-            margin-bottom: 16px;
+            border-radius: 30px;
+            padding: 18px;
+            margin-bottom: 14px;
             border: 1px solid rgba(0,255,209,0.3);
-            box-shadow: 0 12px 30px rgba(0,255,209,0.2);
+            box-shadow: 0 10px 24px rgba(0,255,209,0.2);
         }
 
         .bot-3d-container {
-            display: flex; align-items: center; gap: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
         .bot-hologram {
-            width: 80px; height: 80px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 30px 10px 30px 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 40px; color: #030507;
+            border-radius: 24px 8px 24px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #030507;
             animation: hologram 3s ease-in-out infinite;
-            box-shadow: 0 0 25px rgba(0,255,209,0.5);
+            box-shadow: 0 0 20px rgba(0,255,209,0.5);
         }
 
         @keyframes hologram {
             0%,100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.08); }
+            50% { transform: rotate(4deg) scale(1.05); }
         }
 
         .bot-info h3 {
-            font-size: 22px;
+            font-size: 18px;
             background: linear-gradient(135deg, #fff, #00ffd9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-        .bot-info p { font-size: 12px; color: #8899aa; }
+
+        .bot-info p {
+            font-size: 10px;
+            color: #8899aa;
+        }
 
         .bot-stats {
-            display: flex; gap: 12px; margin: 16px 0;
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
         }
+
         .bot-stat {
-            flex: 1; background: rgba(0,0,0,0.3);
-            border-radius: 18px; padding: 12px; text-align: center;
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 8px;
+            text-align: center;
         }
-        .bot-stat-value { font-size: 20px; color: #00ffd9; font-weight: 700; }
-        .bot-stat-label { font-size: 10px; color: #8899aa; }
+
+        .bot-stat-value {
+            font-size: 16px;
+            color: #00ffd9;
+            font-weight: 700;
+        }
+
+        .bot-stat-label {
+            font-size: 9px;
+            color: #8899aa;
+        }
 
         .window-timer {
             background: rgba(0,0,0,0.3);
-            border-radius: 22px; padding: 14px;
-            margin: 16px 0; text-align: center;
+            border-radius: 18px;
+            padding: 10px;
+            margin: 12px 0;
+            text-align: center;
         }
-        .window-time { font-size: 32px; font-weight: 700; color: #00ffd9; }
-        .window-label { font-size: 11px; color: #8899aa; margin-top: 4px; }
+
+        .window-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00ffd9;
+        }
+
+        .window-label {
+            font-size: 9px;
+            color: #8899aa;
+            margin-top: 2px;
+        }
 
         .window-status {
             background: rgba(0,255,209,0.1);
-            border-radius: 18px; padding: 10px;
-            text-align: center; font-size: 13px; margin: 12px 0;
+            border-radius: 16px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            margin: 10px 0;
         }
 
         .bot-button {
             width: 100%;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none; border-radius: 36px; padding: 16px;
-            color: #030507; font-size: 16px; font-weight: 700;
-            cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border: none;
+            border-radius: 30px;
+            padding: 12px;
+            color: #030507;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
+
         .bot-button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 25px rgba(0,255,209,0.5);
+            transform: scale(1.01);
+            box-shadow: 0 0 20px rgba(0,255,209,0.5);
         }
-        .bot-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .bot-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .section-title {
-            font-size: 18px; margin: 16px 0 12px;
-            display: flex; align-items: center; gap: 6px;
+            font-size: 16px;
+            margin: 14px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #fff;
         }
 
         .staking-packages {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 14px 0;
         }
 
         .package-card {
             background: rgba(0,255,209,0.05);
             border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 22px; padding: 12px 4px;
-            text-align: center; cursor: pointer;
+            border-radius: 18px;
+            padding: 10px 3px;
+            text-align: center;
+            cursor: pointer;
             transition: all 0.3s;
         }
+
         .package-card:hover {
             background: rgba(0,255,209,0.15);
-            transform: translateY(-4px);
+            transform: translateY(-3px);
         }
+
         .package-card.selected {
             border: 2px solid #00ffd9;
             background: rgba(0,255,209,0.2);
         }
-        .package-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-        .package-days { font-size: 11px; color: #8899aa; margin-bottom: 6px; }
-        .package-roi { color: #00ffd9; font-size: 14px; font-weight: 600; margin: 6px 0; }
+
+        .package-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .package-days {
+            font-size: 9px;
+            color: #8899aa;
+            margin-bottom: 4px;
+        }
+
+        .package-roi {
+            color: #00ffd9;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
         .referral-bonus {
             background: rgba(255,215,0,0.1);
-            border-radius: 12px; padding: 4px;
-            font-size: 10px; color: gold; margin: 4px 0;
+            border-radius: 10px;
+            padding: 3px;
+            font-size: 8px;
+            color: gold;
+            margin: 3px 0;
         }
-        .package-min { font-size: 9px; color: #8899aa; }
+
+        .package-min {
+            font-size: 8px;
+            color: #8899aa;
+        }
 
         .package-input {
             background: rgba(12,18,28,0.8);
-            border-radius: 24px; padding: 18px; margin: 16px 0;
+            border-radius: 20px;
+            padding: 14px;
+            margin: 14px 0;
         }
+
         .package-input input {
             width: 100%;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px; padding: 14px;
-            color: #fff; font-size: 15px; margin-bottom: 12px;
+            border-radius: 16px;
+            padding: 10px;
+            color: #fff;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
-        .package-input input::placeholder { color: #8899aa; font-size: 13px; }
+
+        .package-input input::placeholder {
+            color: #8899aa;
+            font-size: 11px;
+        }
 
         .confirm-btn {
             width: 100%;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none; border-radius: 30px; padding: 14px;
-            color: #030507; font-weight: 700; font-size: 15px;
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            color: #030507;
+            font-weight: 700;
+            font-size: 13px;
             cursor: pointer;
         }
 
-        .active-stakings { margin: 16px 0; }
+        .active-stakings {
+            margin: 14px 0;
+        }
+
         .staking-item {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
-            border-radius: 22px; padding: 16px; margin-bottom: 10px;
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 8px;
         }
+
         .staking-header {
-            display: flex; justify-content: space-between; margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
         }
-        .staking-package { font-weight: 700; font-size: 16px; }
-        .staking-amount { color: #00ffd9; font-weight: 700; font-size: 16px; }
+
+        .staking-package {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .staking-amount {
+            color: #00ffd9;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
         .staking-dates {
-            display: flex; justify-content: space-between;
-            font-size: 11px; color: #8899aa; margin: 6px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #8899aa;
+            margin: 4px 0;
         }
-        .staking-roi { color: #00ffd9; font-size: 13px; margin: 8px 0; }
+
+        .staking-roi {
+            color: #00ffd9;
+            font-size: 11px;
+            margin: 6px 0;
+        }
+
         .unstake-btn {
             width: 100%;
             background: rgba(255,107,107,0.2);
             border: 1px solid #ff6b6b;
-            color: #ff6b6b; padding: 10px; border-radius: 18px;
-            font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 10px;
+            color: #ff6b6b;
+            padding: 8px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
         }
-        .unstake-btn:hover { background: rgba(255,107,107,0.3); }
-        .unstake-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        .unstake-btn.active { background: #ff6b6b; color: white; }
+
+        .unstake-btn:hover {
+            background: rgba(255,107,107,0.3);
+        }
+
+        .unstake-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .unstake-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
 
         .wallet-settings {
             background: rgba(12,18,28,0.95);
-            border-radius: 28px; padding: 18px;
-            margin: 16px 0 70px;
+            border-radius: 24px;
+            padding: 14px;
+            margin: 14px 0 60px;
             border: 1px solid rgba(0,255,209,0.2);
         }
+
         .wallet-settings-header {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: #00ffd9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #00ffd9;
         }
+
         .wallet-input-group {
-            display: flex; gap: 10px; margin-bottom: 15px;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
         }
+
         .wallet-input {
             flex: 1;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 20px; padding: 12px; color: #fff;
-        }
-        .pin-small {
-            width: 100px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 20px; padding: 12px; color: #fff; text-align: center;
-        }
-        .attach-btn {
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none; border-radius: 30px; padding: 14px;
-            color: #030507; font-weight: 600; width: 100%; cursor: pointer;
+            border-radius: 18px;
+            padding: 10px;
+            color: #fff;
         }
 
-        /* Level Income Table */
+        .pin-small {
+            width: 80px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 18px;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .attach-btn {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            color: #030507;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Level Income Table - Colors Fixed */
         .income-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 12px 0;
         }
-        .income-table th, .income-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #1e2a3a;
-        }
+
         .income-table th {
-            background: #1e2a3a;
+            background: rgba(0,255,209,0.1);
             color: #00ffd9;
             font-weight: 600;
+            font-size: 11px;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,255,209,0.2);
         }
-        .income-table td { color: #cbd5e0; }
-        .text-success { color: #2ecc71; }
-        .text-muted { color: #8899aa; }
 
-        /* Rank Progress */
-        .rank-progress p {
+        .income-table td {
+            padding: 8px;
+            color: #cbd5e0;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .text-success {
+            color: #2ecc71;
+        }
+
+        .text-muted {
+            color: #8899aa;
+        }
+
+        .note {
+            font-size: 9px;
+            color: #8899aa;
+            font-style: italic;
+        }
+
+        /* Rank Progress - Colors Fixed */
+        .rank-progress {
+            background: rgba(12,18,28,0.95);
+            border-radius: 16px;
+            padding: 12px;
             margin: 10px 0;
+        }
+
+        .rank-progress p {
+            margin: 6px 0;
+            font-size: 11px;
             color: #cbd5e0;
         }
 
-        .members-list {
-            margin-top: 15px;
+        .rank-progress p strong {
+            color: #00ffd9;
         }
+
+        /* Direct Members - Colors Fixed */
+        .members-list {
+            margin-top: 12px;
+        }
+
         .member-item {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
-            border-radius: 15px;
-            padding: 12px;
-            margin-bottom: 8px;
+            border-radius: 14px;
+            padding: 10px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .member-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
+
         .member-avatar {
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #030507;
             font-weight: 700;
-        }
-        .member-details {
-            font-size: 13px;
-        }
-        .member-name {
-            font-weight: 600;
-        }
-        .member-id {
-            font-size: 11px;
-            color: #8899aa;
-        }
-        .member-stats {
-            text-align: right;
             font-size: 12px;
         }
-        .member-rank {
-            color: #ffd700;
+
+        .member-details {
             font-size: 11px;
         }
 
+        .member-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .member-id {
+            font-size: 9px;
+            color: #8899aa;
+        }
+
+        .member-stats {
+            text-align: right;
+            font-size: 10px;
+        }
+
+        .member-rank {
+            color: #ffd700;
+            font-size: 9px;
+        }
+
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -627,7 +993,7 @@
             border-top: 1px solid rgba(0,255,209,0.2);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0 18px;
+            padding: 8px 0 14px;
             z-index: 100;
         }
 
@@ -635,29 +1001,136 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             color: #8899aa;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
             transition: all 0.3s;
         }
 
-        .nav-item i { font-size: 18px; }
-        .nav-item.active { color: #00ffd9; transform: translateY(-3px); }
+        .nav-item i {
+            font-size: 16px;
+        }
+
+        .nav-item.active {
+            color: #00ffd9;
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: rgba(12,18,28,0.95);
+            border: 1px solid rgba(0,255,209,0.3);
+            border-radius: 30px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-header h3 {
+            color: #00ffd9;
+            font-size: 18px;
+        }
+
+        .close-modal {
+            font-size: 22px;
+            cursor: pointer;
+            color: #8899aa;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #ff6b6b;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 16px;
+            padding: 12px;
+            color: #fff;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            color: #030507;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 16px rgba(0,255,209,0.4);
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            border: 1px solid #00ffd9;
+            color: #00ffd9;
+        }
+
+        .bonus-msg {
+            color: #00ffd9;
+            font-size: 11px;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        .pin-input {
+            display: flex;
+            gap: 6px;
+            margin: 12px 0;
+            justify-content: center;
+        }
+
+        .pin-field {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+        }
 
         .no-data {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: #8899aa;
             font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            .premium-header {
-                flex-direction: row;
-                gap: 10px;
-            }
         }
     </style>
 </head>
@@ -666,9 +1139,9 @@
     <div class="grid-overlay"></div>
 
     <div class="dashboard">
-        <!-- Header with clickable logo for logout -->
+        <!-- Header with clickable logo -->
         <div class="premium-header">
-            <div class="logo-3d" onclick="logout()" style="cursor: pointer;">
+            <div class="logo-3d" onclick="logout()">
                 <div class="logo-cube-small">
                     <i class="fas fa-brain"></i>
                 </div>
@@ -685,10 +1158,10 @@
         <!-- Current Rank Banner -->
         <div class="current-rank-banner">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
-            <span class="rank-badge" id="topCurrentRank">1 ⭐</span>
+            <span class="rank-badge" id="topCurrentRank">0 ⭐</span>
         </div>
 
-        <!-- Profile Section -->
+        <!-- Profile Section with Save Button -->
         <div class="profile-section">
             <div class="profile-header">
                 <div class="profile-avatar" onclick="document.getElementById('avatarUpload').click()">
@@ -698,9 +1171,12 @@
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                 </div>
                 <div class="profile-info">
-                    <input type="text" id="userName" value="User" onchange="updateUserName()">
+                    <input type="text" id="userName" value="User">
                     <p><i class="fas fa-id-card"></i> ID: <span id="userId">Gainix100001</span></p>
                     <p><i class="fas fa-envelope"></i> <span id="userEmail">user@example.com</span></p>
+                    <button class="save-profile-btn" onclick="saveProfile()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                 </div>
             </div>
 
@@ -708,17 +1184,17 @@
             <div class="wallet-address-mini">
                 <i class="fas fa-wallet"></i>
                 <span id="walletAddressDisplay">0x5f3a...8e2b</span>
-                <button class="copy-btn" onclick="copyWalletAddress()" style="margin-left: auto;">Copy</button>
+                <button class="copy-btn" onclick="copyWalletAddress()">Copy</button>
             </div>
 
             <!-- Referral Link -->
             <div class="referral-box">
-                <div style="font-size: 11px; color: #8899aa; margin-bottom: 6px;">Referral Link</div>
+                <div style="font-size: 10px; color: #8899aa; margin-bottom: 4px;">Referral Link</div>
                 <div class="referral-link">
                     <span id="refLinkDisplay">gainixai.live/ref/User</span>
                     <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
                 </div>
-                <input type="text" id="refLink" style="position: absolute; opacity: 0;" readonly>
+                <input type="text" id="refLink" style="display: none;">
             </div>
 
             <!-- Staking Stats -->
@@ -778,7 +1254,7 @@
                 <div class="balance-icon-3d"><i class="fas fa-hand-holding-usd"></i></div>
                 <div class="balance-amount" id="directIncome">$0</div>
                 <div class="balance-label">Direct Income</div>
-                <div class="today-plus">+$0 today</div>
+                <div class="today-plus" id="directToday">+$0 today</div>
             </div>
             <div class="balance-card-3d" onclick="showHistoryWithFilter('staking')">
                 <div class="balance-icon-3d"><i class="fas fa-coins"></i></div>
@@ -788,21 +1264,19 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div style="display: flex; gap: 10px;">
-            <div class="quick-actions" style="flex: 4;">
-                <div class="action-btn" onclick="openDepositModal()">
-                    <i class="fas fa-arrow-down"></i>
-                    <span>Deposit</span>
-                </div>
-                <div class="action-btn" onclick="openWithdrawModal()">
-                    <i class="fas fa-arrow-up"></i>
-                    <span>Withdraw</span>
-                </div>
-                <div class="action-btn" onclick="openP2PModal()">
-                    <i class="fas fa-handshake"></i>
-                    <span>P2P</span>
-                </div>
+        <!-- Quick Actions - Working -->
+        <div class="quick-actions">
+            <div class="action-btn" onclick="openDepositModal()">
+                <i class="fas fa-arrow-down"></i>
+                <span>Deposit</span>
+            </div>
+            <div class="action-btn" onclick="openWithdrawModal()">
+                <i class="fas fa-arrow-up"></i>
+                <span>Withdraw</span>
+            </div>
+            <div class="action-btn" onclick="openP2PModal()">
+                <i class="fas fa-handshake"></i>
+                <span>P2P</span>
             </div>
         </div>
 
@@ -879,15 +1353,15 @@
             <div class="no-data">No active stakings</div>
         </div>
 
-        <!-- Level Income Table -->
+        <!-- Level Income Table - Fixed Colors -->
         <div class="section-title"><i class="fas fa-sitemap"></i> LEVEL INCOME</div>
-        <div class="wallet-settings" style="margin-bottom: 16px;">
+        <div class="rank-progress" style="padding: 16px;">
             <table class="income-table">
                 <thead>
                     <tr>
                         <th>Level</th>
-                        <th>% of Team ROI</th>
-                        <th>Today's Estimate</th>
+                        <th>%</th>
+                        <th>Today</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -897,25 +1371,22 @@
                     </tr>
                 </tbody>
             </table>
-            <p class="note">*Levels unlock with direct referrals: 1,2,3,4,5 respectively.</p>
+            <p class="note">*Levels unlock with direct referrals: 1,2,3,4,5</p>
         </div>
 
-        <!-- Salary Rank Progress -->
+        <!-- Salary Rank Progress - Fixed Colors -->
         <div class="section-title"><i class="fas fa-star"></i> SALARY RANK</div>
-        <div class="wallet-settings" style="margin-bottom: 16px;">
-            <div class="rank-progress">
-                <p><strong>Current Rank:</strong> <span id="currentRank">Rank 1</span></p>
-                <span id="salaryCurrentRank" style="display: none;">1 ⭐</span>
-                <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $750</span></p>
-                <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $2,500</span></p>
-                <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 2</span></p>
-                <p><strong>Next Rank:</strong> <span id="nextRank">Rank 2 ($60/week)</span></p>
-            </div>
+        <div class="rank-progress">
+            <p><strong>Current Rank:</strong> <span id="currentRank">Rank 0</span></p>
+            <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $750</span></p>
+            <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $2,500</span></p>
+            <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 2</span></p>
+            <p><strong>Next Rank:</strong> <span id="nextRank">Rank 1 ($25/week)</span></p>
         </div>
 
-        <!-- Direct Members -->
+        <!-- Direct Members - Fixed Colors -->
         <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS</div>
-        <div class="wallet-settings" style="margin-bottom: 16px;">
+        <div class="rank-progress" style="padding: 12px;">
             <p><strong>Total Direct:</strong> <span id="directCount">0</span></p>
             <div id="directMembersList" class="members-list">
                 <div class="no-data">No direct referrals yet</div>
@@ -936,21 +1407,60 @@
         </div>
     </div>
 
-    <!-- Invest Modal -->
-    <div id="investModal" class="modal" style="display: none;">
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Make a New Investment</h3>
+                <h3>Deposit Funds</h3>
+                <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
+            </div>
+            <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input">
+            <button class="modal-btn" onclick="processDeposit()">DEPOSIT</button>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Withdraw Funds</h3>
+                <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
+            </div>
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min $20)" class="modal-input">
+            <button class="modal-btn" onclick="processWithdraw()">WITHDRAW</button>
+        </div>
+    </div>
+
+    <!-- P2P Modal -->
+    <div id="p2pModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>P2P Transfer</h3>
+                <span class="close-modal" onclick="closeModal('p2pModal')">&times;</span>
+            </div>
+            <input type="text" id="recipientId" placeholder="Recipient User ID" class="modal-input">
+            <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
+            <div class="pin-input">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3)">
+            </div>
+            <button class="modal-btn" onclick="processP2P()">SEND</button>
+        </div>
+    </div>
+
+    <!-- Invest Modal -->
+    <div id="investModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Stake</h3>
                 <span class="close-modal" onclick="closeInvestModal()">&times;</span>
             </div>
-            <select id="packageSelect" class="modal-input" onchange="showBonusMessage()">
-                <option value="BASIC">BASIC ($20 min, 90 days, 1-1.3% daily)</option>
-                <option value="PRO">PRO ($150 min, 180 days, 1.3-1.6% daily)</option>
-                <option value="ELITE">ELITE ($300 min, 450 days, 1.5-2% daily)</option>
-            </select>
-            <input type="number" id="modalAmount" class="modal-input" placeholder="Amount" min="20" oninput="showBonusMessage()">
-            <div id="modalBonusMessage" class="bonus-msg"></div>
-            <button class="modal-btn" onclick="createNewStaking()">STAKE NOW</button>
+            <p>Package: <span id="modalPkg"></span></p>
+            <p>Amount: $<span id="modalAmount"></span></p>
+            <button class="modal-btn" onclick="confirmStake()">CONFIRM</button>
+            <button class="modal-btn secondary" onclick="closeInvestModal()">CANCEL</button>
         </div>
     </div>
 
@@ -963,269 +1473,218 @@
         <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
-    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
         // ============================================
-        // LOGOUT FUNCTION (called when logo is clicked)
+        // DEPOSIT / WITHDRAW / P2P FUNCTIONS
         // ============================================
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
+
+        // Open deposit modal
+        function openDepositModal() {
+            document.getElementById('depositModal').style.display = 'flex';
+        }
+
+        // Process deposit
+        async function processDeposit() {
+            const amount = document.getElementById('depositAmount').value;
+            if (!amount || amount < 20) {
+                alert('Minimum deposit is $20');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/wallet/deposit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ amount: parseFloat(amount) })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ $${amount} deposited successfully!`);
+                    closeModal('depositModal');
+                    location.reload();
+                } else {
+                    alert('Deposit failed: ' + data.message);
+                }
+            } catch (error) {
+                alert('Deposit feature coming soon (demo)');
+                closeModal('depositModal');
+                // Demo - update UI
+                const fundWallet = document.getElementById('fundWallet');
+                const current = parseFloat(fundWallet.innerText.replace('$', '')) || 0;
+                fundWallet.innerText = '$' + (current + parseFloat(amount));
             }
         }
 
-        // ============================================
-        // COPY FUNCTIONS
-        // ============================================
-        function copyReferralLink() {
-            const refLinkInput = document.getElementById('refLink');
-            if (refLinkInput) {
-                refLinkInput.select();
-                document.execCommand('copy');
-                showToast('✅ Referral link copied!', 'success');
+        // Open withdraw modal
+        function openWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'flex';
+        }
+
+        // Process withdraw
+        async function processWithdraw() {
+            const amount = document.getElementById('withdrawAmount').value;
+            if (!amount || amount < 20) {
+                alert('Minimum withdrawal is $20');
+                return;
             }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/wallet/withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ amount: parseFloat(amount) })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ $${amount} withdrawal requested!`);
+                    closeModal('withdrawModal');
+                } else {
+                    alert('Withdrawal failed: ' + data.message);
+                }
+            } catch (error) {
+                alert('Withdrawal feature coming soon (demo)');
+                closeModal('withdrawModal');
+            }
+        }
+
+        // Open P2P modal
+        function openP2PModal() {
+            document.getElementById('p2pModal').style.display = 'flex';
+        }
+
+        // Process P2P transfer
+        async function processP2P() {
+            const recipient = document.getElementById('recipientId').value;
+            const amount = document.getElementById('p2pAmount').value;
+
+            if (!recipient || !amount) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            // Get PIN
+            const pins = document.querySelectorAll('#p2pModal .pin-field');
+            let pin = '';
+            pins.forEach(p => pin += p.value);
+
+            if (pin.length !== 4) {
+                alert('Please enter complete PIN');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        recipientId: recipient,
+                        amount: parseFloat(amount),
+                        pin: pin
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ $${amount} sent to ${recipient}!`);
+                    closeModal('p2pModal');
+                } else {
+                    alert('Transfer failed: ' + data.message);
+                }
+            } catch (error) {
+                alert('P2P transfer coming soon (demo)');
+                closeModal('p2pModal');
+            }
+        }
+
+        // Move to next PIN field
+        function moveToNext(current, index) {
+            if (current.value.length === 1) {
+                const next = document.querySelectorAll('#p2pModal .pin-field')[index + 1];
+                if (next) next.focus();
+            }
+        }
+
+        // Save profile function
+        function saveProfile() {
+            const newName = document.getElementById('userName').value;
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.name = newName;
+            localStorage.setItem('user', JSON.stringify(user));
+            alert('✅ Profile updated!');
+        }
+
+        // ============================================
+        // OTHER FUNCTIONS
+        // ============================================
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+}
+
+        function copyReferralLink() {
+            const refLink = document.getElementById('refLinkDisplay');
+            const text = refLink.innerText;
+            navigator.clipboard.writeText(text);
+            alert('✅ Referral link copied!');
         }
 
         function copyWalletAddress() {
-            const walletDisplay = document.getElementById('walletAddressDisplay');
-            if (walletDisplay) {
-                const address = walletDisplay.innerText;
-                navigator.clipboard.writeText(address);
-                showToast('✅ Wallet address copied!', 'success');
-            }
+            const address = document.getElementById('walletAddressDisplay').innerText;
+            navigator.clipboard.writeText(address);
+            alert('✅ Wallet address copied!');
         }
 
-        // ============================================
-        // MODAL FUNCTIONS
-        // ============================================
-        function showInvestModal() {
-            document.getElementById('investModal').style.display = 'flex';
-            showBonusMessage();
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
-        function closeInvestModal() {
-            document.getElementById('investModal').style.display = 'none';
+        // Update UTC time
+        function updateUTCTime() {
+            const now = new Date();
+            const hours = now.getUTCHours().toString().padStart(2, '0');
+            const minutes = now.getUTCMinutes().toString().padStart(2, '0');
+            document.getElementById('utcDisplay').innerText = hours + ':' + minutes + ' UTC';
+        }
+        setInterval(updateUTCTime, 1000);
+        updateUTCTime();
+
+        // Check Sunday
+        const today = new Date();
+        if (today.getUTCDay() === 0) {
+            document.querySelector('.unique-bot').innerHTML += 
+                '<div style="background:rgba(255,107,107,0.2); color:#ff6b6b; padding:10px; border-radius:16px; margin-top:10px;">⚠️ Sunday - Bot Closed</div>';
         }
 
-        function selectPackage(packageNum) {
-            document.querySelectorAll('.package-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            const selectedCard = document.getElementById(`package${packageNum}`);
-            if (selectedCard) selectedCard.classList.add('selected');
-            
-            const packageSelect = document.getElementById('packageSelect');
-            if (packageSelect) {
-                const packages = ['BASIC', 'PRO', 'ELITE'];
-                packageSelect.value = packages[packageNum - 1];
-            }
-            showBonusMessage();
-        }
-
-        function showBonusMessage() {
-            const packageSelect = document.getElementById('packageSelect');
-            const amount = parseFloat(document.getElementById('packageAmount')?.value) || 0;
-            const msgDiv = document.getElementById('bonusMessage');
-            const modalMsgDiv = document.getElementById('modalBonusMessage');
-            
-            if (packageSelect && packageSelect.value === 'ELITE' && amount >= 500) {
-                if (msgDiv) msgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
-                if (modalMsgDiv) modalMsgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
-            } else {
-                if (msgDiv) msgDiv.innerHTML = '';
-                if (modalMsgDiv) modalMsgDiv.innerHTML = '';
-            }
-        }
-
-        function openDepositModal() {
-            showToast('Deposit feature coming soon', 'info');
-        }
-
-        function openWithdrawModal() {
-            showToast('Withdraw feature coming soon', 'info');
-        }
-
-        function openP2PModal() {
-            showToast('P2P transfer coming soon', 'info');
-        }
-
-        function openTradeModal() {
-            showToast('Trading window opens at 9:00 UTC', 'info');
-        }
-
-        function attachWallet() {
-            const address = document.getElementById('bep20Address')?.value;
-            const pin = document.getElementById('walletPin')?.value;
-            
-            if (!address || address.length < 20) {
-                showToast('Please enter a valid BEP20 address', 'error');
-                return;
-            }
-            if (!pin || pin.length !== 4) {
-                showToast('Please enter 4-digit PIN', 'error');
-                return;
-            }
-            showToast('Wallet attached successfully!', 'success');
-        }
-
-        function uploadAvatar(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const avatarIcon = document.getElementById('avatarIcon');
-                    const avatarImage = document.getElementById('avatarImage');
-                    if (avatarIcon) avatarIcon.style.display = 'none';
-                    if (avatarImage) {
-                        avatarImage.style.display = 'block';
-                        avatarImage.src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function updateUserName() {
-            const newName = document.getElementById('userName')?.value;
-            if (newName) {
-                const user = JSON.parse(localStorage.getItem('user') || '{}');
-                user.name = newName;
-                localStorage.setItem('user', JSON.stringify(user));
-                showToast('Username updated!', 'success');
-            }
-        }
-
-        function showHistoryWithFilter(filter) {
-            localStorage.setItem('historyFilter', filter);
-            window.location.href = 'history.html';
-        }
-
-        // Toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#ff6b6b' : '#00ffd9'};
-                color: ${type === 'success' || type === 'error' ? '#fff' : '#030507'};
-                padding: 12px 24px;
-                border-radius: 40px;
-                font-weight: 600;
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            `;
-            toast.innerHTML = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Add animation styles
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-            .bonus-msg {
-                color: #00ffd9;
-                font-size: 13px;
-                margin: 10px 0;
-                text-align: center;
-            }
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.95);
-                backdrop-filter: blur(10px);
-                z-index: 2000;
-                justify-content: center;
-                align-items: center;
-                padding: 16px;
-            }
-            .modal-content {
-                background: rgba(12,18,28,0.95);
-                border: 1px solid rgba(0,255,209,0.3);
-                border-radius: 36px;
-                padding: 22px;
-                width: 100%;
-                max-width: 360px;
-            }
-            .modal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 16px;
-            }
-            .modal-header h3 {
-                color: #00ffd9;
-                font-size: 20px;
-            }
-            .close-modal {
-                font-size: 26px;
-                cursor: pointer;
-                color: #8899aa;
-                transition: color 0.3s;
-            }
-            .close-modal:hover {
-                color: #ff6b6b;
-            }
-            .modal-input {
-                width: 100%;
-                background: rgba(255,255,255,0.05);
-                border: 1px solid rgba(0,255,209,0.2);
-                border-radius: 18px;
-                padding: 14px;
-                color: #fff;
-                font-size: 15px;
-                margin: 12px 0;
-            }
-            .modal-btn {
-                width: 100%;
-                background: linear-gradient(145deg, #00ffd9, #0099ff);
-                border: none;
-                border-radius: 30px;
-                padding: 14px;
-                color: #030507;
-                font-weight: 700;
-                font-size: 15px;
-                cursor: pointer;
-                transition: all 0.3s;
-            }
-            .modal-btn:hover {
-                transform: scale(1.02);
-                box-shadow: 0 0 20px rgba(0,255,209,0.4);
-            }
-        `;
-        document.head.appendChild(style);
+        // Export functions
+        window.openDepositModal = openDepositModal;
+        window.openWithdrawModal = openWithdrawModal;
+        window.openP2PModal = openP2PModal;
+        window.processDeposit = processDeposit;
+        window.processWithdraw = processWithdraw;
+        window.processP2P = processP2P;
+        window.moveToNext = moveToNext;
+        window.closeModal = closeModal;
+        window.saveProfile = saveProfile;
+        window.copyReferralLink = copyReferralLink;
+        window.copyWalletAddress = copyWalletAddress;
+        window.logout = logout;
     </script>
 </body>
 </html>
