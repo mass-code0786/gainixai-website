@@ -1,6 +1,6 @@
 // ==================== ADMIN CONFIGURATION ====================
 let adminLoggedIn = false;
-const API_BASE_URL = 'https://gainixai-backend.onrender.com/api'; // Backend API URL
+const API_BASE_URL = 'https://gainixai-backend.onrender.com/api';
 let adminToken = localStorage.getItem('adminToken') || null;
 
 // ==================== MOBILE MENU ====================
@@ -64,7 +64,6 @@ function adminLogout() {
 // Check if already logged in
 document.addEventListener('DOMContentLoaded', function() {
     if (adminToken) {
-        // Auto-login with token
         document.getElementById('admin-login-page').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'flex';
         adminLoggedIn = true;
@@ -131,14 +130,13 @@ function switchAdminPage(page) {
         w.charAt(0).toUpperCase() + w.slice(1)
     ).join(' ');
     
-    // Close mobile menu
     document.getElementById('adminSidebar').classList.remove('active');
     
-    // Load page specific data
     if (page === 'users') loadUsersTable();
     if (page === 'withdrawals') loadWithdrawalsTable();
     if (page === 'unstake') loadUnstakeTable();
     if (page === 'staking') loadStakingTable();
+    if (page === 'bot-settings') loadBotSettings();
 }
 
 // ==================== DASHBOARD ====================
@@ -162,12 +160,10 @@ async function loadDashboardStats() {
             document.getElementById('activeStaked').textContent = '$' + (stats.totalStaked || 0).toLocaleString();
             document.getElementById('pendingWithdrawals').textContent = '$' + (stats.pendingAmount || 0);
             
-            // Load recent unstake requests
             loadRecentUnstake();
         }
     } catch (error) {
         console.error('Failed to load dashboard stats:', error);
-        // Fallback to sample data
         document.getElementById('totalUsers').textContent = '0';
         document.getElementById('activeUsers').textContent = '0';
     }
@@ -199,7 +195,6 @@ async function loadRecentUnstake() {
 
 // ==================== CHARTS ====================
 function initCharts() {
-    // User Growth Chart
     const userCtx = document.getElementById('userGrowthChart').getContext('2d');
     new Chart(userCtx, {
         type: 'line',
@@ -220,7 +215,6 @@ function initCharts() {
         }
     });
 
-    // Staking Chart
     const stakeCtx = document.getElementById('stakingChart').getContext('2d');
     new Chart(stakeCtx, {
         type: 'bar',
@@ -607,7 +601,6 @@ async function loadStakingTable() {
             });
             tbody.innerHTML = html;
             
-            // Update package stats
             updatePackageStats(data.data);
         } else {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No stakings found</td></tr>';
@@ -630,14 +623,14 @@ function updatePackageStats(stakings) {
     document.getElementById('eliteAmount').textContent = '$' + elite.reduce((sum, s) => sum + s.amount, 0).toLocaleString();
 }
 
-// ==================== BOT SETTINGS ====================
+// ==================== BOT SETTINGS - FIXED ====================
 async function loadBotSettings() {
     try {
         const data = await apiCall('/settings');
         if (data.success) {
             const settings = data.data;
-            document.getElementById('botStartTime').value = `${settings.botTradingStartHour}:00` || '09:00';
-            document.getElementById('botEndTime').value = `${settings.botTradingEndHour}:00` || '10:00';
+            document.getElementById('botStartTime').value = `${settings.botTradingStartHour || 9}:00`;
+            document.getElementById('botEndTime').value = `${settings.botTradingEndHour || 10}:00`;
             document.getElementById('levelDelay').value = 10;
             document.getElementById('botStatusSelect').value = settings.botEnabled ? 'active' : 'paused';
         }
@@ -646,20 +639,32 @@ async function loadBotSettings() {
     }
 }
 
+// ✅ FIXED: Save Bot Settings with API Call
 async function saveBotSettings() {
-    const settings = {
-        botTradingStartHour: parseInt(document.getElementById('botStartTime').value.split(':')[0]),
-        botTradingEndHour: parseInt(document.getElementById('botEndTime').value.split(':')[0]),
-        botEnabled: document.getElementById('botStatusSelect').value === 'active'
-    };
-    
     try {
+        const startTime = document.getElementById('botStartTime').value;
+        const endTime = document.getElementById('botEndTime').value;
+        const status = document.getElementById('botStatusSelect').value;
+        
+        const settings = {
+            startHour: parseInt(startTime.split(':')[0]),
+            endHour: parseInt(endTime.split(':')[0]),
+            enabled: status === 'active'
+        };
+        
+        console.log('Saving bot settings:', settings);
+        
         const data = await apiCall('/settings/bot', 'PUT', settings);
+        
         if (data.success) {
-            alert('Bot settings saved successfully!');
+            alert('✅ Bot settings saved successfully!');
+            loadBotSettings(); // Refresh
+        } else {
+            alert('❌ Failed to save: ' + (data.message || 'Unknown error'));
         }
     } catch (error) {
-        alert('Failed to save bot settings');
+        console.error('Error saving bot settings:', error);
+        alert('❌ Error: ' + error.message);
     }
 }
 
@@ -691,34 +696,35 @@ async function loadROISettings() {
 }
 
 async function saveROISettings() {
-    const settings = {
-        basic: {
-            minAmount: parseFloat(document.getElementById('basicMin').value),
-            roiMin: parseFloat(document.getElementById('basicMinROI').value),
-            roiMax: parseFloat(document.getElementById('basicMaxROI').value),
-            period: parseInt(document.getElementById('basicDays').value)
-        },
-        pro: {
-            minAmount: parseFloat(document.getElementById('proMin').value),
-            roiMin: parseFloat(document.getElementById('proMinROI').value),
-            roiMax: parseFloat(document.getElementById('proMaxROI').value),
-            period: parseInt(document.getElementById('proDays').value)
-        },
-        elite: {
-            minAmount: parseFloat(document.getElementById('eliteMin').value),
-            roiMin: parseFloat(document.getElementById('eliteMinROI').value),
-            roiMax: parseFloat(document.getElementById('eliteMaxROI').value),
-            period: parseInt(document.getElementById('eliteDays').value)
-        }
-    };
-    
     try {
+        const settings = {
+            basic: {
+                minAmount: parseFloat(document.getElementById('basicMin').value),
+                roiMin: parseFloat(document.getElementById('basicMinROI').value),
+                roiMax: parseFloat(document.getElementById('basicMaxROI').value),
+                period: parseInt(document.getElementById('basicDays').value)
+            },
+            pro: {
+                minAmount: parseFloat(document.getElementById('proMin').value),
+                roiMin: parseFloat(document.getElementById('proMinROI').value),
+                roiMax: parseFloat(document.getElementById('proMaxROI').value),
+                period: parseInt(document.getElementById('proDays').value)
+            },
+            elite: {
+                minAmount: parseFloat(document.getElementById('eliteMin').value),
+                roiMin: parseFloat(document.getElementById('eliteMinROI').value),
+                roiMax: parseFloat(document.getElementById('eliteMaxROI').value),
+                period: parseInt(document.getElementById('eliteDays').value)
+            }
+        };
+        
         const data = await apiCall('/settings/packages', 'PUT', settings);
         if (data.success) {
-            alert('ROI settings saved successfully!');
+            alert('✅ ROI settings saved successfully!');
         }
     } catch (error) {
-        alert('Failed to save ROI settings');
+        console.error('Error saving ROI settings:', error);
+        alert('❌ Error: ' + error.message);
     }
 }
 
@@ -799,7 +805,7 @@ async function transferFunds() {
         
         if (data.success) {
             loadUserWallets();
-            alert(`Successfully transferred $${amount}`);
+            alert(`✅ Successfully transferred $${amount}`);
             document.getElementById('transferAmount').value = '';
         }
     } catch (error) {
