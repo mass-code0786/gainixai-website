@@ -250,6 +250,16 @@
             transform: translateY(-2px);
         }
 
+        .member-card.active {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.05);
+        }
+
+        .member-card.inactive {
+            opacity: 0.6;
+            border-color: rgba(136, 153, 170, 0.2);
+        }
+
         .member-avatar {
             width: 40px;
             height: 40px;
@@ -284,6 +294,28 @@
             color: #00ffd9;
             font-weight: 600;
             font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .status-badge.inactive {
+            background: rgba(136, 153, 170, 0.2);
+            color: #8899aa;
         }
 
         .no-data {
@@ -388,13 +420,13 @@
                        placeholder="Enter level number" 
                        min="1" max="1000000" step="1" value="1">
                 <button class="search-btn" onclick="searchLevel()">
-                    <i class="fas fa-arrow-right"></i> GO
+                    <i class="fas fa-arrow-right"></i> SEARCH
                 </button>
             </div>
             
             <div class="search-info">
                 <i class="fas fa-info-circle"></i>
-                Search any level from 1 to 1,000,000
+                Search any level from 1 to 1,000,000 - shows ONLY active members
             </div>
         </div>
 
@@ -414,13 +446,13 @@
             </div>
         </div>
 
-        <!-- Level Tabs -->
+        <!-- Level Tabs (1-5) - Shows ALL members (active + inactive) -->
         <div class="level-tabs">
-            <div class="level-tab active" onclick="loadTeamLevel(1)">Level 1</div>
-            <div class="level-tab" onclick="loadTeamLevel(2)">Level 2</div>
-            <div class="level-tab" onclick="loadTeamLevel(3)">Level 3</div>
-            <div class="level-tab" onclick="loadTeamLevel(4)">Level 4</div>
-            <div class="level-tab" onclick="loadTeamLevel(5)">Level 5</div>
+            <div class="level-tab active" onclick="loadLevelTab(1)">Level 1</div>
+            <div class="level-tab" onclick="loadLevelTab(2)">Level 2</div>
+            <div class="level-tab" onclick="loadLevelTab(3)">Level 3</div>
+            <div class="level-tab" onclick="loadLevelTab(4)">Level 4</div>
+            <div class="level-tab" onclick="loadLevelTab(5)">Level 5</div>
         </div>
 
         <!-- Members Grid -->
@@ -448,13 +480,13 @@
 
         const API_URL = API_BASE_URL || 'https://gainixai-backend.onrender.com/api';
 
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = 'login.html';
                 return;
             }
-            await loadTeamLevel(1);
+            loadLevelTab(1); // Load Level 1 by default (all members)
         });
 
         function goToDashboard() {
@@ -462,9 +494,9 @@
         }
 
         // ============================================
-        // LOAD TEAM MEMBERS FROM BACKEND
+        // LOAD LEVEL TAB (1-5) - SHOWS ALL MEMBERS
         // ============================================
-        async function loadTeamLevel(level) {
+        async function loadLevelTab(level) {
             // Update active tab
             document.querySelectorAll('.level-tab').forEach(tab => tab.classList.remove('active'));
             const tabs = document.querySelectorAll('.level-tab');
@@ -479,8 +511,7 @@
             `;
 
             try {
-                // Call API
-                const response = await fetch(`${API_URL}/team/level/${level}`, {
+                const response = await fetch(`${API_URL}/team/tabs/${level}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
@@ -488,48 +519,43 @@
                 
                 const data = await response.json();
                 
-                if (data.success && data.data && data.data.length > 0) {
+                if (data.success) {
                     // Update stats
-                    const totalMembers = data.data.length;
-                    const totalVolume = data.data.reduce((sum, m) => sum + (m.contribution || m.staked || 0), 0);
-                    const activeStakers = data.data.filter(m => m.active || (m.contribution > 0) || (m.staked > 0)).length;
+                    document.getElementById('totalMembers').innerText = data.stats.totalMembers;
+                    document.getElementById('totalVolume').innerText = '$' + data.stats.totalVolume.toFixed(2);
+                    document.getElementById('activeStakers').innerText = data.stats.activeMembers;
                     
-                    document.getElementById('totalMembers').innerText = totalMembers;
-                    document.getElementById('totalVolume').innerText = '$' + totalVolume.toFixed(2);
-                    document.getElementById('activeStakers').innerText = activeStakers;
+                    if (data.data.length === 0) {
+                        membersContainer.innerHTML = `
+                            <div class="no-data">
+                                <i class="fas fa-users-slash"></i>
+                                <p>No members found at level ${level}</p>
+                            </div>
+                        `;
+                        return;
+                    }
                     
-                    // Render members
                     let html = '';
                     data.data.forEach(member => {
-                        const contribution = member.contribution || member.staked || 0;
-                        const name = member.name || member.fullName || `Team Member`;
-                        const userId = member.userId || member.id || `Gainix${100000 + Math.floor(Math.random()*9000)}`;
-                        const avatarLetter = name ? name[0].toUpperCase() : 'U';
+                        const statusClass = member.isActive ? 'active' : 'inactive';
+                        const statusText = member.isActive ? 'Active' : 'Inactive';
+                        const avatarLetter = member.name ? member.name[0].toUpperCase() : 'U';
                         
                         html += `
-                            <div class="member-card">
+                            <div class="member-card ${statusClass}">
                                 <div class="member-avatar">${avatarLetter}</div>
                                 <div class="member-info">
-                                    <div class="member-name">${name}</div>
-                                    <div class="member-id">${userId}</div>
-                                    <div class="member-contribution">$${contribution}</div>
+                                    <div class="member-name">${member.name || 'Team Member'}</div>
+                                    <div class="member-id">${member.userId}</div>
+                                    <div class="member-contribution">
+                                        $${member.contribution || 0}
+                                        <span class="status-badge ${statusClass}">${statusText}</span>
+                                    </div>
                                 </div>
                             </div>
                         `;
                     });
                     membersContainer.innerHTML = html;
-                } else {
-                    // No members found
-                    document.getElementById('totalMembers').innerText = '0';
-                    document.getElementById('totalVolume').innerText = '$0';
-                    document.getElementById('activeStakers').innerText = '0';
-                    
-                    membersContainer.innerHTML = `
-                        <div class="no-data">
-                            <i class="fas fa-users-slash"></i>
-                            <p>No members found at level ${level}</p>
-                        </div>
-                    `;
                 }
             } catch (error) {
                 console.error('Failed to load team:', error);
@@ -543,7 +569,8 @@
         }
 
         // ============================================
-        // SEARCH LEVEL FUNCTION
+        // SEARCH LEVEL - UNLIMITED (1 to 1,000,000)
+        // SHOWS ONLY ACTIVE MEMBERS
         // ============================================
         async function searchLevel() {
             const input = document.getElementById('levelSearchInput');
@@ -553,11 +580,73 @@
                 alert('Please enter a valid level between 1 and 1,000,000');
                 return;
             }
-            await loadTeamLevel(level);
+
+            // Show loading
+            const membersContainer = document.getElementById('membersList');
+            membersContainer.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Searching level ${level} for active members...
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`${API_URL}/team/level/${level}?active=true`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update stats
+                    document.getElementById('totalMembers').innerText = data.stats.totalMembers;
+                    document.getElementById('totalVolume').innerText = '$' + data.stats.totalVolume.toFixed(2);
+                    document.getElementById('activeStakers').innerText = data.stats.activeMembers;
+                    
+                    if (data.data.length === 0) {
+                        membersContainer.innerHTML = `
+                            <div class="no-data">
+                                <i class="fas fa-users-slash"></i>
+                                <p>No active members found at level ${level}</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    let html = '';
+                    data.data.forEach(member => {
+                        const avatarLetter = member.name ? member.name[0].toUpperCase() : 'U';
+                        
+                        html += `
+                            <div class="member-card active">
+                                <div class="member-avatar">${avatarLetter}</div>
+                                <div class="member-info">
+                                    <div class="member-name">${member.name || 'Team Member'}</div>
+                                    <div class="member-id">${member.userId}</div>
+                                    <div class="member-contribution">
+                                        $${member.contribution || 0}
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    membersContainer.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Failed to search level:', error);
+                membersContainer.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to search level ${level}</p>
+                    </div>
+                `;
+            }
         }
 
         // Export functions
-        window.loadTeamLevel = loadTeamLevel;
+        window.loadLevelTab = loadLevelTab;
         window.searchLevel = searchLevel;
         window.goToDashboard = goToDashboard;
     </script>
