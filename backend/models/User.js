@@ -4,25 +4,22 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Name is required'],
+        required: true,
         trim: true
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: true,
         unique: true,
-        lowercase: true,
-        trim: true
+        lowercase: true
     },
     phone: {
         type: String,
-        required: [true, 'Phone number is required'],
-        unique: true
+        required: true
     },
     password: {
         type: String,
-        required: [true, 'Password is required'],
-        minlength: 6
+        required: true
     },
     sponsorId: {
         type: String,
@@ -49,6 +46,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    // Direct referrals (all - regardless of staking)
     directReferrals: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -57,13 +55,42 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    // ✅ NEW: Active referrals (those who have staked)
+    activeReferrals: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    activeReferralCount: {
+        type: Number,
+        default: 0
+    },
     teamBusiness: {
+        type: Number,
+        default: 0
+    },
+    // Level income related
+    unlockedLevels: {
         type: Number,
         default: 0
     },
     currentRank: {
         type: Number,
         default: 1
+    },
+    rankName: {
+        type: String,
+        default: '⭐ Rank 1'
+    },
+    rankQualifiedMembers: {
+        type: Number,
+        default: 0
+    },
+    lastSalaryPaid: {
+        type: Date
+    },
+    totalSalaryEarned: {
+        type: Number,
+        default: 0
     },
     createdAt: {
         type: Date,

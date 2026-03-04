@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {
-    getTeamByLevel,
     getLevelIncomeSummary,
+    getTeamByLevel,
     getLevelIncomeHistory,
     distributeLevelIncome
 } = require('../controllers/levelController');
@@ -14,6 +14,6 @@ router.get('/history', protect, getLevelIncomeHistory);
 router.get('/team/:level', protect, getTeamByLevel);
 
 // Admin only route
-router.post('/distribute', protect, distributeLevelIncome); // Add admin check later
+router.post('/distribute', protect, distributeLevelIncome);
 
 module.exports = router;

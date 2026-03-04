@@ -1,5 +1,6 @@
 const Staking = require('../models/staking');
 const User = require('../models/User');
+const LevelIncome = require('../models/levelIncome');
 
 // Package configurations with referral bonuses
 const packages = {
@@ -29,9 +30,9 @@ const packages = {
     }
 };
 
-// @desc    Create new staking
-// @route   POST /api/staking/create
-// @access  Private
+// ============================================
+// CREATE STAKING - WITH ACTIVE REFERRAL UPDATE
+// ============================================
 const createStaking = async (req, res) => {
     try {
         const { package: packageName, amount } = req.body;
@@ -66,10 +67,15 @@ const createStaking = async (req, res) => {
             });
         }
 
+        // Check if this is user's FIRST staking
+        const existingStakings = await Staking.find({ userId: user.userId });
+        const isFirstStaking = existingStakings.length === 0;
+
         console.log('👤 User found:', { 
             email: user.email, 
             fundWallet: user.fundWallet,
-            sponsorId: user.sponsorId 
+            sponsorId: user.sponsorId,
+            isFirstStaking
         });
 
         // Check fund wallet balance
@@ -151,10 +157,31 @@ const createStaking = async (req, res) => {
                 // Update sponsor's direct business
                 sponsor.directBusiness = (sponsor.directBusiness || 0) + amount;
                 
-                // Update sponsor's direct count if not already counted
+                // Update sponsor's team business (for all levels)
+                sponsor.teamBusiness = (sponsor.teamBusiness || 0) + amount;
+                
+                // Update sponsor's direct referrals list (if not already)
                 if (!sponsor.directReferrals.includes(user._id)) {
                     sponsor.directReferrals.push(user._id);
                     sponsor.directCount = sponsor.directReferrals.length;
+                }
+                
+                // ============================================
+                // 🔥 ACTIVE REFERRAL CHECK - CRITICAL PART
+                // ============================================
+                // ✅ Check if this downline is becoming active for the FIRST TIME
+                if (isFirstStaking) {
+                    // Check if not already in active referrals
+                    if (!sponsor.activeReferrals.includes(user._id)) {
+                        sponsor.activeReferrals.push(user._id);
+                        sponsor.activeReferralCount = sponsor.activeReferrals.length;
+                        
+                        console.log(`✅ New ACTIVE referral added for ${sponsor.userId}: ${user.userId}`);
+                        console.log(`📊 Sponsor now has ${sponsor.activeReferralCount} active referrals`);
+                        
+                        // 🔥 RECALCULATE UNLOCKED LEVELS FOR SPONSOR
+                        await updateUnlockedLevels(sponsor);
+                    }
                 }
                 
                 await sponsor.save();
@@ -164,10 +191,21 @@ const createStaking = async (req, res) => {
                 sponsorInfo = {
                     sponsorId: sponsor.userId,
                     amount: referralAmount,
-                    percentage: referralPercentage
+                    percentage: referralPercentage,
+                    isNewActiveReferral: isFirstStaking && !sponsor.activeReferrals.includes(user._id)
                 };
                 
                 console.log(`💰 Referral bonus: $${referralAmount} (${referralPercentage}%) credited to ${sponsor.userId}`);
+                
+                // ============================================
+                // 🔥 UPDATE UPLINE TEAM BUSINESS (LEVELS 2-5)
+                // ============================================
+                await updateUplineTeamBusiness(sponsor, amount, 2);
+                
+                // ============================================
+                // 🔥 DISTRIBUTE LEVEL INCOME TO UPLINES
+                // ============================================
+                await distributeLevelIncomeToUplines(sponsor, amount, user, 1);
             } else {
                 console.log('⚠️ Sponsor not found in database:', user.sponsorId);
             }
@@ -219,6 +257,11 @@ const createStaking = async (req, res) => {
                     bonusEarned: referralAmount,
                     sponsorInfo: sponsorInfo
                 },
+                activeReferral: {
+                    isFirstStaking,
+                    isNewActiveReferral: isFirstStaking && sponsorInfo?.isNewActiveReferral,
+                    sponsorActiveCount: sponsorInfo?.sponsorId ? (await User.findOne({ userId: sponsorInfo.sponsorId }))?.activeReferralCount : 0
+                },
                 specialBonus: specialBonusAmount
             }
         });
@@ -248,9 +291,107 @@ const createStaking = async (req, res) => {
     }
 };
 
-// @desc    Get user's active stakings
-// @route   GET /api/staking/active
-// @access  Private
+// ============================================
+// 🔥 HELPER: Update Unlocked Levels Based on Active Referrals
+// ============================================
+async function updateUnlockedLevels(user) {
+    // Level unlock rules based on ACTIVE referrals
+    const activeCount = user.activeReferralCount || 0;
+    
+    let unlockedLevels = 0;
+    if (activeCount >= 5) unlockedLevels = 5;
+    else if (activeCount >= 4) unlockedLevels = 4;
+    else if (activeCount >= 3) unlockedLevels = 3;
+    else if (activeCount >= 2) unlockedLevels = 2;
+    else if (activeCount >= 1) unlockedLevels = 1;
+    else unlockedLevels = 0;
+    
+    if (user.unlockedLevels !== unlockedLevels) {
+        user.unlockedLevels = unlockedLevels;
+        await user.save();
+        console.log(`📊 Unlocked levels updated for ${user.userId}: ${unlockedLevels} (based on ${activeCount} active referrals)`);
+    }
+    
+    return unlockedLevels;
+}
+
+// ============================================
+// 🔥 HELPER: Update Upline Team Business (Levels 2-5)
+// ============================================
+async function updateUplineTeamBusiness(user, amount, level) {
+    if (level > 5 || !user.sponsorId) return;
+    
+    const upline = await User.findOne({ userId: user.sponsorId });
+    if (upline) {
+        upline.teamBusiness = (upline.teamBusiness || 0) + amount;
+        await upline.save();
+        
+        console.log(`📈 Level ${level} team business updated for ${upline.userId}: +$${amount}`);
+        
+        // Recursively update next level upline
+        await updateUplineTeamBusiness(upline, amount, level + 1);
+    }
+}
+
+// ============================================
+// 🔥 HELPER: Distribute Level Income to Uplines
+// ============================================
+async function distributeLevelIncomeToUplines(sponsor, amount, downlineUser, currentLevel) {
+    if (currentLevel > 5 || !sponsor) return;
+    
+    try {
+        // Check if this level is unlocked for sponsor
+        const sponsorActiveCount = sponsor.activeReferralCount || 0;
+        const isLevelUnlocked = sponsorActiveCount >= currentLevel;
+        
+        if (isLevelUnlocked) {
+            // Calculate level income percentage
+            let percentage = 0;
+            switch(currentLevel) {
+                case 1: percentage = 10; break;
+                case 2: percentage = 7; break;
+                case 3: percentage = 5; break;
+                case 4: percentage = 3; break;
+                case 5: percentage = 1; break;
+            }
+            
+            const levelIncomeAmount = (amount * percentage) / 100;
+            
+            // Create level income record
+            await LevelIncome.create({
+                user: sponsor._id,
+                userId: sponsor.userId,
+                fromUser: downlineUser._id,
+                fromUserId: downlineUser.userId,
+                level: currentLevel,
+                amount: levelIncomeAmount,
+                percentage: percentage,
+                sourceAmount: amount,
+                sourceType: 'staking'
+            });
+            
+            // Credit to sponsor's withdraw wallet
+            sponsor.withdrawWallet = (sponsor.withdrawWallet || 0) + levelIncomeAmount;
+            await sponsor.save();
+            
+            console.log(`📊 Level ${currentLevel} income: $${levelIncomeAmount} (${percentage}%) credited to ${sponsor.userId}`);
+        }
+        
+        // Move to next level upline
+        if (sponsor.sponsorId) {
+            const nextUpline = await User.findOne({ userId: sponsor.sponsorId });
+            if (nextUpline) {
+                await distributeLevelIncomeToUplines(nextUpline, amount, downlineUser, currentLevel + 1);
+            }
+        }
+    } catch (error) {
+        console.error(`❌ Error distributing level ${currentLevel} income:`, error);
+    }
+}
+
+// ============================================
+// GET USER'S ACTIVE STAKINGS
+// ============================================
 const getActiveStakings = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -291,9 +432,9 @@ const getActiveStakings = async (req, res) => {
     }
 };
 
-// @desc    Unstake (withdraw) a staking
-// @route   POST /api/staking/unstake/:id
-// @access  Private
+// ============================================
+// UNSTAKE STAKING
+// ============================================
 const unstakeStaking = async (req, res) => {
     try {
         const { id } = req.params;
@@ -357,9 +498,9 @@ const unstakeStaking = async (req, res) => {
     }
 };
 
-// @desc    Get staking statistics
-// @route   GET /api/staking/stats
-// @access  Private
+// ============================================
+// GET STAKING STATISTICS
+// ============================================
 const getStakingStats = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -409,9 +550,9 @@ const getStakingStats = async (req, res) => {
     }
 };
 
-// @desc    Get referral summary
-// @route   GET /api/staking/referral-summary
-// @access  Private
+// ============================================
+// GET REFERRAL SUMMARY
+// ============================================
 const getReferralSummary = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -424,8 +565,11 @@ const getReferralSummary = async (req, res) => {
             });
         }
 
+        // Get all downline users
+        const downlines = user.directReferrals || [];
+        
         // Get all stakings from downlines
-        const downlineUserIds = user.directReferrals.map(ref => ref.userId);
+        const downlineUserIds = downlines.map(ref => ref.userId);
         const downlineStakings = await Staking.find({
             userId: { $in: downlineUserIds },
             status: 'ACTIVE'
@@ -439,32 +583,84 @@ const getReferralSummary = async (req, res) => {
             total: 0
         };
 
+        const packageDetails = [];
+
         downlineStakings.forEach(staking => {
             const pkg = packages[staking.package];
             if (pkg) {
                 const referralAmount = (staking.amount * pkg.referralBonus) / 100;
                 earnings[staking.package] += referralAmount;
                 earnings.total += referralAmount;
+                
+                packageDetails.push({
+                    package: staking.package,
+                    amount: staking.amount,
+                    referralBonus: pkg.referralBonus,
+                    earned: referralAmount,
+                    fromUser: staking.userId,
+                    date: staking.createdAt
+                });
             }
         });
+
+        // Calculate total team volume
+        const teamVolume = downlineStakings.reduce((sum, s) => sum + s.amount, 0);
+
+        // Rank progress for each downline
+        const downlineDetails = await Promise.all(downlines.map(async (ref) => {
+            const refStakings = await Staking.find({ 
+                userId: ref.userId,
+                status: 'ACTIVE'
+            });
+            
+            const totalStaked = refStakings.reduce((sum, s) => sum + s.amount, 0);
+            const activePackages = refStakings.map(s => s.package);
+            
+            return {
+                userId: ref.userId,
+                name: ref.name,
+                email: ref.email,
+                joinDate: ref.createdAt,
+                totalStaked: totalStaked,
+                activePackages: activePackages,
+                packageCount: refStakings.length,
+                currentRank: ref.currentRank || 1,
+                rankName: ref.rankName || '⭐ Rank 1',
+                isActive: totalStaked > 0
+            };
+        }));
 
         res.status(200).json({
             success: true,
             data: {
-                totalReferrals: user.directCount,
-                totalReferralEarned: earnings.total.toFixed(2),
+                summary: {
+                    totalReferrals: user.directCount,
+                    activeReferrals: user.activeReferralCount || 0,
+                    totalReferralEarned: earnings.total.toFixed(2),
+                    totalTeamVolume: teamVolume,
+                    qualifiedForRank: downlineDetails.filter(d => d.currentRank >= 2).length
+                },
                 earningsByPackage: {
                     BASIC: earnings.BASIC.toFixed(2),
                     PRO: earnings.PRO.toFixed(2),
                     ELITE: earnings.ELITE.toFixed(2)
                 },
-                downlines: user.directReferrals.map(ref => ({
-                    userId: ref.userId,
-                    name: ref.name,
-                    joinDate: ref.createdAt,
-                    totalStaked: ref.totalStaked || 0,
-                    activeStakings: downlineStakings.filter(s => s.userId === ref.userId).length
-                }))
+                recentCommissions: packageDetails.slice(0, 10).map(p => ({
+                    package: p.package,
+                    amount: p.amount,
+                    bonus: p.referralBonus,
+                    earned: p.earned.toFixed(2),
+                    from: p.fromUser,
+                    date: p.date
+                })),
+                downlines: downlineDetails,
+                stats: {
+                    activeDownlines: downlineDetails.filter(d => d.totalStaked > 0).length,
+                    totalPackages: downlineStakings.length,
+                    averageStake: downlineStakings.length > 0 
+                        ? (teamVolume / downlineStakings.length).toFixed(2) 
+                        : 0
+                }
             }
         });
 
@@ -478,10 +674,43 @@ const getReferralSummary = async (req, res) => {
     }
 };
 
+// ============================================
+// GET UNLOCKED LEVELS
+// ============================================
+const getUnlockedLevels = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const user = await User.findOne({ userId });
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: {
+                activeReferralCount: user.activeReferralCount || 0,
+                unlockedLevels: user.unlockedLevels || 0,
+                directCount: user.directCount || 0
+            }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// ============================================
+// EXPORT ALL FUNCTIONS
+// ============================================
 module.exports = {
     createStaking,
     getActiveStakings,
     unstakeStaking,
     getStakingStats,
-    getReferralSummary
+    getReferralSummary,
+    getUnlockedLevels
 };
