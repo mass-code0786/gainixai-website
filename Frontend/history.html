@@ -49,7 +49,7 @@
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
             padding-bottom: 80px;
             position: relative;
             z-index: 1;
@@ -58,59 +58,60 @@
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(0, 255, 209, 0.1);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 40px;
-            padding: 12px 24px;
+            border-radius: 30px;
+            padding: 8px 18px;
             color: #00ffd9;
             cursor: pointer;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             font-weight: 600;
+            font-size: 13px;
             transition: all 0.3s;
         }
 
         .back-btn:hover {
             background: rgba(0, 255, 209, 0.2);
-            transform: translateX(-5px);
+            transform: translateX(-4px);
         }
 
         .page-title {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 16px;
             background: linear-gradient(135deg, #fff, #00ffd9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         /* Summary Cards */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .summary-card {
             background: rgba(12, 18, 28, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 20px;
-            padding: 15px;
+            border-radius: 18px;
+            padding: 12px;
             text-align: center;
         }
 
         .summary-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #8899aa;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .summary-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #00ffd9;
         }
@@ -118,19 +119,19 @@
         /* Filter Tabs */
         .filter-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 5px;
+            gap: 8px;
+            margin: 16px 0;
+            padding: 4px;
             background: rgba(8, 12, 20, 0.6);
-            border-radius: 50px;
+            border-radius: 40px;
             overflow-x: auto;
             scrollbar-width: none;
         }
 
         .filter-tab {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
@@ -150,8 +151,8 @@
         /* Date Filter */
         .date-filter {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin: 16px 0;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -159,25 +160,23 @@
         .date-input {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 20px;
-            padding: 10px 15px;
+            border-radius: 18px;
+            padding: 8px 12px;
             color: #fff;
-            font-size: 14px;
-        }
-
-        .date-input:focus {
-            outline: none;
-            border-color: #00ffd9;
+            font-size: 12px;
+            flex: 1;
+            min-width: 110px;
         }
 
         .apply-btn {
             background: rgba(0, 255, 209, 0.1);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 20px;
-            padding: 10px 25px;
+            border-radius: 18px;
+            padding: 8px 16px;
             color: #00ffd9;
             cursor: pointer;
             font-weight: 600;
+            font-size: 12px;
             transition: all 0.3s;
         }
 
@@ -189,51 +188,42 @@
         .transaction-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin: 16px 0;
         }
 
         .transaction-item {
             background: rgba(12, 18, 28, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 209, 0.1);
-            border-radius: 20px;
-            padding: 18px;
+            border-radius: 18px;
+            padding: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: all 0.3s;
-            cursor: pointer;
         }
 
         .transaction-item:hover {
             border-color: #00ffd9;
-            transform: translateX(5px);
         }
 
         .transaction-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .transaction-icon {
-            width: 50px;
-            height: 50px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(145deg, rgba(0, 255, 209, 0.2), rgba(0, 153, 255, 0.2));
-            border-radius: 15px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 16px;
         }
-
-        .staking-icon { color: #00ffd9; }
-        .referral-icon { color: #ffd700; }
-        .salary-icon { color: #ffd700; }
-        .level-icon { color: #00ffd9; }
-        .p2p-icon { color: #ff6b6b; }
-        .withdraw-icon { color: #ff6b6b; }
 
         .transaction-details {
             flex: 1;
@@ -241,29 +231,21 @@
 
         .transaction-title {
             font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
+            font-size: 13px;
+            margin-bottom: 3px;
         }
 
         .transaction-subtitle {
-            font-size: 13px;
+            font-size: 10px;
             color: #8899aa;
             display: flex;
-            align-items: center;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
-        }
-
-        .transaction-subtitle i {
-            font-size: 12px;
-            margin-right: 3px;
         }
 
         .transaction-amount {
             font-weight: 700;
-            font-size: 18px;
-            min-width: 100px;
-            text-align: right;
+            font-size: 14px;
         }
 
         .amount-positive {
@@ -274,54 +256,19 @@
             color: #ff6b6b;
         }
 
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        .page-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8899aa;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .page-btn:hover {
-            border-color: #00ffd9;
-            color: #00ffd9;
-        }
-
-        .page-btn.active {
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none;
-            color: #030507;
-        }
-
-        /* No Data */
         .no-data {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 16px;
             color: #8899aa;
         }
 
         .no-data i {
-            font-size: 60px;
+            font-size: 40px;
             color: #00ffd9;
             opacity: 0.3;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -332,7 +279,7 @@
             border-top: 1px solid rgba(0, 255, 209, 0.2);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0 18px;
+            padding: 8px 0 14px;
             z-index: 100;
         }
 
@@ -340,21 +287,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             color: #8899aa;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
             transition: all 0.3s;
         }
 
         .nav-item i {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .nav-item.active {
             color: #00ffd9;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -362,20 +309,9 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .transaction-subtitle {
+            .date-filter {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .transaction-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .transaction-amount {
-                align-self: flex-end;
+                align-items: stretch;
             }
         }
     </style>
@@ -386,7 +322,7 @@
 
     <div class="dashboard">
         <!-- Back Button -->
-        <div class="back-btn" onclick="window.location.href='dashboard.html'">
+        <div class="back-btn" onclick="goToDashboard()">
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </div>
 
@@ -399,54 +335,46 @@
         <div class="summary-grid">
             <div class="summary-card">
                 <div class="summary-label">Total Income</div>
-                <div class="summary-value" id="totalIncome">$12,450</div>
+                <div class="summary-value" id="totalIncome">$0</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">Total Withdrawn</div>
-                <div class="summary-value" id="totalWithdrawn">$3,200</div>
+                <div class="summary-value" id="totalWithdrawn">$0</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">P2P Sent</div>
-                <div class="summary-value" id="p2pSent">$1,500</div>
+                <div class="summary-value" id="p2pSent">$0</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">P2P Received</div>
-                <div class="summary-value" id="p2pReceived">$850</div>
+                <div class="summary-value" id="p2pReceived">$0</div>
             </div>
         </div>
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-            <div class="filter-tab active" onclick="filterTransactions('all')">All</div>
-            <div class="filter-tab" onclick="filterTransactions('staking')">Staking</div>
-            <div class="filter-tab" onclick="filterTransactions('referral')">Referral</div>
-            <div class="filter-tab" onclick="filterTransactions('salary')">Salary</div>
-            <div class="filter-tab" onclick="filterTransactions('level')">Level</div>
-            <div class="filter-tab" onclick="filterTransactions('p2p')">P2P</div>
-            <div class="filter-tab" onclick="filterTransactions('withdraw')">Withdraw</div>
+            <div class="filter-tab active" onclick="filterHistory('all')">All</div>
+            <div class="filter-tab" onclick="filterHistory('staking')">Staking</div>
+            <div class="filter-tab" onclick="filterHistory('referral')">Referral</div>
+            <div class="filter-tab" onclick="filterHistory('salary')">Salary</div>
+            <div class="filter-tab" onclick="filterHistory('p2p')">P2P</div>
+            <div class="filter-tab" onclick="filterHistory('withdraw')">Withdraw</div>
         </div>
 
         <!-- Date Filter -->
         <div class="date-filter">
             <input type="date" class="date-input" id="startDate" value="2026-03-01">
-            <span style="color: #8899aa;">to</span>
-            <input type="date" class="date-input" id="endDate" value="2026-03-03">
+            <span style="color:#8899aa">to</span>
+            <input type="date" class="date-input" id="endDate" value="2026-03-04">
             <button class="apply-btn" onclick="applyDateFilter()">Apply</button>
         </div>
 
         <!-- Transaction List -->
-        <div class="transaction-list" id="transactionList">
-            <!-- Transactions will be loaded here -->
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            <div class="page-btn active">1</div>
-            <div class="page-btn">2</div>
-            <div class="page-btn">3</div>
-            <div class="page-btn">4</div>
-            <div class="page-btn">5</div>
-            <div class="page-btn">→</div>
+        <div id="transactionList" class="transaction-list">
+            <div class="no-data">
+                <i class="fas fa-history"></i>
+                <p>Loading transactions...</p>
+            </div>
         </div>
     </div>
 
@@ -459,159 +387,113 @@
         <div class="nav-item active" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
-        // Sample transaction data
-        const transactions = [
-            {
-                id: 1,
-                type: 'staking',
-                title: 'BASIC Staking ROI',
-                subtitle: 'Daily ROI - BASIC Package',
-                amount: 4.50,
-                date: '2026-03-03',
-                time: '10:30 AM',
-                status: 'completed',
-                from: 'System',
-                package: 'BASIC'
-            },
-            {
-                id: 2,
-                type: 'staking',
-                title: 'PRO Staking ROI',
-                subtitle: 'Daily ROI - PRO Package',
-                amount: 11.50,
-                date: '2026-03-03',
-                time: '10:30 AM',
-                status: 'completed',
-                from: 'System',
-                package: 'PRO'
-            },
-            {
-                id: 3,
-                type: 'referral',
-                title: 'Direct Referral Bonus',
-                subtitle: 'From Gainix100002',
-                amount: 25.00,
-                date: '2026-03-03',
-                time: '09:15 AM',
-                status: 'completed',
-                from: 'Alice Johnson',
-                package: 'ELITE'
-            },
-            {
-                id: 4,
-                type: 'salary',
-                title: 'Weekly Salary',
-                subtitle: 'Rank 2 ⭐⭐',
-                amount: 60.00,
-                date: '2026-03-02',
-                time: '12:00 AM',
-                status: 'completed'
-            },
-            {
-                id: 5,
-                type: 'level',
-                title: 'Level 1 Commission',
-                subtitle: 'From Team ROI',
-                amount: 32.40,
-                date: '2026-03-02',
-                time: '10:10 AM',
-                status: 'completed',
-                level: 1
-            },
-            {
-                id: 6,
-                type: 'level',
-                title: 'Level 2 Commission',
-                subtitle: 'From Team ROI',
-                amount: 22.68,
-                date: '2026-03-02',
-                time: '10:10 AM',
-                status: 'completed',
-                level: 2
-            },
-            {
-                id: 7,
-                type: 'p2p',
-                title: 'P2P Transfer Sent',
-                subtitle: 'To Gainix100003',
-                amount: -100.00,
-                date: '2026-03-02',
-                time: '02:30 PM',
-                status: 'completed',
-                to: 'Gainix100003'
-            },
-            {
-                id: 8,
-                type: 'p2p',
-                title: 'P2P Transfer Received',
-                subtitle: 'From Gainix100002',
-                amount: 250.00,
-                date: '2026-03-01',
-                time: '11:20 AM',
-                status: 'completed',
-                from: 'Gainix100002'
-            },
-            {
-                id: 9,
-                type: 'withdraw',
-                title: 'Withdrawal',
-                subtitle: 'To BEP20 Wallet',
-                amount: -50.00,
-                date: '2026-03-01',
-                time: '09:45 AM',
-                status: 'completed'
-            },
-            {
-                id: 10,
-                type: 'referral',
-                title: 'Direct Referral Bonus',
-                subtitle: 'From Gainix100004',
-                amount: 35.00,
-                date: '2026-02-28',
-                time: '03:45 PM',
-                status: 'completed',
-                from: 'Bob Smith',
-                package: 'ELITE'
-            },
-            {
-                id: 11,
-                type: 'staking',
-                title: 'ELITE Staking ROI',
-                subtitle: 'Daily ROI - ELITE Package',
-                amount: 29.00,
-                date: '2026-02-28',
-                time: '10:30 AM',
-                status: 'completed',
-                from: 'System',
-                package: 'ELITE'
-            },
-            {
-                id: 12,
-                type: 'salary',
-                title: 'Weekly Salary',
-                subtitle: 'Rank 2 ⭐⭐',
-                amount: 60.00,
-                date: '2026-02-22',
-                time: '12:00 AM',
-                status: 'completed'
-            }
-        ];
+        // ============================================
+        // HISTORY PAGE JAVASCRIPT
+        // ============================================
 
         let currentFilter = 'all';
-        let filteredTransactions = [...transactions];
+        let allTransactions = [];
 
-        // Load transactions on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTransactions();
-            updateSummary();
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            await loadTransactionHistory();
         });
 
-        // Load transactions into DOM
-        function loadTransactions() {
-            const container = document.getElementById('transactionList');
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        async function loadTransactionHistory() {
+            try {
+                // Get wallet balances first
+                const walletResult = await getStakingStats();
+                if (walletResult?.success) {
+                    document.getElementById('totalIncome').innerText = '$' + (walletResult.data.summary.totalROIEarned || 0);
+                }
+
+                // Get transaction history
+                const result = await getTransactionHistory?.() || { success: true, data: generateDemoTransactions() };
+                
+                if (result?.success) {
+                    allTransactions = result.data || generateDemoTransactions();
+                    updateSummary();
+                    renderTransactions(currentFilter);
+                } else {
+                    // Demo data if API fails
+                    allTransactions = generateDemoTransactions();
+                    updateSummary();
+                    renderTransactions(currentFilter);
+                }
+            } catch (error) {
+                console.error('Failed to load history:', error);
+                allTransactions = generateDemoTransactions();
+                updateSummary();
+                renderTransactions(currentFilter);
+            }
+        }
+
+        function generateDemoTransactions() {
+            return [
+                { type: 'staking', date: '2026-03-04', time: '10:30', package: 'BASIC', amount: 4.50, from: 'System', title: 'BASIC Staking ROI' },
+                { type: 'staking', date: '2026-03-03', time: '10:30', package: 'PRO', amount: 11.50, from: 'System', title: 'PRO Staking ROI' },
+                { type: 'staking', date: '2026-03-02', time: '10:30', package: 'ELITE', amount: 29.00, from: 'System', title: 'ELITE Staking ROI' },
+                { type: 'referral', date: '2026-03-03', time: '09:45', amount: 124.00, from: 'Alice Johnson', title: 'Direct Referral Bonus' },
+                { type: 'referral', date: '2026-03-02', time: '14:20', amount: 89.00, from: 'David Miller', title: 'Direct Referral Bonus' },
+                { type: 'salary', date: '2026-03-01', time: '00:05', amount: 50.00, rank: '2⭐⭐', title: 'Weekly Salary' },
+                { type: 'salary', date: '2026-02-22', time: '00:05', amount: 50.00, rank: '2⭐⭐', title: 'Weekly Salary' },
+                { type: 'level', date: '2026-03-03', time: '10:10', amount: 32.40, level: 1, title: 'Level 1 Commission' },
+                { type: 'level', date: '2026-03-02', time: '10:10', amount: 22.68, level: 2, title: 'Level 2 Commission' },
+                { type: 'p2p', date: '2026-03-03', time: '15:20', amount: -100.00, to: 'Gainix100003', title: 'P2P Transfer Sent' },
+                { type: 'p2p', date: '2026-03-02', time: '09:30', amount: 250.00, from: 'Gainix100002', title: 'P2P Transfer Received' },
+                { type: 'withdraw', date: '2026-03-01', time: '11:10', amount: -50.00, to: 'BEP20 Wallet', title: 'Withdrawal' }
+            ];
+        }
+
+        function updateSummary() {
+            const totalIncome = allTransactions
+                .filter(t => t.amount > 0)
+                .reduce((sum, t) => sum + t.amount, 0);
             
-            if (filteredTransactions.length === 0) {
+            const totalWithdrawn = allTransactions
+                .filter(t => t.type === 'withdraw')
+                .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+            
+            const p2pSent = allTransactions
+                .filter(t => t.type === 'p2p' && t.amount < 0)
+                .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+            
+            const p2pReceived = allTransactions
+                .filter(t => t.type === 'p2p' && t.amount > 0)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            document.getElementById('totalIncome').innerText = '$' + totalIncome.toFixed(2);
+            document.getElementById('totalWithdrawn').innerText = '$' + totalWithdrawn.toFixed(2);
+            document.getElementById('p2pSent').innerText = '$' + p2pSent.toFixed(2);
+            document.getElementById('p2pReceived').innerText = '$' + p2pReceived.toFixed(2);
+        }
+
+        function filterHistory(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTransactions(type);
+        }
+
+        function renderTransactions(type) {
+            const container = document.getElementById('transactionList');
+            let filtered = allTransactions;
+            
+            if (type !== 'all') {
+                filtered = allTransactions.filter(t => t.type === type);
+            }
+
+            if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="no-data">
                         <i class="fas fa-history"></i>
@@ -622,23 +504,21 @@
             }
 
             let html = '';
-            filteredTransactions.forEach(t => {
+            filtered.forEach(t => {
                 const isPositive = t.amount > 0;
-                const iconClass = getIconClass(t.type);
-                
                 html += `
-                    <div class="transaction-item" onclick="showTransactionDetails(${t.id})">
+                    <div class="transaction-item">
                         <div class="transaction-left">
-                            <div class="transaction-icon ${iconClass}">
+                            <div class="transaction-icon">
                                 <i class="fas ${getIcon(t.type)}"></i>
                             </div>
                             <div class="transaction-details">
-                                <div class="transaction-title">${t.title}</div>
+                                <div class="transaction-title">${t.title || t.type.toUpperCase()}</div>
                                 <div class="transaction-subtitle">
-                                    <span><i class="far fa-calendar"></i> ${t.date}</span>
-                                    <span><i class="far fa-clock"></i> ${t.time}</span>
-                                    ${t.from ? `<span><i class="fas fa-user"></i> ${t.from}</span>` : ''}
-                                    ${t.to ? `<span><i class="fas fa-user"></i> ${t.to}</span>` : ''}
+                                    <span>${t.date}</span>
+                                    <span>${t.time}</span>
+                                    ${t.from ? `<span>From: ${t.from}</span>` : ''}
+                                    ${t.to ? `<span>To: ${t.to}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -648,11 +528,9 @@
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
 
-        // Get icon for transaction type
         function getIcon(type) {
             switch(type) {
                 case 'staking': return 'fa-coins';
@@ -665,115 +543,18 @@
             }
         }
 
-        // Get icon class for transaction type
-        function getIconClass(type) {
-            switch(type) {
-                case 'staking': return 'staking-icon';
-                case 'referral': return 'referral-icon';
-                case 'salary': return 'salary-icon';
-                case 'level': return 'level-icon';
-                case 'p2p': return 'p2p-icon';
-                case 'withdraw': return 'withdraw-icon';
-                default: return '';
-            }
-        }
-
-        // Filter transactions by type
-        function filterTransactions(type) {
-            currentFilter = type;
-            
-            // Update active tab
-            document.querySelectorAll('.filter-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Filter transactions
-            if (type === 'all') {
-                filteredTransactions = [...transactions];
-            } else {
-                filteredTransactions = transactions.filter(t => t.type === type);
-            }
-            
-            loadTransactions();
-        }
-
-        // Apply date filter
         function applyDateFilter() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            
-            if (!startDate || !endDate) {
-                alert('Please select both dates');
-                return;
-            }
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            endDate.setHours(23, 59, 59);
 
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            end.setHours(23, 59, 59); // Include entire end day
-            
-            filteredTransactions = transactions.filter(t => {
+            const filtered = allTransactions.filter(t => {
                 const tDate = new Date(t.date);
-                return tDate >= start && tDate <= end;
+                return tDate >= startDate && tDate <= endDate;
             });
-            
-            if (currentFilter !== 'all') {
-                filteredTransactions = filteredTransactions.filter(t => t.type === currentFilter);
-            }
-            
-            loadTransactions();
-            
-            if (filteredTransactions.length === 0) {
-                alert('No transactions found for selected date range');
-            }
-        }
 
-        // Update summary cards
-        function updateSummary() {
-            const totalIncome = transactions
-                .filter(t => t.amount > 0)
-                .reduce((sum, t) => sum + t.amount, 0);
-            
-            const totalWithdrawn = transactions
-                .filter(t => t.type === 'withdraw')
-                .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-            
-            const p2pSent = transactions
-                .filter(t => t.type === 'p2p' && t.amount < 0)
-                .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-            
-            const p2pReceived = transactions
-                .filter(t => t.type === 'p2p' && t.amount > 0)
-                .reduce((sum, t) => sum + t.amount, 0);
-            
-            document.getElementById('totalIncome').innerText = '$' + totalIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            document.getElementById('totalWithdrawn').innerText = '$' + totalWithdrawn.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            document.getElementById('p2pSent').innerText = '$' + p2pSent.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            document.getElementById('p2pReceived').innerText = '$' + p2pReceived.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            renderTransactions(currentFilter === 'all' ? 'all' : currentFilter);
         }
-
-        // Show transaction details (can be expanded)
-        function showTransactionDetails(id) {
-            const transaction = transactions.find(t => t.id === id);
-            if (transaction) {
-                alert(`
-                    ${transaction.title}
-                    Amount: $${Math.abs(transaction.amount).toFixed(2)}
-                    Date: ${transaction.date} ${transaction.time}
-                    Status: ${transaction.status}
-                `);
-            }
-        }
-
-        // Pagination (simplified)
-        document.querySelectorAll('.page-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                // In a real app, you would load the next page of transactions here
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
     </script>
 </body>
 </html>

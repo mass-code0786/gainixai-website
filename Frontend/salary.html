@@ -49,151 +49,178 @@
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
             padding-bottom: 80px;
             position: relative;
             z-index: 1;
         }
 
+        /* Back Button */
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(0, 255, 209, 0.1);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 40px;
-            padding: 12px 24px;
+            border-radius: 30px;
+            padding: 8px 18px;
             color: #00ffd9;
             cursor: pointer;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             font-weight: 600;
+            font-size: 13px;
             transition: all 0.3s;
         }
 
         .back-btn:hover {
             background: rgba(0, 255, 209, 0.2);
-            transform: translateX(-5px);
+            transform: translateX(-4px);
         }
 
+        /* Page Title */
         .page-title {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 16px;
             background: linear-gradient(135deg, #fff, #00ffd9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
+        /* Current Rank Banner */
         .current-rank-banner {
             background: linear-gradient(145deg, #ffd700, #ffaa00);
-            border-radius: 40px;
-            padding: 16px 24px;
-            margin-bottom: 25px;
+            border-radius: 36px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: #030507;
             font-weight: 700;
-            box-shadow: 0 10px 25px rgba(255,215,0,0.3);
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
         }
 
         .rank-badge-large {
             background: rgba(0,0,0,0.2);
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 14px;
         }
 
+        /* Sunday Warning */
+        .sunday-warning {
+            background: rgba(255,107,107,0.2);
+            border: 1px solid #ff6b6b;
+            border-radius: 30px;
+            padding: 12px 18px;
+            margin: 16px 0;
+            color: #ff6b6b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .sunday-warning i {
+            font-size: 18px;
+        }
+
+        /* Salary System Container */
         .salary-system {
             background: rgba(12,18,28,0.95);
-            border-radius: 28px;
-            padding: 25px;
-            margin: 20px 0;
+            border-radius: 24px;
+            padding: 18px;
+            margin: 16px 0;
             border: 1px solid rgba(255,215,0,0.3);
-            overflow-x: auto;
         }
 
         .salary-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            min-width: 800px;
+            margin-bottom: 16px;
+            min-width: 700px;
         }
 
         .salary-header h2 {
-            font-size: 24px;
+            font-size: 20px;
             color: #ffd700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .current-rank-tag {
             background: linear-gradient(145deg, #ffd700, #ffaa00);
             color: #030507;
-            padding: 8px 25px;
-            border-radius: 36px;
+            padding: 6px 20px;
+            border-radius: 30px;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 15px;
         }
 
+        /* Horizontal Scroll Container */
         .salary-scroll-container {
             overflow-x: auto;
-            padding-bottom: 15px;
+            padding-bottom: 12px;
             scrollbar-width: thin;
             scrollbar-color: #00ffd9 #1e2a3a;
         }
 
         .salary-scroll-container::-webkit-scrollbar {
-            height: 8px;
+            height: 6px;
         }
 
         .salary-scroll-container::-webkit-scrollbar-track {
             background: #1e2a3a;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .salary-scroll-container::-webkit-scrollbar-thumb {
             background: #00ffd9;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
+        /* Salary Grid - Horizontal Flex */
         .salary-grid {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             min-width: max-content;
-            padding: 5px;
+            padding: 4px;
         }
 
+        /* Rank Card */
         .salary-rank-card {
-            width: 340px;
+            width: 280px;
             background: rgba(255,215,0,0.05);
             border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 28px;
-            padding: 22px;
+            border-radius: 22px;
+            padding: 18px;
             transition: all 0.3s;
             flex-shrink: 0;
         }
 
         .salary-rank-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             border-color: #ffd700;
-            box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.15);
         }
 
         .salary-rank-card.achieved { 
             border-color: #2ecc71; 
-            background: rgba(46,204,113,0.1); 
+            background: rgba(46,204,113,0.08); 
         }
 
         .salary-rank-card.current { 
             border: 2px solid #ffd700; 
-            background: rgba(255,215,0,0.15); 
-            box-shadow: 0 0 25px rgba(255,215,0,0.3);
-            transform: scale(1.02);
+            background: rgba(255,215,0,0.1); 
+            box-shadow: 0 0 18px rgba(255,215,0,0.2);
+            transform: scale(1.01);
         }
 
         .salary-rank-card.future { 
@@ -202,38 +229,39 @@
             opacity: 0.8; 
         }
 
+        /* Rank Header */
         .rank-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
         .rank-stars {
-            font-size: 28px;
+            font-size: 22px;
             color: #ffd700;
         }
 
         .rank-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
         }
 
         .rank-status {
             margin-left: auto;
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
 
         .achieved .rank-status { 
-            background: rgba(46,204,113,0.2); 
+            background: rgba(46,204,113,0.15); 
             color: #2ecc71; 
         }
 
         .current .rank-status { 
-            background: rgba(255,215,0,0.2); 
+            background: rgba(255,215,0,0.15); 
             color: #ffd700; 
         }
 
@@ -242,122 +270,113 @@
             color: #8899aa; 
         }
 
+        /* Rank Conditions */
         .rank-conditions {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 16px 0;
         }
 
         .condition-item {
-            background: rgba(0,0,0,0.3);
-            border-radius: 18px;
-            padding: 15px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 16px;
+            padding: 12px;
         }
 
         .condition-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #8899aa;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .condition-value {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .condition-progress {
-            margin-top: 10px;
-            height: 6px;
+            margin-top: 6px;
+            height: 4px;
             background: rgba(255,255,255,0.1);
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #00ffd9, #ffd700);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
+        /* Rank Salary Box */
         .rank-salary-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0,255,209,0.1);
-            border-radius: 18px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(0,255,209,0.08);
+            border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(0,255,209,0.2);
+            border: 1px solid rgba(0,255,209,0.15);
         }
 
         .salary-amount {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
             color: #00ffd9;
         }
 
         .salary-period {
-            font-size: 12px;
+            font-size: 10px;
             color: #8899aa;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
-        .sunday-warning {
-            background: rgba(255,107,107,0.2);
-            border: 1px solid #ff6b6b;
-            border-radius: 40px;
-            padding: 15px 25px;
-            margin: 20px 0;
-            color: #ff6b6b;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: 600;
-        }
-
+        /* Rules Section */
         .rules-section {
             background: rgba(12,18,28,0.95);
-            border-radius: 28px;
-            padding: 25px;
-            margin: 20px 0;
-            border: 1px solid rgba(0,255,209,0.3);
+            border-radius: 24px;
+            padding: 18px;
+            margin: 16px 0;
+            border: 1px solid rgba(0,255,209,0.2);
         }
 
         .rules-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
             color: #00ffd9;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .rules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
         }
 
         .rule-item {
-            background: rgba(0,255,209,0.05);
-            padding: 15px;
-            border-radius: 18px;
+            background: rgba(0,255,209,0.04);
+            padding: 12px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .rule-item i {
-            font-size: 20px;
+            font-size: 16px;
             color: #00ffd9;
         }
 
         .rule-item span {
-            font-size: 14px;
+            font-size: 12px;
             color: #cbd5e0;
         }
 
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -368,7 +387,7 @@
             border-top: 1px solid rgba(0,255,209,0.2);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0 18px;
+            padding: 8px 0 14px;
             z-index: 100;
         }
 
@@ -376,22 +395,46 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             color: #8899aa;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
             transition: all 0.3s;
         }
 
-        .nav-item i { font-size: 18px; }
-        .nav-item.active { color: #00ffd9; transform: translateY(-3px); }
+        .nav-item i {
+            font-size: 16px;
+        }
+
+        .nav-item.active {
+            color: #00ffd9;
+            transform: translateY(-2px);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            color: #8899aa;
+            text-align: center;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .loading-spinner i {
+            font-size: 24px;
+            color: #00ffd9;
+            margin-bottom: 8px;
+        }
 
         @media (max-width: 768px) {
             .current-rank-banner {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
                 text-align: center;
+            }
+            
+            .rules-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -414,7 +457,7 @@
         <!-- Current Rank Banner -->
         <div class="current-rank-banner" id="currentRankBanner">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
-            <span class="rank-badge-large" id="currentRankDisplay">2 ⭐⭐</span>
+            <span class="rank-badge-large" id="currentRankDisplay">0 ⭐</span>
         </div>
 
         <!-- Sunday Warning (hidden by default) -->
@@ -430,14 +473,15 @@
         <div class="salary-system">
             <div class="salary-header">
                 <h2><i class="fas fa-star"></i> SALARY RANKS</h2>
-                <span class="current-rank-tag" id="headerCurrentRank">2 ⭐⭐</span>
+                <span class="current-rank-tag" id="headerCurrentRank">0 ⭐</span>
             </div>
             
             <div class="salary-scroll-container">
                 <div class="salary-grid" id="salaryGrid">
-                    <!-- Ranks will be loaded here -->
-                    <div style="color: #8899aa; text-align: center; padding: 40px; width: 100%;">
-                        <i class="fas fa-spinner fa-spin"></i> Loading ranks...
+                    <!-- Ranks will be loaded here by JavaScript -->
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading ranks...</p>
                     </div>
                 </div>
             </div>
@@ -482,10 +526,10 @@
     <script src="js/api.js"></script>
     <script>
         // ============================================
-        // SALARY PAGE JAVASCRIPT - UPDATED RANKS
+        // SALARY PAGE JAVASCRIPT - HORIZONTAL SCROLL
         // ============================================
 
-        // Rank data (as per new plan)
+        // Complete Rank Data (9 levels)
         const salaryRanks = [
             { rank: 1, stars: '⭐', direct: 750, team: 2500, requirement: 'None', salary: 25 },
             { rank: 2, stars: '⭐⭐', direct: 1500, team: 7500, requirement: '2 members at ⭐ Rank 1', salary: 60 },
@@ -498,7 +542,8 @@
             { rank: 9, stars: '⭐⭐⭐⭐⭐⭐⭐⭐⭐', direct: 300000, team: 25000000, requirement: '2 members at ⭐⭐⭐⭐⭐⭐⭐⭐ Rank 8', salary: 30000 }
         ];
 
-        let currentUserRank = 1;
+        // User data - default to rank 0
+        let currentUserRank = 0;
         let directBusiness = 0;
         let teamBusiness = 0;
         let qualifiedMembers = 0;
@@ -526,8 +571,7 @@
             initSalaryGrid();
             
             // Update current rank display
-            document.getElementById('currentRankDisplay').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
-            document.getElementById('headerCurrentRank').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
+            updateRankDisplay();
         });
 
         async function loadUserRankData() {
@@ -535,14 +579,26 @@
                 const result = await getMyRank();
                 if (result?.success) {
                     const data = result.data;
-                    currentUserRank = data.currentRank?.rank || 1;
+                    currentUserRank = data.currentRank?.rank || 0;
                     directBusiness = data.progress?.directVolume?.current || 0;
                     teamBusiness = data.progress?.teamVolume?.current || 0;
                     qualifiedMembers = data.progress?.qualifiedMembers?.current || 0;
-                    console.log('✅ Real rank data loaded');
+                    console.log('✅ Real rank data loaded:', currentUserRank);
+                } else {
+                    console.log('No rank data, showing rank 0');
                 }
             } catch (error) {
-                console.error('Failed to load rank data, using defaults:', error);
+                console.error('Failed to load rank data, showing rank 0:', error);
+            }
+        }
+
+        function updateRankDisplay() {
+            if (currentUserRank === 0) {
+                document.getElementById('currentRankDisplay').innerHTML = '0 ⭐';
+                document.getElementById('headerCurrentRank').innerHTML = '0 ⭐';
+            } else {
+                document.getElementById('currentRankDisplay').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
+                document.getElementById('headerCurrentRank').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
             }
         }
 
@@ -553,23 +609,37 @@
             salaryRanks.forEach((rank, index) => {
                 const rankNumber = index + 1;
                 let rankClass = 'future';
-                if (rankNumber < currentUserRank) rankClass = 'achieved';
-                if (rankNumber === currentUserRank) rankClass = 'current';
+                
+                if (rankNumber < currentUserRank) {
+                    rankClass = 'achieved';
+                } else if (rankNumber === currentUserRank) {
+                    rankClass = 'current';
+                } else if (currentUserRank === 0 && rankNumber === 1) {
+                    // If no rank, first card is 'next'
+                    rankClass = 'future';
+                }
                 
                 // Calculate progress for next rank
                 let directProgress = 0;
                 let teamProgress = 0;
                 let qualProgress = 0;
                 
-                if (rankNumber === currentUserRank && rankNumber < 9) {
-                    const nextRank = salaryRanks[index];
-                    directProgress = (directBusiness / nextRank.direct) * 100;
-                    teamProgress = (teamBusiness / nextRank.team) * 100;
-                    qualProgress = (qualifiedMembers / 2) * 100;
+                if (rankNumber === currentUserRank && currentUserRank > 0) {
+                    // Current rank mein progress show karo next rank ke liye
+                    if (rankNumber < 9) {
+                        const nextRank = salaryRanks[rankNumber];
+                        directProgress = (directBusiness / nextRank.direct) * 100;
+                        teamProgress = (teamBusiness / nextRank.team) * 100;
+                        qualProgress = (qualifiedMembers / 2) * 100;
+                    }
                 } else if (rankNumber < currentUserRank) {
                     directProgress = 100;
                     teamProgress = 100;
                     qualProgress = 100;
+                } else if (currentUserRank === 0 && rankNumber === 1) {
+                    // No rank yet - show progress towards Rank 1
+                    directProgress = (directBusiness / rank.direct) * 100;
+                    teamProgress = (teamBusiness / rank.team) * 100;
                 }
                 
                 html += `
@@ -587,7 +657,7 @@
                             <div class="condition-item">
                                 <div class="condition-label">Direct Volume</div>
                                 <div class="condition-value">$${rank.direct.toLocaleString()}</div>
-                                ${rankNumber <= currentUserRank ? `
+                                ${(rankNumber <= currentUserRank || (currentUserRank === 0 && rankNumber === 1)) ? `
                                     <div class="condition-progress">
                                         <div class="progress-fill" style="width: ${Math.min(100, directProgress)}%"></div>
                                     </div>
@@ -595,9 +665,9 @@
                             </div>
                             
                             <div class="condition-item">
-                                <div class="condition-label">Team Volume (Unlimited Depth)</div>
+                                <div class="condition-label">Team Volume (Unlimited)</div>
                                 <div class="condition-value">$${rank.team.toLocaleString()}</div>
-                                ${rankNumber <= currentUserRank ? `
+                                ${(rankNumber <= currentUserRank || (currentUserRank === 0 && rankNumber === 1)) ? `
                                     <div class="condition-progress">
                                         <div class="progress-fill" style="width: ${Math.min(100, teamProgress)}%"></div>
                                     </div>
@@ -606,8 +676,8 @@
                             
                             <div class="condition-item">
                                 <div class="condition-label">Requirement</div>
-                                <div class="condition-value" style="font-size: 14px;">${rank.requirement}</div>
-                                ${rankNumber === currentUserRank && rankNumber > 1 ? `
+                                <div class="condition-value" style="font-size: 12px;">${rank.requirement}</div>
+                                ${(rankNumber === currentUserRank && currentUserRank > 1) ? `
                                     <div class="condition-progress">
                                         <div class="progress-fill" style="width: ${Math.min(100, qualProgress)}%"></div>
                                     </div>
@@ -626,6 +696,7 @@
             grid.innerHTML = html;
         }
 
+        // Toast notification function
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.style.cssText = `
@@ -634,39 +705,28 @@
                 right: 20px;
                 background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#ff6b6b' : '#00ffd9'};
                 color: ${type === 'success' || type === 'error' ? '#fff' : '#030507'};
-                padding: 12px 24px;
-                border-radius: 40px;
+                padding: 10px 20px;
+                border-radius: 30px;
                 font-weight: 600;
                 z-index: 9999;
                 animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             `;
             toast.innerHTML = message;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
+        // Add animation styles
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
             }
         `;
         document.head.appendChild(style);

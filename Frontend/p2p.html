@@ -49,7 +49,7 @@
         .dashboard {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
             padding-bottom: 80px;
             position: relative;
             z-index: 1;
@@ -58,212 +58,210 @@
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(0, 255, 209, 0.1);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 40px;
-            padding: 12px 24px;
+            border-radius: 30px;
+            padding: 8px 18px;
             color: #00ffd9;
             cursor: pointer;
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             font-weight: 600;
+            font-size: 13px;
             transition: all 0.3s;
         }
 
         .back-btn:hover {
             background: rgba(0, 255, 209, 0.2);
-            transform: translateX(-5px);
+            transform: translateX(-4px);
         }
 
         .page-title {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 16px;
             background: linear-gradient(135deg, #fff, #00ffd9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .p2p-container {
+        /* Wallet Cards */
+        .wallet-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .wallet-card {
             background: rgba(12, 18, 28, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 30px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 16px;
         }
 
         .wallet-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
         .wallet-icon {
-            width: 50px;
-            height: 50px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 18px;
             color: #030507;
         }
 
-        .wallet-info h3 {
-            font-size: 18px;
+        .wallet-title {
+            font-size: 13px;
             color: #8899aa;
         }
 
         .wallet-balance {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             color: #00ffd9;
         }
 
+        /* Transfer Form */
         .transfer-form {
             background: rgba(12, 18, 28, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 30px;
-            padding: 30px;
-            margin-bottom: 30px;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .form-title {
-            font-size: 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #00ffd9;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 8px;
-            color: #8899aa;
-            font-size: 14px;
-        }
-
-        .input-field {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 20px;
-            padding: 16px 20px;
-            color: #fff;
             font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #00ffd9;
-            box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.1);
-        }
-
-        .input-field::placeholder {
-            color: #667788;
-        }
-
-        .pin-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 25px 0;
-        }
-
-        .pin-box {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 15px;
-            color: #fff;
-            font-size: 24px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .pin-box:focus {
-            outline: none;
-            border-color: #00ffd9;
-            box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.1);
-        }
-
-        .transfer-btn {
-            width: 100%;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none;
-            border-radius: 40px;
-            padding: 18px;
-            color: #030507;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-
-        .transfer-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(0, 255, 209, 0.4);
-        }
-
-        .transfer-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .history-section {
-            background: rgba(12, 18, 28, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 209, 0.2);
-            border-radius: 30px;
-            padding: 25px;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .history-title {
-            font-size: 18px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
             color: #00ffd9;
         }
 
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #8899aa;
+            font-size: 12px;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 18px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00ffd9;
+            box-shadow: 0 0 0 2px rgba(0, 255, 209, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #667788;
+        }
+
+        /* PIN Input */
+        .pin-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .pin-field {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .pin-field:focus {
+            outline: none;
+            border-color: #00ffd9;
+        }
+
+        .transfer-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 30px;
+            padding: 14px;
+            color: #030507;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .transfer-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 20px rgba(0, 255, 209, 0.4);
+        }
+
+        /* History Section */
+        .history-section {
+            background: rgba(12, 18, 28, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 24px;
+            padding: 20px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .history-title {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #00ffd9;
+        }
+
         .history-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .history-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(0, 255, 209, 0.1);
-            border-radius: 20px;
-            padding: 15px;
+            border-radius: 16px;
+            padding: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -272,37 +270,38 @@
         .history-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .history-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(145deg, rgba(0, 255, 209, 0.2), rgba(0, 153, 255, 0.2));
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
             color: #00ffd9;
         }
 
         .history-details {
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .history-user {
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .history-date {
-            font-size: 11px;
+            font-size: 10px;
             color: #8899aa;
         }
 
         .history-amount {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .amount-sent {
@@ -315,8 +314,15 @@
 
         .no-data {
             text-align: center;
-            padding: 40px;
+            padding: 30px 16px;
             color: #8899aa;
+        }
+
+        .no-data i {
+            font-size: 40px;
+            color: #00ffd9;
+            opacity: 0.3;
+            margin-bottom: 12px;
         }
 
         .bottom-nav {
@@ -329,7 +335,7 @@
             border-top: 1px solid rgba(0, 255, 209, 0.2);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0 18px;
+            padding: 8px 0 14px;
             z-index: 100;
         }
 
@@ -337,32 +343,39 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             color: #8899aa;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
             transition: all 0.3s;
         }
 
         .nav-item i {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .nav-item.active {
             color: #00ffd9;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
-            .p2p-container {
+            .wallet-grid {
                 grid-template-columns: 1fr;
             }
             
-            .pin-box {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+            .pin-field {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pin-field {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
             }
         }
     </style>
@@ -373,7 +386,7 @@
 
     <div class="dashboard">
         <!-- Back Button -->
-        <div class="back-btn" onclick="window.location.href='dashboard.html'">
+        <div class="back-btn" onclick="goToDashboard()">
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </div>
 
@@ -383,29 +396,24 @@
         </div>
 
         <!-- Wallet Cards -->
-        <div class="p2p-container">
+        <div class="wallet-grid">
             <div class="wallet-card">
                 <div class="wallet-header">
                     <div class="wallet-icon">
                         <i class="fas fa-wallet"></i>
                     </div>
-                    <div class="wallet-info">
-                        <h3>Fund Wallet</h3>
-                        <div class="wallet-balance" id="fundWallet">$5,000</div>
-                    </div>
+                    <span class="wallet-title">Fund Wallet</span>
                 </div>
+                <div class="wallet-balance" id="fundWallet">$0</div>
             </div>
-
             <div class="wallet-card">
                 <div class="wallet-header">
                     <div class="wallet-icon">
                         <i class="fas fa-arrow-up"></i>
                     </div>
-                    <div class="wallet-info">
-                        <h3>Withdraw Wallet</h3>
-                        <div class="wallet-balance" id="withdrawWallet">$2,346</div>
-                    </div>
+                    <span class="wallet-title">Withdraw Wallet</span>
                 </div>
+                <div class="wallet-balance" id="withdrawWallet">$0</div>
             </div>
         </div>
 
@@ -428,10 +436,10 @@
             <div class="input-group">
                 <label class="input-label">Enter 4-digit PIN</label>
                 <div class="pin-container">
-                    <input type="password" class="pin-box" maxlength="1" onkeyup="moveToNext(this, 0)">
-                    <input type="password" class="pin-box" maxlength="1" onkeyup="moveToNext(this, 1)">
-                    <input type="password" class="pin-box" maxlength="1" onkeyup="moveToNext(this, 2)">
-                    <input type="password" class="pin-box" maxlength="1" onkeyup="moveToNext(this, 3)">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this, 0)">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this, 1)">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this, 2)">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this, 3)">
                 </div>
             </div>
 
@@ -449,31 +457,7 @@
             </div>
 
             <div class="history-list" id="p2pHistory">
-                <div class="history-item">
-                    <div class="history-info">
-                        <div class="history-icon">
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                        <div class="history-details">
-                            <div class="history-user">Sent to Gainix100003</div>
-                            <div class="history-date">Today, 10:30 AM</div>
-                        </div>
-                    </div>
-                    <div class="history-amount amount-sent">-$100</div>
-                </div>
-
-                <div class="history-item">
-                    <div class="history-info">
-                        <div class="history-icon">
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <div class="history-details">
-                            <div class="history-user">Received from Gainix100002</div>
-                            <div class="history-date">Yesterday, 3:45 PM</div>
-                        </div>
-                    </div>
-                    <div class="history-amount amount-received">+$250</div>
-                </div>
+                <!-- History will be loaded here -->
             </div>
         </div>
     </div>
@@ -487,17 +471,66 @@
         <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
+    <script src="js/api.js"></script>
     <script>
+        // ============================================
+        // P2P PAGE JAVASCRIPT
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await loadWalletBalances();
+            await loadP2PHistory();
+        });
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Load wallet balances
+        async function loadWalletBalances() {
+            try {
+                const result = await getStakingStats();
+                if (result?.success) {
+                    const stats = result.data.summary;
+                    document.getElementById('fundWallet').innerText = '$' + (stats.fundWallet || 5000);
+                    document.getElementById('withdrawWallet').innerText = '$' + (stats.withdrawWallet || 2346);
+                    
+                    // Update localStorage
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    user.fundWallet = stats.fundWallet;
+                    user.withdrawWallet = stats.withdrawWallet;
+                    localStorage.setItem('user', JSON.stringify(user));
+                } else {
+                    // Fallback to localStorage
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    document.getElementById('fundWallet').innerText = '$' + (user.fundWallet || 5000);
+                    document.getElementById('withdrawWallet').innerText = '$' + (user.withdrawWallet || 2346);
+                }
+            } catch (error) {
+                console.error('Failed to load wallet balances:', error);
+                // Fallback to localStorage
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                document.getElementById('fundWallet').innerText = '$' + (user.fundWallet || 5000);
+                document.getElementById('withdrawWallet').innerText = '$' + (user.withdrawWallet || 2346);
+            }
+        }
+
         // Move to next PIN field
         function moveToNext(current, index) {
             if (current.value.length === 1) {
-                const next = document.querySelectorAll('.pin-box')[index + 1];
+                const next = document.querySelectorAll('.pin-field')[index + 1];
                 if (next) next.focus();
             }
         }
 
         // Send P2P transfer
-        function sendP2P() {
+        async function sendP2P() {
             const recipient = document.getElementById('recipientId').value;
             const amount = document.getElementById('amount').value;
             
@@ -512,7 +545,7 @@
             }
 
             // Get PIN
-            const pins = document.querySelectorAll('.pin-box');
+            const pins = document.querySelectorAll('.pin-field');
             let pin = '';
             pins.forEach(p => pin += p.value);
             
@@ -521,22 +554,79 @@
                 return;
             }
 
-            alert(`✅ Transfer of $${amount} to ${recipient} initiated!`);
-            
-            // Clear form
-            document.getElementById('recipientId').value = '';
-            document.getElementById('amount').value = '';
-            pins.forEach(p => p.value = '');
-            
-            // Add to history (demo)
-            addToHistory(recipient, amount);
+            // Check withdraw wallet balance
+            const withdrawWallet = parseFloat(document.getElementById('withdrawWallet').innerText.replace('$', '')) || 0;
+            if (amount > withdrawWallet) {
+                alert('Insufficient balance in Withdraw Wallet');
+                return;
+            }
+
+            try {
+                // Call P2P API
+                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        recipientId: recipient,
+                        amount: parseFloat(amount),
+                        pin: pin
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ $${amount} sent to ${recipient} successfully!`);
+                    
+                    // Update wallet balance
+                    const newBalance = withdrawWallet - parseFloat(amount);
+                    document.getElementById('withdrawWallet').innerText = '$' + newBalance;
+                    
+                    // Update localStorage
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    user.withdrawWallet = newBalance;
+                    localStorage.setItem('user', JSON.stringify(user));
+                    
+                    // Add to history
+                    addToHistory(recipient, amount);
+                    
+                    // Clear form
+                    document.getElementById('recipientId').value = '';
+                    document.getElementById('amount').value = '';
+                    pins.forEach(p => p.value = '');
+                    document.querySelectorAll('.pin-field')[0].focus();
+                } else {
+                    alert('Transfer failed: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('P2P error:', error);
+                
+                // Demo mode - simulate success
+                alert(`✅ [DEMO] $${amount} sent to ${recipient}! (Backend not connected)`);
+                
+                // Update wallet balance
+                const newBalance = withdrawWallet - parseFloat(amount);
+                document.getElementById('withdrawWallet').innerText = '$' + newBalance;
+                
+                // Add to history
+                addToHistory(recipient, amount);
+                
+                // Clear form
+                document.getElementById('recipientId').value = '';
+                document.getElementById('amount').value = '';
+                pins.forEach(p => p.value = '');
+            }
         }
 
-        // Add to history (demo)
+        // Add transaction to history
         function addToHistory(recipient, amount) {
             const historyDiv = document.getElementById('p2pHistory');
             const now = new Date();
             const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = now.toLocaleDateString('en-US');
             
             const newItem = document.createElement('div');
             newItem.className = 'history-item';
@@ -547,7 +637,7 @@
                     </div>
                     <div class="history-details">
                         <div class="history-user">Sent to ${recipient}</div>
-                        <div class="history-date">Today, ${timeStr}</div>
+                        <div class="history-date">${dateStr}, ${timeStr}</div>
                     </div>
                 </div>
                 <div class="history-amount amount-sent">-$${amount}</div>
@@ -556,15 +646,118 @@
             historyDiv.prepend(newItem);
         }
 
-        // Load user data
-        document.addEventListener('DOMContentLoaded', function() {
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-                const user = JSON.parse(userStr);
-                document.getElementById('fundWallet').innerText = '$' + (user.fundWallet || 5000).toLocaleString();
-                document.getElementById('withdrawWallet').innerText = '$' + (user.withdrawWallet || 2346).toLocaleString();
+        // Load P2P history
+        async function loadP2PHistory() {
+            try {
+                // Try to get from API
+                const response = await fetch(`${API_BASE_URL}/p2p/history`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.length > 0) {
+                    renderHistory(data.data);
+                } else {
+                    // Load demo history
+                    loadDemoHistory();
+                }
+            } catch (error) {
+                console.log('Using demo history');
+                loadDemoHistory();
             }
-        });
+        }
+
+        function loadDemoHistory() {
+            const historyDiv = document.getElementById('p2pHistory');
+            
+            const demoHistory = [
+                { type: 'sent', to: 'Gainix100003', amount: 100, date: '2026-03-03', time: '10:30 AM' },
+                { type: 'received', from: 'Gainix100002', amount: 250, date: '2026-03-02', time: '3:45 PM' },
+                { type: 'sent', to: 'Gainix100005', amount: 50, date: '2026-03-01', time: '2:15 PM' },
+                { type: 'received', from: 'Gainix100004', amount: 120, date: '2026-02-28', time: '11:20 AM' }
+            ];
+            
+            let html = '';
+            demoHistory.forEach(item => {
+                if (item.type === 'sent') {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Sent to ${item.to}</div>
+                                    <div class="history-date">${item.date}, ${item.time}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-sent">-$${item.amount}</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Received from ${item.from}</div>
+                                    <div class="history-date">${item.date}, ${item.time}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-received">+$${item.amount}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            historyDiv.innerHTML = html;
+        }
+
+        function renderHistory(transactions) {
+            const historyDiv = document.getElementById('p2pHistory');
+            let html = '';
+            
+            transactions.forEach(item => {
+                if (item.type === 'sent' || item.amount < 0) {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Sent to ${item.to || item.recipientId}</div>
+                                    <div class="history-date">${item.date || item.createdAt}, ${item.time || '00:00'}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-sent">-$${Math.abs(item.amount)}</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Received from ${item.from || item.senderId}</div>
+                                    <div class="history-date">${item.date || item.createdAt}, ${item.time || '00:00'}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-received">+$${item.amount}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            historyDiv.innerHTML = html;
+        }
     </script>
 </body>
 </html>
