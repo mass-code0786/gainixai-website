@@ -184,6 +184,10 @@ const server = app.listen(PORT, () => {
     console.log(`   📅 Day        : ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}`);
     console.log(`══════════════════════════════════════════════`);
     console.log(`\n📌 Available Routes:\n`);
+    console.log('🚀 Server starting on port:', PORT);
+const server = app.listen(PORT, () => {
+    console.log(`✅ Server successfully listening on port ${PORT}`);
+});
     
     const routes = [
         { method: 'GET', path: '/', desc: 'Health check' },
