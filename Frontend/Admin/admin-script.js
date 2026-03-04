@@ -629,8 +629,13 @@ async function loadBotSettings() {
         const data = await apiCall('/settings');
         if (data.success) {
             const settings = data.data;
-            document.getElementById('botStartTime').value = `${settings.botTradingStartHour || 9}:00`;
-            document.getElementById('botEndTime').value = `${settings.botTradingEndHour || 10}:00`;
+            
+            // ✅ FIX: Add leading zeros to hours (9 → 09)
+            const startHour = settings.botTradingStartHour || 9;
+            const endHour = settings.botTradingEndHour || 10;
+            
+            document.getElementById('botStartTime').value = `${startHour.toString().padStart(2, '0')}:00`;
+            document.getElementById('botEndTime').value = `${endHour.toString().padStart(2, '0')}:00`;
             document.getElementById('levelDelay').value = 10;
             document.getElementById('botStatusSelect').value = settings.botEnabled ? 'active' : 'paused';
         }
@@ -639,13 +644,14 @@ async function loadBotSettings() {
     }
 }
 
-// ✅ FIXED: Save Bot Settings with API Call
+// ✅ FIXED: Save Bot Settings with proper format
 async function saveBotSettings() {
     try {
-        const startTime = document.getElementById('botStartTime').value;
-        const endTime = document.getElementById('botEndTime').value;
+        const startTime = document.getElementById('botStartTime').value; // "09:00"
+        const endTime = document.getElementById('botEndTime').value;     // "18:00"
         const status = document.getElementById('botStatusSelect').value;
         
+        // ✅ Extract hours (9 from "09:00")
         const settings = {
             startHour: parseInt(startTime.split(':')[0]),
             endHour: parseInt(endTime.split(':')[0]),
