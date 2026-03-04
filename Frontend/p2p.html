@@ -255,6 +255,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            min-height: 100px;
         }
 
         .history-item {
@@ -323,6 +324,17 @@
             color: #00ffd9;
             opacity: 0.3;
             margin-bottom: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #8899aa;
+        }
+
+        .loading i {
+            margin-right: 8px;
+            color: #00ffd9;
         }
 
         .bottom-nav {
@@ -443,7 +455,7 @@
                 </div>
             </div>
 
-            <button class="transfer-btn" onclick="sendP2P()">
+            <button class="transfer-btn" onclick="sendP2P()" id="sendBtn">
                 <i class="fas fa-paper-plane"></i> SEND TRANSFER
             </button>
         </div>
@@ -452,12 +464,14 @@
         <div class="history-section">
             <div class="history-header">
                 <div class="history-title">
-                    <i class="fas fa-history"></i> Recent P2P Transactions
+                    <i class="fas fa-history"></i> P2P Transaction History
                 </div>
             </div>
 
             <div class="history-list" id="p2pHistory">
-                <!-- History will be loaded here -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading transactions...
+                </div>
             </div>
         </div>
     </div>
@@ -474,8 +488,10 @@
     <script src="js/api.js"></script>
     <script>
         // ============================================
-        // P2P PAGE JAVASCRIPT
+        // P2P PAGE - 100% BACKEND CONNECTED
         // ============================================
+
+        const API_URL = API_BASE_URL || 'https://gainixai-backend.onrender.com/api';
 
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
@@ -492,46 +508,152 @@
             window.location.href = 'dashboard.html';
         }
 
-        // Load wallet balances
+        // ============================================
+        // LOAD WALLET BALANCES FROM BACKEND
+        // ============================================
         async function loadWalletBalances() {
             try {
-                const result = await getStakingStats();
-                if (result?.success) {
-                    const stats = result.data.summary;
-                    document.getElementById('fundWallet').innerText = '$' + (stats.fundWallet || 5000);
-                    document.getElementById('withdrawWallet').innerText = '$' + (stats.withdrawWallet || 2346);
+                const response = await fetch(`${API_URL}/wallet/balances`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('fundWallet').innerText = '$' + data.data.fundWallet;
+                    document.getElementById('withdrawWallet').innerText = '$' + data.data.withdrawWallet;
                     
                     // Update localStorage
                     const user = JSON.parse(localStorage.getItem('user') || '{}');
-                    user.fundWallet = stats.fundWallet;
-                    user.withdrawWallet = stats.withdrawWallet;
+                    user.fundWallet = data.data.fundWallet;
+                    user.withdrawWallet = data.data.withdrawWallet;
                     localStorage.setItem('user', JSON.stringify(user));
                 } else {
-                    // Fallback to localStorage
-                    const user = JSON.parse(localStorage.getItem('user') || '{}');
-                    document.getElementById('fundWallet').innerText = '$' + (user.fundWallet || 5000);
-                    document.getElementById('withdrawWallet').innerText = '$' + (user.withdrawWallet || 2346);
+                    throw new Error('Failed to load balances');
                 }
             } catch (error) {
-                console.error('Failed to load wallet balances:', error);
-                // Fallback to localStorage
-                const user = JSON.parse(localStorage.getItem('user') || '{}');
-                document.getElementById('fundWallet').innerText = '$' + (user.fundWallet || 5000);
-                document.getElementById('withdrawWallet').innerText = '$' + (user.withdrawWallet || 2346);
+                console.error('Error loading wallet balances:', error);
+                
+                // Try staking stats API as fallback
+                try {
+                    const result = await getStakingStats();
+                    if (result?.success) {
+                        const stats = result.data.summary;
+                        document.getElementById('fundWallet').innerText = '$' + (stats.fundWallet || 0);
+                        document.getElementById('withdrawWallet').innerText = '$' + (stats.withdrawWallet || 0);
+                    } else {
+                        showError('Could not load wallet balances');
+                    }
+                } catch (e) {
+                    showError('Backend connection failed');
+                }
             }
         }
 
-        // Move to next PIN field
-        function moveToNext(current, index) {
-            if (current.value.length === 1) {
-                const next = document.querySelectorAll('.pin-field')[index + 1];
-                if (next) next.focus();
+        // ============================================
+        // LOAD P2P HISTORY FROM BACKEND
+        // ============================================
+        async function loadP2PHistory() {
+            const historyDiv = document.getElementById('p2pHistory');
+            
+            try {
+                const response = await fetch(`${API_URL}/p2p/history`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.length > 0) {
+                    renderHistory(data.data);
+                } else {
+                    // No transactions - show empty state
+                    historyDiv.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-history"></i>
+                            <p>No P2P transactions yet</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading P2P history:', error);
+                historyDiv.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Could not load transaction history</p>
+                    </div>
+                `;
             }
         }
 
-        // Send P2P transfer
+        // ============================================
+        // RENDER HISTORY FROM BACKEND DATA
+        // ============================================
+        function renderHistory(transactions) {
+            const historyDiv = document.getElementById('p2pHistory');
+            
+            if (!transactions || transactions.length === 0) {
+                historyDiv.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-history"></i>
+                        <p>No P2P transactions yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            transactions.forEach(tx => {
+                const date = new Date(tx.createdAt || tx.date);
+                const dateStr = date.toLocaleDateString();
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                if (tx.type === 'sent' || tx.amount < 0) {
+                    // Sent transaction
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Sent to ${tx.recipientId || tx.to}</div>
+                                    <div class="history-date">${dateStr}, ${timeStr}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-sent">-$${Math.abs(tx.amount)}</div>
+                        </div>
+                    `;
+                } else {
+                    // Received transaction
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <div class="history-icon">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="history-details">
+                                    <div class="history-user">Received from ${tx.senderId || tx.from}</div>
+                                    <div class="history-date">${dateStr}, ${timeStr}</div>
+                                </div>
+                            </div>
+                            <div class="history-amount amount-received">+$${tx.amount}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            historyDiv.innerHTML = html;
+        }
+
+        // ============================================
+        // SEND P2P TRANSFER
+        // ============================================
         async function sendP2P() {
-            const recipient = document.getElementById('recipientId').value;
+            const recipient = document.getElementById('recipientId').value.trim();
             const amount = document.getElementById('amount').value;
             
             if (!recipient) {
@@ -554,16 +676,12 @@
                 return;
             }
 
-            // Check withdraw wallet balance
-            const withdrawWallet = parseFloat(document.getElementById('withdrawWallet').innerText.replace('$', '')) || 0;
-            if (amount > withdrawWallet) {
-                alert('Insufficient balance in Withdraw Wallet');
-                return;
-            }
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
 
             try {
-                // Call P2P API
-                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
+                const response = await fetch(`${API_URL}/p2p/send`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -581,183 +699,65 @@
                 if (data.success) {
                     alert(`✅ $${amount} sent to ${recipient} successfully!`);
                     
-                    // Update wallet balance
-                    const newBalance = withdrawWallet - parseFloat(amount);
-                    document.getElementById('withdrawWallet').innerText = '$' + newBalance;
-                    
-                    // Update localStorage
-                    const user = JSON.parse(localStorage.getItem('user') || '{}');
-                    user.withdrawWallet = newBalance;
-                    localStorage.setItem('user', JSON.stringify(user));
-                    
-                    // Add to history
-                    addToHistory(recipient, amount);
-                    
                     // Clear form
                     document.getElementById('recipientId').value = '';
                     document.getElementById('amount').value = '';
                     pins.forEach(p => p.value = '');
                     document.querySelectorAll('.pin-field')[0].focus();
+                    
+                    // Reload wallet balances and history
+                    await loadWalletBalances();
+                    await loadP2PHistory();
                 } else {
                     alert('Transfer failed: ' + (data.message || 'Unknown error'));
                 }
             } catch (error) {
                 console.error('P2P error:', error);
-                
-                // Demo mode - simulate success
-                alert(`✅ [DEMO] $${amount} sent to ${recipient}! (Backend not connected)`);
-                
-                // Update wallet balance
-                const newBalance = withdrawWallet - parseFloat(amount);
-                document.getElementById('withdrawWallet').innerText = '$' + newBalance;
-                
-                // Add to history
-                addToHistory(recipient, amount);
-                
-                // Clear form
-                document.getElementById('recipientId').value = '';
-                document.getElementById('amount').value = '';
-                pins.forEach(p => p.value = '');
+                alert('Transfer failed. Please try again.');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> SEND TRANSFER';
             }
         }
 
-        // Add transaction to history
-        function addToHistory(recipient, amount) {
-            const historyDiv = document.getElementById('p2pHistory');
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = now.toLocaleDateString('en-US');
+        // ============================================
+        // PIN INPUT NAVIGATION
+        // ============================================
+        function moveToNext(current, index) {
+            if (current.value.length === 1) {
+                const next = document.querySelectorAll('.pin-field')[index + 1];
+                if (next) next.focus();
+            }
             
-            const newItem = document.createElement('div');
-            newItem.className = 'history-item';
-            newItem.innerHTML = `
-                <div class="history-info">
-                    <div class="history-icon">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-user">Sent to ${recipient}</div>
-                        <div class="history-date">${dateStr}, ${timeStr}</div>
-                    </div>
-                </div>
-                <div class="history-amount amount-sent">-$${amount}</div>
-            `;
-            
-            historyDiv.prepend(newItem);
-        }
-
-        // Load P2P history
-        async function loadP2PHistory() {
-            try {
-                // Try to get from API
-                const response = await fetch(`${API_BASE_URL}/p2p/history`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+            // If backspace pressed and empty, go to previous
+            current.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0) {
+                    const prev = document.querySelectorAll('.pin-field')[index - 1];
+                    if (prev) {
+                        prev.focus();
+                        prev.value = '';
                     }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.data.length > 0) {
-                    renderHistory(data.data);
-                } else {
-                    // Load demo history
-                    loadDemoHistory();
                 }
-            } catch (error) {
-                console.log('Using demo history');
-                loadDemoHistory();
-            }
+            }, { once: true });
         }
 
-        function loadDemoHistory() {
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function showError(message) {
             const historyDiv = document.getElementById('p2pHistory');
-            
-            const demoHistory = [
-                { type: 'sent', to: 'Gainix100003', amount: 100, date: '2026-03-03', time: '10:30 AM' },
-                { type: 'received', from: 'Gainix100002', amount: 250, date: '2026-03-02', time: '3:45 PM' },
-                { type: 'sent', to: 'Gainix100005', amount: 50, date: '2026-03-01', time: '2:15 PM' },
-                { type: 'received', from: 'Gainix100004', amount: 120, date: '2026-02-28', time: '11:20 AM' }
-            ];
-            
-            let html = '';
-            demoHistory.forEach(item => {
-                if (item.type === 'sent') {
-                    html += `
-                        <div class="history-item">
-                            <div class="history-info">
-                                <div class="history-icon">
-                                    <i class="fas fa-arrow-up"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-user">Sent to ${item.to}</div>
-                                    <div class="history-date">${item.date}, ${item.time}</div>
-                                </div>
-                            </div>
-                            <div class="history-amount amount-sent">-$${item.amount}</div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="history-item">
-                            <div class="history-info">
-                                <div class="history-icon">
-                                    <i class="fas fa-arrow-down"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-user">Received from ${item.from}</div>
-                                    <div class="history-date">${item.date}, ${item.time}</div>
-                                </div>
-                            </div>
-                            <div class="history-amount amount-received">+$${item.amount}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            historyDiv.innerHTML = html;
+            historyDiv.innerHTML = `
+                <div class="no-data">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>${message}</p>
+                </div>
+            `;
         }
 
-        function renderHistory(transactions) {
-            const historyDiv = document.getElementById('p2pHistory');
-            let html = '';
-            
-            transactions.forEach(item => {
-                if (item.type === 'sent' || item.amount < 0) {
-                    html += `
-                        <div class="history-item">
-                            <div class="history-info">
-                                <div class="history-icon">
-                                    <i class="fas fa-arrow-up"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-user">Sent to ${item.to || item.recipientId}</div>
-                                    <div class="history-date">${item.date || item.createdAt}, ${item.time || '00:00'}</div>
-                                </div>
-                            </div>
-                            <div class="history-amount amount-sent">-$${Math.abs(item.amount)}</div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="history-item">
-                            <div class="history-info">
-                                <div class="history-icon">
-                                    <i class="fas fa-arrow-down"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-user">Received from ${item.from || item.senderId}</div>
-                                    <div class="history-date">${item.date || item.createdAt}, ${item.time || '00:00'}</div>
-                                </div>
-                            </div>
-                            <div class="history-amount amount-received">+$${item.amount}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            historyDiv.innerHTML = html;
-        }
+        // Export functions
+        window.moveToNext = moveToNext;
+        window.sendP2P = sendP2P;
+        window.goToDashboard = goToDashboard;
     </script>
 </body>
 </html>

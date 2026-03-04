@@ -55,7 +55,6 @@
             z-index: 1;
         }
 
-        /* Back Button */
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -77,7 +76,6 @@
             transform: translateX(-4px);
         }
 
-        /* Page Title */
         .page-title {
             font-size: 22px;
             margin-bottom: 16px;
@@ -89,7 +87,6 @@
             gap: 8px;
         }
 
-        /* Search Section */
         .search-section {
             background: rgba(12, 18, 28, 0.95);
             backdrop-filter: blur(10px);
@@ -170,7 +167,6 @@
             color: #00ffd9;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -199,7 +195,6 @@
             color: #00ffd9;
         }
 
-        /* Level Tabs */
         .level-tabs {
             display: flex;
             gap: 8px;
@@ -231,7 +226,6 @@
             color: #030507;
         }
 
-        /* Members Grid */
         .members-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -306,7 +300,18 @@
             margin-bottom: 12px;
         }
 
-        /* Bottom Navigation */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8899aa;
+            grid-column: 1 / -1;
+        }
+
+        .loading i {
+            margin-right: 8px;
+            color: #00ffd9;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -420,9 +425,8 @@
 
         <!-- Members Grid -->
         <div id="membersList" class="members-grid">
-            <div class="no-data">
-                <i class="fas fa-users"></i>
-                <p>No members found</p>
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading team members...
             </div>
         </div>
     </div>
@@ -436,12 +440,13 @@
         <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
-    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script>
         // ============================================
-        // TEAM PAGE JAVASCRIPT
+        // TEAM PAGE - 100% BACKEND CONNECTED
         // ============================================
+
+        const API_URL = API_BASE_URL || 'https://gainixai-backend.onrender.com/api';
 
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
@@ -456,6 +461,9 @@
             window.location.href = 'dashboard.html';
         }
 
+        // ============================================
+        // LOAD TEAM MEMBERS FROM BACKEND
+        // ============================================
         async function loadTeamLevel(level) {
             // Update active tab
             document.querySelectorAll('.level-tab').forEach(tab => tab.classList.remove('active'));
@@ -465,21 +473,26 @@
             // Show loading
             const membersContainer = document.getElementById('membersList');
             membersContainer.innerHTML = `
-                <div class="no-data">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading level ${level}...</p>
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading level ${level}...
                 </div>
             `;
 
             try {
                 // Call API
-                const result = await getTeamByLevel(level);
+                const response = await fetch(`${API_URL}/team/level/${level}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 
-                if (result?.success && result.data && result.data.length > 0) {
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
                     // Update stats
-                    const totalMembers = result.data.length;
-                    const totalVolume = result.data.reduce((sum, m) => sum + (m.contribution || 0), 0);
-                    const activeStakers = result.data.filter(m => m.active || m.contribution > 0).length;
+                    const totalMembers = data.data.length;
+                    const totalVolume = data.data.reduce((sum, m) => sum + (m.contribution || m.staked || 0), 0);
+                    const activeStakers = data.data.filter(m => m.active || (m.contribution > 0) || (m.staked > 0)).length;
                     
                     document.getElementById('totalMembers').innerText = totalMembers;
                     document.getElementById('totalVolume').innerText = '$' + totalVolume.toFixed(2);
@@ -487,14 +500,19 @@
                     
                     // Render members
                     let html = '';
-                    result.data.forEach(member => {
+                    data.data.forEach(member => {
+                        const contribution = member.contribution || member.staked || 0;
+                        const name = member.name || member.fullName || `Team Member`;
+                        const userId = member.userId || member.id || `Gainix${100000 + Math.floor(Math.random()*9000)}`;
+                        const avatarLetter = name ? name[0].toUpperCase() : 'U';
+                        
                         html += `
                             <div class="member-card">
-                                <div class="member-avatar">${member.name ? member.name[0].toUpperCase() : 'U'}</div>
+                                <div class="member-avatar">${avatarLetter}</div>
                                 <div class="member-info">
-                                    <div class="member-name">${member.name || 'Team Member'}</div>
-                                    <div class="member-id">${member.userId || 'Gainix' + (100000 + Math.floor(Math.random()*9000))}</div>
-                                    <div class="member-contribution">$${member.contribution || 0}</div>
+                                    <div class="member-name">${name}</div>
+                                    <div class="member-id">${userId}</div>
+                                    <div class="member-contribution">$${contribution}</div>
                                 </div>
                             </div>
                         `;
@@ -524,6 +542,9 @@
             }
         }
 
+        // ============================================
+        // SEARCH LEVEL FUNCTION
+        // ============================================
         async function searchLevel() {
             const input = document.getElementById('levelSearchInput');
             const level = parseInt(input?.value);
@@ -534,6 +555,11 @@
             }
             await loadTeamLevel(level);
         }
+
+        // Export functions
+        window.loadTeamLevel = loadTeamLevel;
+        window.searchLevel = searchLevel;
+        window.goToDashboard = goToDashboard;
     </script>
 </body>
 </html>

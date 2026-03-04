@@ -55,7 +55,6 @@
             z-index: 1;
         }
 
-        /* Back Button */
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -77,7 +76,6 @@
             transform: translateX(-4px);
         }
 
-        /* Page Title */
         .page-title {
             font-size: 22px;
             margin-bottom: 16px;
@@ -89,7 +87,6 @@
             gap: 8px;
         }
 
-        /* Current Rank Banner */
         .current-rank-banner {
             background: linear-gradient(145deg, #ffd700, #ffaa00);
             border-radius: 36px;
@@ -111,7 +108,6 @@
             font-size: 14px;
         }
 
-        /* Sunday Warning */
         .sunday-warning {
             background: rgba(255,107,107,0.2);
             border: 1px solid #ff6b6b;
@@ -130,7 +126,6 @@
             font-size: 18px;
         }
 
-        /* Salary System Container */
         .salary-system {
             background: rgba(12,18,28,0.95);
             border-radius: 24px;
@@ -164,7 +159,6 @@
             font-size: 15px;
         }
 
-        /* Horizontal Scroll Container */
         .salary-scroll-container {
             overflow-x: auto;
             padding-bottom: 12px;
@@ -186,7 +180,6 @@
             border-radius: 8px;
         }
 
-        /* Salary Grid - Horizontal Flex */
         .salary-grid {
             display: flex;
             gap: 16px;
@@ -194,7 +187,6 @@
             padding: 4px;
         }
 
-        /* Rank Card */
         .salary-rank-card {
             width: 280px;
             background: rgba(255,215,0,0.05);
@@ -229,7 +221,6 @@
             opacity: 0.8; 
         }
 
-        /* Rank Header */
         .rank-header {
             display: flex;
             align-items: center;
@@ -270,7 +261,6 @@
             color: #8899aa; 
         }
 
-        /* Rank Conditions */
         .rank-conditions {
             display: grid;
             grid-template-columns: 1fr;
@@ -311,7 +301,6 @@
             border-radius: 2px;
         }
 
-        /* Rank Salary Box */
         .rank-salary-box {
             margin-top: 16px;
             padding: 12px;
@@ -333,7 +322,6 @@
             margin-top: 4px;
         }
 
-        /* Rules Section */
         .rules-section {
             background: rgba(12,18,28,0.95);
             border-radius: 24px;
@@ -376,7 +364,6 @@
             color: #cbd5e0;
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -412,7 +399,6 @@
             transform: translateY(-2px);
         }
 
-        /* Loading Spinner */
         .loading-spinner {
             color: #8899aa;
             text-align: center;
@@ -454,7 +440,7 @@
             <i class="fas fa-star"></i> STAR RANK LEADERSHIP SALARY SYSTEM
         </div>
 
-        <!-- Current Rank Banner -->
+        <!-- Current Rank Banner - Will show 0 ⭐ if no rank achieved -->
         <div class="current-rank-banner" id="currentRankBanner">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
             <span class="rank-badge-large" id="currentRankDisplay">0 ⭐</span>
@@ -478,7 +464,6 @@
             
             <div class="salary-scroll-container">
                 <div class="salary-grid" id="salaryGrid">
-                    <!-- Ranks will be loaded here by JavaScript -->
                     <div class="loading-spinner">
                         <i class="fas fa-spinner fa-spin"></i>
                         <p>Loading ranks...</p>
@@ -526,8 +511,10 @@
     <script src="js/api.js"></script>
     <script>
         // ============================================
-        // SALARY PAGE JAVASCRIPT - HORIZONTAL SCROLL
+        // SALARY PAGE - 100% BACKEND CONNECTED
         // ============================================
+
+        const API_URL = API_BASE_URL || 'https://gainixai-backend.onrender.com/api';
 
         // Complete Rank Data (9 levels)
         const salaryRanks = [
@@ -576,7 +563,14 @@
 
         async function loadUserRankData() {
             try {
-                const result = await getMyRank();
+                const response = await fetch(`${API_URL}/salary/my-rank`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                const result = await response.json();
+                
                 if (result?.success) {
                     const data = result.data;
                     currentUserRank = data.currentRank?.rank || 0;
@@ -593,12 +587,16 @@
         }
 
         function updateRankDisplay() {
+            const displayEl = document.getElementById('currentRankDisplay');
+            const headerEl = document.getElementById('headerCurrentRank');
+            
             if (currentUserRank === 0) {
-                document.getElementById('currentRankDisplay').innerHTML = '0 ⭐';
-                document.getElementById('headerCurrentRank').innerHTML = '0 ⭐';
+                displayEl.innerHTML = '0 ⭐';
+                headerEl.innerHTML = '0 ⭐';
             } else {
-                document.getElementById('currentRankDisplay').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
-                document.getElementById('headerCurrentRank').innerHTML = `${currentUserRank} ${salaryRanks[currentUserRank-1].stars}`;
+                const rank = salaryRanks[currentUserRank - 1];
+                displayEl.innerHTML = `${currentUserRank} ${rank.stars}`;
+                headerEl.innerHTML = `${currentUserRank} ${rank.stars}`;
             }
         }
 
@@ -609,14 +607,18 @@
             salaryRanks.forEach((rank, index) => {
                 const rankNumber = index + 1;
                 let rankClass = 'future';
+                let statusText = 'LOCKED';
                 
                 if (rankNumber < currentUserRank) {
                     rankClass = 'achieved';
+                    statusText = 'ACHIEVED';
                 } else if (rankNumber === currentUserRank) {
                     rankClass = 'current';
+                    statusText = 'CURRENT';
                 } else if (currentUserRank === 0 && rankNumber === 1) {
-                    // If no rank, first card is 'next'
+                    // No rank yet - first rank is 'next'
                     rankClass = 'future';
+                    statusText = 'NEXT';
                 }
                 
                 // Calculate progress for next rank
@@ -647,10 +649,7 @@
                         <div class="rank-header">
                             <span class="rank-stars">${rank.stars}</span>
                             <span class="rank-name">Rank ${rank.rank}</span>
-                            <span class="rank-status">
-                                ${rankClass === 'current' ? 'CURRENT' : 
-                                  (rankClass === 'achieved' ? 'ACHIEVED' : 'LOCKED')}
-                            </span>
+                            <span class="rank-status">${statusText}</span>
                         </div>
                         
                         <div class="rank-conditions">
@@ -695,41 +694,6 @@
             
             grid.innerHTML = html;
         }
-
-        // Toast notification function
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#ff6b6b' : '#00ffd9'};
-                color: ${type === 'success' || type === 'error' ? '#fff' : '#030507'};
-                padding: 10px 20px;
-                border-radius: 30px;
-                font-weight: 600;
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            `;
-            toast.innerHTML = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        // Add animation styles
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
