@@ -15,7 +15,9 @@ const {
 // ============================================
 router.post('/create', protect, createWithdrawal);
 router.get('/my-withdrawals', protect, getUserWithdrawals);
-
+router.post('/test', (req, res) => {
+    res.json({ success: true, message: 'Test route working' });
+});
 // ============================================
 // ADMIN ROUTES
 // ============================================
