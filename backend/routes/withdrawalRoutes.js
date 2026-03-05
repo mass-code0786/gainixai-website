@@ -6,15 +6,21 @@ const {
     createWithdrawal,
     getUserWithdrawals,
     getAllWithdrawals,
-    processWithdrawal
+    processWithdrawal,
+    getWithdrawalStats
 } = require('../controllers/withdrawalController');
 
-// User routes
+// ============================================
+// USER ROUTES
+// ============================================
 router.post('/create', protect, createWithdrawal);
 router.get('/my-withdrawals', protect, getUserWithdrawals);
 
-// Admin routes
+// ============================================
+// ADMIN ROUTES
+// ============================================
 router.get('/admin/all', adminProtect, getAllWithdrawals);
 router.put('/admin/process/:id', adminProtect, processWithdrawal);
+router.get('/admin/stats', adminProtect, getWithdrawalStats);
 
 module.exports = router;

@@ -8,7 +8,17 @@ const Transaction = require('../models/Transaction');
 const createWithdrawal = async (req, res) => {
     try {
         const { amount, walletAddress } = req.body;
-        const userId = req.user.userId;
+        const userId = req.user?.userId;
+
+        console.log('📤 Withdrawal request received:', { userId, amount, walletAddress });
+
+        // Validation
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
 
         if (!amount || amount < 10) {
             return res.status(400).json({
@@ -17,6 +27,14 @@ const createWithdrawal = async (req, res) => {
             });
         }
 
+        if (!walletAddress || walletAddress.length < 10) {
+            return res.status(400).json({
+                success: false,
+                message: 'Valid wallet address is required'
+            });
+        }
+
+        // Get user
         const user = await User.findOne({ userId });
         if (!user) {
             return res.status(404).json({
@@ -25,10 +43,16 @@ const createWithdrawal = async (req, res) => {
             });
         }
 
+        console.log('👤 User found:', { 
+            userId: user.userId, 
+            withdrawWallet: user.withdrawWallet 
+        });
+
+        // Check balance
         if (user.withdrawWallet < amount) {
             return res.status(400).json({
                 success: false,
-                message: 'Insufficient balance in Withdraw Wallet'
+                message: `Insufficient balance. Available: $${user.withdrawWallet}`
             });
         }
 
@@ -36,35 +60,48 @@ const createWithdrawal = async (req, res) => {
         user.withdrawWallet -= amount;
         await user.save();
 
+        console.log('💰 Amount deducted. New balance:', user.withdrawWallet);
+
         // Create withdrawal request
         const withdrawal = await Withdrawal.create({
             userId: user.userId,
-            userName: user.name,
+            userName: user.name || 'Unknown',
             amount,
-            walletAddress: walletAddress || user.walletAddress || 'Not provided',
-            status: 'pending'
+            walletAddress,
+            status: 'pending',
+            createdAt: new Date()
         });
+
+        console.log('✅ Withdrawal request created:', withdrawal._id);
 
         // Create transaction record
         await Transaction.create({
             userId: user.userId,
             type: 'withdrawal_request',
             amount: -amount,
-            description: `Withdrawal request of $${amount}`,
+            description: `Withdrawal request of $${amount} to ${walletAddress.substring(0,6)}...`,
+            status: 'pending',
             createdAt: new Date()
         });
 
-        res.json({
+        res.status(201).json({
             success: true,
-            message: 'Withdrawal request submitted successfully',
-            data: withdrawal
+            message: '✅ Withdrawal request submitted successfully',
+            data: {
+                id: withdrawal._id,
+                amount: withdrawal.amount,
+                status: withdrawal.status,
+                walletAddress: withdrawal.walletAddress,
+                createdAt: withdrawal.createdAt,
+                newBalance: user.withdrawWallet
+            }
         });
 
     } catch (error) {
-        console.error('Create withdrawal error:', error);
+        console.error('❌ Create withdrawal error:', error);
         res.status(500).json({
             success: false,
-            message: error.message
+            message: 'Server error: ' + error.message
         });
     }
 };
@@ -74,18 +111,26 @@ const createWithdrawal = async (req, res) => {
 // ============================================
 const getUserWithdrawals = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        
+        const userId = req.user?.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
+
         const withdrawals = await Withdrawal.find({ userId })
             .sort({ createdAt: -1 });
 
         res.json({
             success: true,
+            count: withdrawals.length,
             data: withdrawals
         });
 
     } catch (error) {
-        console.error('Get user withdrawals error:', error);
+        console.error('❌ Get user withdrawals error:', error);
         res.status(500).json({
             success: false,
             message: error.message
@@ -122,7 +167,7 @@ const getAllWithdrawals = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Get all withdrawals error:', error);
+        console.error('❌ Get all withdrawals error:', error);
         res.status(500).json({
             success: false,
             message: error.message
@@ -138,10 +183,12 @@ const processWithdrawal = async (req, res) => {
         const { id } = req.params;
         const { status, txHash } = req.body;
 
+        console.log('📋 Processing withdrawal:', { id, status, txHash });
+
         if (!['approved', 'rejected', 'paid'].includes(status)) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid status'
+                message: 'Invalid status. Use: approved, rejected, or paid'
             });
         }
 
@@ -156,10 +203,11 @@ const processWithdrawal = async (req, res) => {
         if (withdrawal.status !== 'pending') {
             return res.status(400).json({
                 success: false,
-                message: 'Withdrawal already processed'
+                message: `Withdrawal already ${withdrawal.status}`
             });
         }
 
+        // Update withdrawal
         withdrawal.status = status;
         withdrawal.processedBy = req.admin?.username || 'admin';
         withdrawal.processedAt = new Date();
@@ -178,9 +226,10 @@ const processWithdrawal = async (req, res) => {
                     userId: user.userId,
                     type: 'withdrawal_refund',
                     amount: withdrawal.amount,
-                    description: `Withdrawal request rejected - refunded`,
+                    description: `Withdrawal #${withdrawal._id} rejected - refunded`,
                     createdAt: new Date()
                 });
+                console.log('💰 Refund processed for user:', user.userId);
             }
         }
 
@@ -190,20 +239,21 @@ const processWithdrawal = async (req, res) => {
                 userId: withdrawal.userId,
                 type: 'withdrawal_paid',
                 amount: -withdrawal.amount,
-                description: `Withdrawal processed - $${withdrawal.amount}`,
+                description: `Withdrawal #${withdrawal._id} processed`,
                 txHash: txHash,
                 createdAt: new Date()
             });
+            console.log('✅ Withdrawal marked as paid');
         }
 
         res.json({
             success: true,
-            message: `Withdrawal ${status} successfully`,
+            message: `✅ Withdrawal ${status} successfully`,
             data: withdrawal
         });
 
     } catch (error) {
-        console.error('Process withdrawal error:', error);
+        console.error('❌ Process withdrawal error:', error);
         res.status(500).json({
             success: false,
             message: error.message
@@ -211,9 +261,45 @@ const processWithdrawal = async (req, res) => {
     }
 };
 
+// ============================================
+// GET WITHDRAWAL STATS (ADMIN)
+// ============================================
+const getWithdrawalStats = async (req, res) => {
+    try {
+        const pending = await Withdrawal.countDocuments({ status: 'pending' });
+        const approved = await Withdrawal.countDocuments({ status: 'approved' });
+        const paid = await Withdrawal.countDocuments({ status: 'paid' });
+        const rejected = await Withdrawal.countDocuments({ status: 'rejected' });
+
+        const totalAmount = await Withdrawal.aggregate([
+            { $match: { status: { $in: ['paid', 'approved'] } } },
+            { $group: { _id: null, total: { $sum: '$amount' } } }
+        ]);
+
+        res.json({
+            success: true,
+            data: {
+                counts: { pending, approved, paid, rejected },
+                totalProcessed: totalAmount[0]?.total || 0
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Get withdrawal stats error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// ============================================
+// EXPORT ALL FUNCTIONS
+// ============================================
 module.exports = {
     createWithdrawal,
     getUserWithdrawals,
     getAllWithdrawals,
-    processWithdrawal
+    processWithdrawal,
+    getWithdrawalStats
 };
