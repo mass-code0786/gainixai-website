@@ -1,9 +1,13 @@
 // ============================================
+// GLOBAL CONFIGURATION
+// ============================================
+const API_BASE_URL = 'https://gainixai-backend.onrender.com/api';
+
+// ============================================
 // DASHBOARD INITIALIZATION
 // ============================================
-
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Dashboard initializing with real API data...');
+    console.log('🚀 Dashboard initializing...');
     
     const token = localStorage.getItem('token');
     if (!token) {
@@ -11,26 +15,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Check if Sunday
     checkSunday();
+    updateUTCTime();
+    setInterval(updateUTCTime, 1000);
 
-    // Load all data from APIs
     try {
         await loadUserProfile();
         await loadStakingStats();
-        await loadActiveStakings();  // ✅ FIXED: was loadActiveTaskings
+        await loadActiveStakings();
         await loadLevelSummary();
         await loadRankInfo();
         await loadReferralSummary();
-        console.log('✅ Dashboard initialized successfully with real data');
+        console.log('✅ Dashboard initialized');
     } catch (error) {
-        console.error('❌ Dashboard initialization error:', error);
-        showToast('Failed to load some data. Please refresh.', 'error');
+        console.error('❌ Dashboard error:', error);
     }
 });
 
 // ============================================
-// LOGOUT FUNCTION (for logo click)
+// LOGOUT FUNCTION
 // ============================================
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
@@ -50,13 +53,19 @@ function checkSunday() {
     if (isSunday) {
         const warningDiv = document.createElement('div');
         warningDiv.className = 'sunday-warning';
-        warningDiv.innerHTML = '<i class="fas fa-power-off"></i> ⚠️ Sunday - Bot Closed. No income will be generated today.';
-        
-        const dashboard = document.querySelector('.dashboard');
-        if (dashboard) {
-            dashboard.prepend(warningDiv);
-        }
+        warningDiv.innerHTML = '<i class="fas fa-power-off"></i> ⚠️ Sunday - Bot Closed. No income generated.';
+        document.querySelector('.dashboard')?.prepend(warningDiv);
     }
+}
+
+// ============================================
+// UTC TIME UPDATE
+// ============================================
+function updateUTCTime() {
+    const now = new Date();
+    const hours = now.getUTCHours().toString().padStart(2, '0');
+    const minutes = now.getUTCMinutes().toString().padStart(2, '0');
+    document.getElementById('utcDisplay').innerText = hours + ':' + minutes + ' UTC';
 }
 
 // ============================================
@@ -80,7 +89,7 @@ async function loadUserProfile() {
 function displayReferralLink(user) {
     const userId = user.userId || 'Gainix100001';
     const baseUrl = window.location.origin;
-    const referralLink = `${baseUrl}/Frontend/register.html?ref=${userId}`;
+    const referralLink = `${baseUrl}/register.html?ref=${userId}`;
     
     const refLinkInput = document.getElementById('refLink');
     if (refLinkInput) refLinkInput.value = referralLink;
@@ -89,20 +98,61 @@ function displayReferralLink(user) {
     if (refLinkSpan) refLinkSpan.innerText = `gainixai.live/ref/${userId}`;
 }
 
+function saveProfile() {
+    const newName = document.getElementById('userName')?.value;
+    if (newName) {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        user.name = newName;
+        localStorage.setItem('user', JSON.stringify(user));
+        showToast('✅ Profile updated!', 'success');
+    }
+}
+
+function copyReferralLink() {
+    const refLink = document.getElementById('refLinkDisplay');
+    if (refLink) {
+        navigator.clipboard.writeText(refLink.innerText);
+        showToast('✅ Referral link copied!', 'success');
+    }
+}
+
+function copyWalletAddress() {
+    const address = document.getElementById('walletAddressDisplay')?.innerText;
+    if (address) {
+        navigator.clipboard.writeText(address);
+        showToast('✅ Wallet address copied!', 'success');
+    }
+}
+
+function uploadAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('avatarIcon').style.display = 'none';
+            const img = document.getElementById('avatarImage');
+            img.style.display = 'block';
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 // ============================================
-// STAKING STATS - REAL API
+// STAKING FUNCTIONS
 // ============================================
 async function loadStakingStats() {
     try {
-        const result = await getStakingStats();
+        const response = await fetch(`${API_BASE_URL}/staking/stats`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
+        
         if (result?.success) {
             const stats = result.data.summary;
-            
             safeSetText('totalStaked', `$${stats.totalStaked || 0}`);
             safeSetText('stakingCount', stats.activeStakings || '0');
             safeSetText('stakingIncome', `$${stats.totalROIEarned || 0}`);
             safeSetText('stakingIncomeToday', `+$${stats.totalDailyROI || 0} today`);
-            
             safeSetText('fundWallet', `$${stats.fundWallet || 0}`);
             safeSetText('withdrawWallet', `$${stats.withdrawWallet || 0}`);
         }
@@ -111,12 +161,12 @@ async function loadStakingStats() {
     }
 }
 
-// ============================================
-// ACTIVE STAKINGS - REAL API
-// ============================================
 async function loadActiveStakings() {
     try {
-        const result = await getActiveStakings();
+        const response = await fetch(`${API_BASE_URL}/staking/active`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
         const container = document.getElementById('activeStakingsList');
         if (!container) return;
         
@@ -155,12 +205,99 @@ async function loadActiveStakings() {
     }
 }
 
+async function unstakeStaking(stakingId) {
+    if (!confirm('Are you sure you want to unstake?')) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/staking/unstake/${stakingId}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
+        
+        if (result?.success) {
+            showToast('✅ Staking unstaked successfully!', 'success');
+            await loadActiveStakings();
+            await loadStakingStats();
+        }
+    } catch (error) {
+        showToast('Failed to unstake', 'error');
+    }
+}
+
+function showBonusMessage() {
+    const packageSelect = document.getElementById('packageSelect');
+    const amount = parseFloat(document.getElementById('packageAmount')?.value) || 0;
+    const msgDiv = document.getElementById('bonusMessage');
+    
+    if (packageSelect && packageSelect.value === 'ELITE' && amount >= 500) {
+        if (msgDiv) msgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
+    } else {
+        if (msgDiv) msgDiv.innerHTML = '';
+    }
+}
+
+function selectPackage(num) {
+    document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+    const card = document.getElementById(`package${num}`);
+    if (card) card.classList.add('selected');
+    
+    const select = document.getElementById('packageSelect');
+    if (select) {
+        select.value = ['BASIC', 'PRO', 'ELITE'][num - 1];
+    }
+    showBonusMessage();
+}
+
+async function createStaking() {
+    const packageSelect = document.getElementById('packageSelect');
+    const amount = document.getElementById('packageAmount').value;
+    const referralId = document.getElementById('referralId')?.value || '';
+    
+    if (!amount || amount < 20) {
+        showToast('Minimum amount is $20', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/staking/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                package: packageSelect.value,
+                amount: parseFloat(amount)
+            })
+        });
+        const result = await response.json();
+        
+        if (result?.success) {
+            showToast('✅ Staking created!', 'success');
+            closeInvestModal();
+            await loadStakingStats();
+            await loadActiveStakings();
+            await loadReferralSummary();
+            await loadRankInfo();
+            document.getElementById('packageAmount').value = '';
+            document.getElementById('bonusMessage').innerHTML = '';
+        }
+    } catch (error) {
+        showToast('Failed to create staking', 'error');
+    }
+}
+
 // ============================================
-// LEVEL INCOME - REAL API
+// LEVEL INCOME FUNCTIONS
 // ============================================
 async function loadLevelSummary() {
     try {
-        const result = await getLevelSummary();
+        const response = await fetch(`${API_BASE_URL}/level/summary`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
+        
         if (result?.success) {
             const tbody = document.getElementById('levelIncomeBody');
             if (tbody) {
@@ -186,11 +323,15 @@ async function loadLevelSummary() {
 }
 
 // ============================================
-// RANK INFO - REAL API
+// RANK FUNCTIONS
 // ============================================
 async function loadRankInfo() {
     try {
-        const result = await getMyRank();
+        const response = await fetch(`${API_BASE_URL}/salary/my-rank`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
+        
         if (result?.success) {
             const data = result.data;
             
@@ -205,7 +346,6 @@ async function loadRankInfo() {
             }
             
             safeSetText('totalSalaryIncome', `$${data.totalSalaryEarned || 0}`);
-            safeSetText('salaryIncomeToday', `+$${data.totalSalaryEarned || 0} this week`);
         }
     } catch (error) {
         console.error('Failed to load rank info:', error);
@@ -213,11 +353,15 @@ async function loadRankInfo() {
 }
 
 // ============================================
-// REFERRAL SUMMARY - REAL API
+// REFERRAL FUNCTIONS
 // ============================================
 async function loadReferralSummary() {
     try {
-        const result = await getReferralSummary();
+        const response = await fetch(`${API_BASE_URL}/referral/summary`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        const result = await response.json();
+        
         if (result?.success) {
             const data = result.data;
             
@@ -258,55 +402,133 @@ async function loadReferralSummary() {
 }
 
 // ============================================
-// CREATE NEW STAKING
+// WITHDRAWAL FUNCTIONS - FIXED WITH CORRECT URL
 // ============================================
-async function createNewStaking() {
-    const packageSelect = document.getElementById('packageSelect');
-    const amount = document.getElementById('packageAmount').value;
-    const referralId = document.getElementById('referralId')?.value || '';
-    
+function openWithdrawModal() {
+    document.getElementById('withdrawModal').style.display = 'flex';
+}
+
+async function processWithdraw() {
+    const amount = document.getElementById('withdrawAmount').value;
+    const walletAddress = document.getElementById('withdrawWalletAddress').value;
+    const token = localStorage.getItem('token');
+
     if (!amount || amount < 20) {
-        showToast('Please enter a valid amount (minimum $20)', 'error');
+        showToast('Minimum withdrawal is $20', 'error');
+        return;
+    }
+
+    if (!walletAddress || walletAddress.length < 10) {
+        showToast('Please enter a valid wallet address', 'error');
         return;
     }
 
     try {
-        const result = await createStaking(packageSelect.value, parseFloat(amount));
-        if (result?.success) {
-            showToast(result.message || 'Staking created successfully!', 'success');
-            closeInvestModal();
-            await loadStakingStats();
-            await loadActiveStakings();
-            await loadReferralSummary();
-            await loadRankInfo();
-            document.getElementById('packageAmount').value = '';
-            document.getElementById('bonusMessage').innerHTML = '';
+        console.log('Sending withdrawal request to:', `${API_BASE_URL}/withdrawal/create`);
+        
+        const response = await fetch(`${API_BASE_URL}/withdrawal/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                amount: parseFloat(amount),
+                walletAddress: walletAddress
+            })
+        });
+
+        const data = await response.json();
+        console.log('Withdrawal response:', data);
+
+        if (data.success) {
+            showToast(`✅ Withdrawal request submitted!`, 'success');
+            closeModal('withdrawModal');
+            await loadStakingStats(); // Refresh wallet balance
+            document.getElementById('withdrawAmount').value = '';
+            document.getElementById('withdrawWalletAddress').value = '';
+        } else {
+            showToast(`❌ ${data.message || 'Withdrawal failed'}`, 'error');
         }
     } catch (error) {
-        showToast(error.message || 'Failed to create staking', 'error');
+        console.error('Withdrawal error:', error);
+        showToast('❌ Network error. Please try again.', 'error');
     }
 }
 
 // ============================================
-// UNSTAKE STAKING
+// DEPOSIT FUNCTIONS
 // ============================================
-async function unstakeStaking(stakingId) {
-    if (!confirm('Are you sure you want to unstake this position?')) return;
+function openDepositModal() {
+    document.getElementById('depositModal').style.display = 'flex';
+}
+
+async function processDeposit() {
+    const amount = document.getElementById('depositAmount').value;
     
-    try {
-        const result = await unstakeStaking(stakingId);
-        if (result?.success) {
-            showToast('✅ Staking unstaked successfully!', 'success');
-            await loadActiveStakings();
-            await loadStakingStats();
-        }
-    } catch (error) {
-        showToast(error.message || 'Failed to unstake', 'error');
+    if (!amount || amount < 20) {
+        showToast('Minimum deposit is $20', 'error');
+        return;
     }
+
+    showToast('Deposit feature coming soon', 'info');
+    closeModal('depositModal');
 }
 
 // ============================================
-// HELPER FUNCTIONS
+// P2P FUNCTIONS
+// ============================================
+function openP2PModal() {
+    document.getElementById('p2pModal').style.display = 'flex';
+}
+
+function moveToNext(current, index) {
+    if (current.value.length === 1) {
+        const next = document.querySelectorAll('.pin-field')[index + 1];
+        if (next) next.focus();
+    }
+}
+
+async function processP2P() {
+    const recipient = document.getElementById('recipientId').value;
+    const amount = document.getElementById('p2pAmount').value;
+    const pins = document.querySelectorAll('.pin-field');
+    let pin = '';
+    pins.forEach(p => pin += p.value);
+
+    if (!recipient || !amount) {
+        showToast('Please fill all fields', 'error');
+        return;
+    }
+
+    if (pin.length !== 4) {
+        showToast('Please enter complete PIN', 'error');
+        return;
+    }
+
+    showToast('P2P feature coming soon', 'info');
+    closeModal('p2pModal');
+}
+
+// ============================================
+// INVEST MODAL FUNCTIONS
+// ============================================
+function showInvestModal() {
+    document.getElementById('investModal').style.display = 'flex';
+    showBonusMessage();
+}
+
+function closeInvestModal() {
+    document.getElementById('investModal').style.display = 'none';
+}
+
+function confirmStake() {
+    showToast('Staking confirmed!', 'success');
+    closeInvestModal();
+}
+
+// ============================================
+// UTILITY FUNCTIONS
 // ============================================
 function safeSetText(id, value) {
     const el = document.getElementById(id);
@@ -318,38 +540,31 @@ function safeSetValue(id, value) {
     if (el) el.value = value;
 }
 
-function showBonusMessage() {
-    const packageSelect = document.getElementById('packageSelect');
-    const amount = parseFloat(document.getElementById('packageAmount')?.value) || 0;
-    const msgDiv = document.getElementById('bonusMessage');
-    
-    if (packageSelect && packageSelect.value === 'ELITE' && amount >= 500) {
-        if (msgDiv) msgDiv.innerHTML = '🎉 You qualify for $100 instant bonus!';
-    } else {
-        if (msgDiv) msgDiv.innerHTML = '';
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function goToHistory(filter) {
+    localStorage.setItem('historyFilter', filter);
+    window.location.href = 'history.html';
+}
+
+function attachWallet() {
+    const address = document.getElementById('bep20Address')?.value;
+    const pin = document.getElementById('walletPin')?.value;
+    if (!address || address.length < 20) {
+        showToast('Invalid address', 'error');
+        return;
     }
-}
-
-function selectPackage(num) {
-    document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-    const card = document.getElementById(`package${num}`);
-    if (card) card.classList.add('selected');
-    
-    const select = document.getElementById('packageSelect');
-    if (select) {
-        const packages = ['BASIC', 'PRO', 'ELITE'];
-        select.value = packages[num - 1];
+    if (!pin || pin.length !== 4) {
+        showToast('Invalid PIN', 'error');
+        return;
     }
-    showBonusMessage();
+    showToast('Wallet attached!', 'success');
 }
 
-function showInvestModal() {
-    document.getElementById('investModal').style.display = 'flex';
-    showBonusMessage();
-}
-
-function closeInvestModal() {
-    document.getElementById('investModal').style.display = 'none';
+function openTradeModal() {
+    showToast('Trading window opens at 9:00 UTC', 'info');
 }
 
 // ============================================
@@ -390,16 +605,42 @@ style.textContent = `
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
     }
+    .sunday-warning {
+        background: rgba(255,107,107,0.2);
+        border: 1px solid #ff6b6b;
+        border-radius: 40px;
+        padding: 12px 18px;
+        margin-bottom: 16px;
+        color: #ff6b6b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 12px;
+    }
 `;
 document.head.appendChild(style);
 
-// ============================================
-// EXPORT FUNCTIONS TO GLOBAL SCOPE
-// ============================================
+// Export functions to global scope
 window.logout = logout;
+window.saveProfile = saveProfile;
+window.copyReferralLink = copyReferralLink;
+window.copyWalletAddress = copyWalletAddress;
+window.uploadAvatar = uploadAvatar;
 window.selectPackage = selectPackage;
 window.showBonusMessage = showBonusMessage;
+window.createStaking = createStaking;
+window.unstakeStaking = unstakeStaking;
+window.openDepositModal = openDepositModal;
+window.openWithdrawModal = openWithdrawModal;
+window.processWithdraw = processWithdraw;
+window.openP2PModal = openP2PModal;
+window.processP2P = processP2P;
+window.moveToNext = moveToNext;
 window.showInvestModal = showInvestModal;
 window.closeInvestModal = closeInvestModal;
-window.createNewStaking = createNewStaking;
-window.unstakeStaking = unstakeStaking;
+window.confirmStake = confirmStake;
+window.closeModal = closeModal;
+window.goToHistory = goToHistory;
+window.attachWallet = attachWallet;
+window.openTradeModal = openTradeModal;

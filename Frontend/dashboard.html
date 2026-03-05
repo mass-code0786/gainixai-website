@@ -55,7 +55,6 @@
             z-index: 1;
         }
 
-        /* Header - Slightly Smaller */
         .premium-header {
             display: flex;
             align-items: center;
@@ -133,7 +132,6 @@
             100% { opacity:1; transform:scale(1); }
         }
 
-        /* Current Rank Banner - Smaller */
         .current-rank-banner {
             background: linear-gradient(145deg, #ffd700, #ffaa00);
             border-radius: 36px;
@@ -155,7 +153,6 @@
             font-size: 12px;
         }
 
-        /* Profile Section - Compact */
         .profile-section {
             background: linear-gradient(145deg, rgba(0,255,209,0.1), rgba(0,153,255,0.05));
             border-radius: 24px;
@@ -867,7 +864,6 @@
             cursor: pointer;
         }
 
-        /* Level Income Table - Colors Fixed */
         .income-table {
             width: 100%;
             border-collapse: collapse;
@@ -905,7 +901,6 @@
             font-style: italic;
         }
 
-        /* Rank Progress - Colors Fixed */
         .rank-progress {
             background: rgba(12,18,28,0.95);
             border-radius: 16px;
@@ -923,7 +918,6 @@
             color: #00ffd9;
         }
 
-        /* Direct Members - Colors Fixed */
         .members-list {
             margin-top: 12px;
         }
@@ -982,7 +976,6 @@
             font-size: 9px;
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1018,7 +1011,6 @@
             transform: translateY(-2px);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -1230,7 +1222,7 @@
 
         <!-- Income Summary -->
         <div class="income-summary">
-            <div class="summary-box" onclick="showHistoryWithFilter('level')">
+            <div class="summary-box" onclick="goToHistory('level')">
                 <div class="summary-header">
                     <div class="summary-icon"><i class="fas fa-sitemap" style="color: #00ffd9;"></i></div>
                     <div class="summary-title">Total Level Income</div>
@@ -1238,7 +1230,7 @@
                 <div class="summary-total" id="totalLevelIncome">$0</div>
                 <div class="today-plus" id="levelIncomeToday">+$0 today</div>
             </div>
-            <div class="summary-box" onclick="showHistoryWithFilter('salary')">
+            <div class="summary-box" onclick="goToHistory('salary')">
                 <div class="summary-header">
                     <div class="summary-icon"><i class="fas fa-star" style="color: #ffd700;"></i></div>
                     <div class="summary-title">Total Salary Income</div>
@@ -1250,13 +1242,13 @@
 
         <!-- Income Cards -->
         <div class="balance-grid-premium">
-            <div class="balance-card-3d" onclick="showHistoryWithFilter('direct')">
+            <div class="balance-card-3d" onclick="goToHistory('direct')">
                 <div class="balance-icon-3d"><i class="fas fa-hand-holding-usd"></i></div>
                 <div class="balance-amount" id="directIncome">$0</div>
                 <div class="balance-label">Direct Income</div>
                 <div class="today-plus" id="directToday">+$0 today</div>
             </div>
-            <div class="balance-card-3d" onclick="showHistoryWithFilter('staking')">
+            <div class="balance-card-3d" onclick="goToHistory('staking')">
                 <div class="balance-icon-3d"><i class="fas fa-coins"></i></div>
                 <div class="balance-amount" id="stakingIncome">$0</div>
                 <div class="balance-label">Staking Income</div>
@@ -1264,7 +1256,7 @@
             </div>
         </div>
 
-        <!-- Quick Actions - Working -->
+        <!-- Quick Actions - WORKING WITHDRAWAL BUTTON -->
         <div class="quick-actions">
             <div class="action-btn" onclick="openDepositModal()">
                 <i class="fas fa-arrow-down"></i>
@@ -1344,7 +1336,7 @@
             <input type="number" id="packageAmount" placeholder="Amount" min="20" oninput="showBonusMessage()">
             <input type="text" id="referralId" placeholder="Sponsor ID (Optional)">
             <div id="bonusMessage" class="bonus-msg"></div>
-            <button class="confirm-btn" onclick="createNewStaking()">STAKE NOW</button>
+            <button class="confirm-btn" onclick="createStaking()">STAKE NOW</button>
         </div>
 
         <!-- Active Stakings -->
@@ -1353,7 +1345,7 @@
             <div class="no-data">No active stakings</div>
         </div>
 
-        <!-- Level Income Table - Fixed Colors -->
+        <!-- Level Income Table -->
         <div class="section-title"><i class="fas fa-sitemap"></i> LEVEL INCOME</div>
         <div class="rank-progress" style="padding: 16px;">
             <table class="income-table">
@@ -1371,10 +1363,10 @@
                     </tr>
                 </tbody>
             </table>
-            <p class="note">*Levels unlock with direct referrals: 1,2,3,4,5</p>
+            <p class="note">*Levels unlock with active referrals (who have staked)</p>
         </div>
 
-        <!-- Salary Rank Progress - Fixed Colors -->
+        <!-- Salary Rank Progress -->
         <div class="section-title"><i class="fas fa-star"></i> SALARY RANK</div>
         <div class="rank-progress">
             <p><strong>Current Rank:</strong> <span id="currentRank">Rank 0</span></p>
@@ -1384,7 +1376,7 @@
             <p><strong>Next Rank:</strong> <span id="nextRank">Rank 1 ($25/week)</span></p>
         </div>
 
-        <!-- Direct Members - Fixed Colors -->
+        <!-- Direct Members -->
         <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS</div>
         <div class="rank-progress" style="padding: 12px;">
             <p><strong>Total Direct:</strong> <span id="directCount">0</span></p>
@@ -1419,7 +1411,7 @@
         </div>
     </div>
 
-    <!-- Withdraw Modal -->
+    <!-- Withdraw Modal - FIXED URL -->
     <div id="withdrawModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1427,6 +1419,7 @@
                 <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
             </div>
             <input type="number" id="withdrawAmount" placeholder="Amount (Min $20)" class="modal-input">
+            <input type="text" id="withdrawWalletAddress" placeholder="BEP20 Wallet Address" class="modal-input">
             <button class="modal-btn" onclick="processWithdraw()">WITHDRAW</button>
         </div>
     </div>
@@ -1475,216 +1468,5 @@
 
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
-    <script>
-        // ============================================
-        // DEPOSIT / WITHDRAW / P2P FUNCTIONS
-        // ============================================
-
-        // Open deposit modal
-        function openDepositModal() {
-            document.getElementById('depositModal').style.display = 'flex';
-        }
-
-        // Process deposit
-        async function processDeposit() {
-            const amount = document.getElementById('depositAmount').value;
-            if (!amount || amount < 20) {
-                alert('Minimum deposit is $20');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/wallet/deposit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({ amount: parseFloat(amount) })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    alert(`✅ $${amount} deposited successfully!`);
-                    closeModal('depositModal');
-                    location.reload();
-                } else {
-                    alert('Deposit failed: ' + data.message);
-                }
-            } catch (error) {
-                alert('Deposit feature coming soon (demo)');
-                closeModal('depositModal');
-                // Demo - update UI
-                const fundWallet = document.getElementById('fundWallet');
-                const current = parseFloat(fundWallet.innerText.replace('$', '')) || 0;
-                fundWallet.innerText = '$' + (current + parseFloat(amount));
-            }
-        }
-
-        // Open withdraw modal
-        function openWithdrawModal() {
-            document.getElementById('withdrawModal').style.display = 'flex';
-        }
-
-        // Process withdraw
-        async function processWithdraw() {
-            const amount = document.getElementById('withdrawAmount').value;
-            if (!amount || amount < 20) {
-                alert('Minimum withdrawal is $20');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/withdraw/create`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({ amount: parseFloat(amount) })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    alert(`✅ $${amount} withdrawal requested!`);
-                    closeModal('withdrawModal');
-                } else {
-                    alert('Withdrawal failed: ' + data.message);
-                }
-            } catch (error) {
-                alert('Withdrawal feature coming soon (demo)');
-                closeModal('withdrawModal');
-            }
-        }
-
-        // Open P2P modal
-        function openP2PModal() {
-            document.getElementById('p2pModal').style.display = 'flex';
-        }
-
-        // Process P2P transfer
-        async function processP2P() {
-            const recipient = document.getElementById('recipientId').value;
-            const amount = document.getElementById('p2pAmount').value;
-
-            if (!recipient || !amount) {
-                alert('Please fill all fields');
-                return;
-            }
-
-            // Get PIN
-            const pins = document.querySelectorAll('#p2pModal .pin-field');
-            let pin = '';
-            pins.forEach(p => pin += p.value);
-
-            if (pin.length !== 4) {
-                alert('Please enter complete PIN');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({
-                        recipientId: recipient,
-                        amount: parseFloat(amount),
-                        pin: pin
-                    })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    alert(`✅ $${amount} sent to ${recipient}!`);
-                    closeModal('p2pModal');
-                } else {
-                    alert('Transfer failed: ' + data.message);
-                }
-            } catch (error) {
-                alert('P2P transfer coming soon (demo)');
-                closeModal('p2pModal');
-            }
-        }
-
-        // Move to next PIN field
-        function moveToNext(current, index) {
-            if (current.value.length === 1) {
-                const next = document.querySelectorAll('#p2pModal .pin-field')[index + 1];
-                if (next) next.focus();
-            }
-        }
-
-        // Save profile function
-        function saveProfile() {
-            const newName = document.getElementById('userName').value;
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            user.name = newName;
-            localStorage.setItem('user', JSON.stringify(user));
-            alert('✅ Profile updated!');
-        }
-
-        // ============================================
-        // OTHER FUNCTIONS
-        // ============================================
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        }
-}
-
-        function copyReferralLink() {
-            const refLink = document.getElementById('refLinkDisplay');
-            const text = refLink.innerText;
-            navigator.clipboard.writeText(text);
-            alert('✅ Referral link copied!');
-        }
-
-        function copyWalletAddress() {
-            const address = document.getElementById('walletAddressDisplay').innerText;
-            navigator.clipboard.writeText(address);
-            alert('✅ Wallet address copied!');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Update UTC time
-        function updateUTCTime() {
-            const now = new Date();
-            const hours = now.getUTCHours().toString().padStart(2, '0');
-            const minutes = now.getUTCMinutes().toString().padStart(2, '0');
-            document.getElementById('utcDisplay').innerText = hours + ':' + minutes + ' UTC';
-        }
-        setInterval(updateUTCTime, 1000);
-        updateUTCTime();
-
-        // Check Sunday
-        const today = new Date();
-        if (today.getUTCDay() === 0) {
-            document.querySelector('.unique-bot').innerHTML += 
-                '<div style="background:rgba(255,107,107,0.2); color:#ff6b6b; padding:10px; border-radius:16px; margin-top:10px;">⚠️ Sunday - Bot Closed</div>';
-        }
-
-        // Export functions
-        window.openDepositModal = openDepositModal;
-        window.openWithdrawModal = openWithdrawModal;
-        window.openP2PModal = openP2PModal;
-        window.processDeposit = processDeposit;
-        window.processWithdraw = processWithdraw;
-        window.processP2P = processP2P;
-        window.moveToNext = moveToNext;
-        window.closeModal = closeModal;
-        window.saveProfile = saveProfile;
-        window.copyReferralLink = copyReferralLink;
-        window.copyWalletAddress = copyWalletAddress;
-        window.logout = logout;
-    </script>
 </body>
 </html>
