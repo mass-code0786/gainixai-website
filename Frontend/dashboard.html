@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>GAINIX AI - Updated Dashboard</title>
+    <title>GAINIX AI - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -131,31 +132,25 @@
             100% { opacity:1; transform:scale(1); }
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+        .current-rank-banner {
+            background: linear-gradient(145deg, #ffd700, #ffaa00);
+            border-radius: 36px;
+            padding: 10px 18px;
             margin-bottom: 14px;
-        }
-
-        .stat-card {
-            background: rgba(12,18,28,0.9);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 16px;
-            padding: 12px 8px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #030507;
             font-weight: 700;
-            color: #00ffd9;
-            margin-bottom: 2px;
+            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
         }
 
-        .stat-label {
-            font-size: 10px;
-            color: #8899aa;
+        .rank-badge {
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
         }
 
         .profile-section {
@@ -199,6 +194,24 @@
             display: none;
         }
 
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 9px;
+            text-align: center;
+            padding: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .profile-avatar:hover .avatar-upload {
+            opacity: 1;
+        }
+
         .profile-info {
             flex: 1;
         }
@@ -212,6 +225,43 @@
             font-size: 14px;
             width: 100%;
             margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            font-size: 11px;
+            color: #8899aa;
+            margin: 3px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-info p i {
+            width: 14px;
+            color: #00ffd9;
+        }
+
+        .profile-info p span {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .save-profile-btn {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 16px;
+            padding: 6px 12px;
+            color: #030507;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: fit-content;
+        }
+
+        .save-profile-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0,255,209,0.3);
         }
 
         .wallet-address-mini {
@@ -256,6 +306,33 @@
             cursor: pointer;
         }
 
+        .staking-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(0,255,209,0.1);
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00ffd9;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #8899aa;
+        }
+
         .wallet-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -289,131 +366,368 @@
             color: #00ffd9;
         }
 
+        .income-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .summary-box {
+            background: rgba(12,18,28,0.9);
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid rgba(0,255,209,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .summary-box:hover {
+            transform: translateY(-3px);
+            border-color: #00ffd9;
+            box-shadow: 0 10px 20px rgba(0,255,209,0.2);
+        }
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .summary-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .summary-title {
+            font-size: 12px;
+            color: #8899aa;
+        }
+
+        .summary-total {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .today-plus {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: #2ecc71;
+            background: rgba(46,204,113,0.1);
+            padding: 3px 8px;
+            border-radius: 16px;
+            width: fit-content;
+        }
+
+        .balance-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .balance-card-3d {
+            background: rgba(12,18,28,0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid rgba(0,255,209,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .balance-card-3d:hover {
+            transform: translateY(-3px);
+            border-color: #00ffd9;
+            box-shadow: 0 10px 20px rgba(0,255,209,0.2);
+        }
+
+        .balance-icon-3d {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(145deg, rgba(0,255,209,0.2), rgba(0,153,255,0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(0,255,209,0.3);
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .balance-label {
+            font-size: 10px;
+            color: #8899aa;
+            margin-bottom: 4px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 14px 0;
+        }
+
+        .action-btn {
+            background: rgba(0,255,209,0.1);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 16px;
+            padding: 10px 3px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: rgba(0,255,209,0.2);
+            transform: translateY(-2px);
+        }
+
+        .action-btn i {
+            font-size: 16px;
+            color: #00ffd9;
+            margin-bottom: 2px;
+        }
+
+        .action-btn span {
+            display: block;
+            font-size: 10px;
+        }
+
+        .unique-bot {
+            background: linear-gradient(145deg, #1a2f3f, #0d1a24);
+            border-radius: 30px;
+            padding: 18px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(0,255,209,0.3);
+            box-shadow: 0 10px 24px rgba(0,255,209,0.2);
+        }
+
+        .bot-3d-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .bot-hologram {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border-radius: 24px 8px 24px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #030507;
+            animation: hologram 3s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0,255,209,0.5);
+        }
+
+        @keyframes hologram {
+            0%,100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(4deg) scale(1.05); }
+        }
+
+        .bot-info h3 {
+            font-size: 18px;
+            background: linear-gradient(135deg, #fff, #00ffd9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2px;
+        }
+
+        .bot-info p {
+            font-size: 10px;
+            color: #8899aa;
+        }
+
+        .bot-stats {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .bot-stat {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .bot-stat-value {
+            font-size: 16px;
+            color: #00ffd9;
+            font-weight: 700;
+        }
+
+        .bot-stat-label {
+            font-size: 9px;
+            color: #8899aa;
+        }
+
+        .window-timer {
+            background: rgba(0,0,0,0.3);
+            border-radius: 18px;
+            padding: 10px;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .window-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00ffd9;
+        }
+
+        .window-label {
+            font-size: 9px;
+            color: #8899aa;
+            margin-top: 2px;
+        }
+
+        .window-status {
+            background: rgba(0,255,209,0.1);
+            border-radius: 16px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            margin: 10px 0;
+        }
+
+        .bot-button {
+            width: 100%;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 30px;
+            padding: 12px;
+            color: #030507;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .bot-button:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 20px rgba(0,255,209,0.5);
+        }
+
+        .bot-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .section-title {
             font-size: 16px;
-            margin: 20px 0 10px;
+            margin: 14px 0 10px;
             display: flex;
             align-items: center;
             gap: 5px;
             color: #fff;
         }
 
-        .section-title i {
-            color: #00ffd9;
-        }
-
-        /* Staking Packages */
-        .packages-grid {
+        .staking-packages {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 8px;
             margin: 14px 0;
         }
 
         .package-card {
-            background: linear-gradient(145deg, #1a2f3f, #0d1a24);
-            border: 1px solid rgba(0,255,209,0.3);
-            border-radius: 24px;
-            padding: 16px 12px;
+            background: rgba(0,255,209,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 18px;
+            padding: 10px 3px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .package-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,255,209,0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .package-card:hover::before {
-            left: 100%;
         }
 
         .package-card:hover {
-            transform: translateY(-4px);
-            border-color: #00ffd9;
-            box-shadow: 0 10px 20px rgba(0,255,209,0.2);
+            background: rgba(0,255,209,0.15);
+            transform: translateY(-3px);
         }
 
         .package-card.selected {
             border: 2px solid #00ffd9;
-            background: linear-gradient(145deg, #1a3f3a, #0d2a25);
+            background: rgba(0,255,209,0.2);
         }
 
         .package-name {
-            font-size: 18px;
             font-weight: 700;
-            background: linear-gradient(135deg, #fff, #00ffd9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            font-size: 14px;
+            margin-bottom: 2px;
         }
 
-        .package-duration {
-            font-size: 12px;
+        .package-days {
+            font-size: 9px;
             color: #8899aa;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
 
         .package-roi {
-            font-size: 20px;
-            font-weight: 700;
             color: #00ffd9;
-            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 0;
         }
 
-        .package-roi span {
-            font-size: 12px;
-            color: #8899aa;
+        .referral-bonus {
+            background: rgba(255,215,0,0.1);
+            border-radius: 10px;
+            padding: 3px;
+            font-size: 8px;
+            color: gold;
+            margin: 3px 0;
         }
 
         .package-min {
-            font-size: 11px;
+            font-size: 8px;
             color: #8899aa;
-            margin: 10px 0;
         }
 
-        .package-badge {
-            background: rgba(255,215,0,0.15);
-            color: gold;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-
-        .staking-input {
+        .package-input {
             background: rgba(12,18,28,0.8);
             border-radius: 20px;
-            padding: 16px;
+            padding: 14px;
             margin: 14px 0;
         }
 
-        .staking-input input {
+        .package-input input {
             width: 100%;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,255,209,0.2);
             border-radius: 16px;
-            padding: 12px;
+            padding: 10px;
             color: #fff;
             font-size: 13px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .info-message {
-            color: #00ffd9;
-            font-size: 12px;
-            margin: 10px 0;
-            text-align: center;
+        .package-input input::placeholder {
+            color: #8899aa;
+            font-size: 11px;
         }
 
         .confirm-btn {
@@ -421,235 +735,71 @@
             background: linear-gradient(145deg, #00ffd9, #0099ff);
             border: none;
             border-radius: 24px;
-            padding: 14px;
-            color: #030507;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .confirm-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(0,255,209,0.3);
-        }
-
-        .confirm-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Bot Section */
-        .ai-bot-section {
-            background: linear-gradient(145deg, #1a2f3f, #0d1a24);
-            border-radius: 30px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(0,255,209,0.3);
-            box-shadow: 0 10px 30px rgba(0,255,209,0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ai-bot-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,255,209,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .bot-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .bot-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 24px 8px 24px 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            color: #030507;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%,100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .bot-info h3 {
-            font-size: 22px;
-            background: linear-gradient(135deg, #fff, #00ffd9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .bot-info p {
-            font-size: 12px;
-            color: #8899aa;
-        }
-
-        .bot-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .bot-stat {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
             padding: 12px;
-            text-align: center;
-            border: 1px solid rgba(0,255,209,0.1);
-        }
-
-        .bot-stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #00ffd9;
-        }
-
-        .bot-stat-label {
-            font-size: 10px;
-            color: #8899aa;
-        }
-
-        .window-timer {
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            margin: 15px 0;
-            border: 1px solid rgba(0,255,209,0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .timer-display {
-            font-size: 32px;
-            font-weight: 700;
-            color: #00ffd9;
-            font-family: monospace;
-        }
-
-        .window-status {
-            text-align: center;
-            font-size: 13px;
-            margin: 10px 0;
-            padding: 8px;
-            border-radius: 20px;
-            background: rgba(0,255,209,0.1);
-            position: relative;
-            z-index: 1;
-        }
-
-        .trade-btn {
-            width: 100%;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none;
-            border-radius: 30px;
-            padding: 16px;
             color: #030507;
-            font-size: 16px;
             font-weight: 700;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
-        .trade-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(0,255,209,0.4);
-        }
-
-        .trade-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Active Stakings */
-        .stakings-list {
+        .active-stakings {
             margin: 14px 0;
         }
 
         .staking-item {
-            background: rgba(12,18,28,0.8);
+            background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
             border-radius: 18px;
-            padding: 14px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
         }
 
         .staking-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .staking-package {
             font-weight: 700;
             font-size: 14px;
-            color: #00ffd9;
         }
 
         .staking-amount {
+            color: #00ffd9;
             font-weight: 700;
+            font-size: 14px;
         }
 
         .staking-dates {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 9px;
             color: #8899aa;
-            margin: 5px 0;
+            margin: 4px 0;
         }
 
         .staking-roi {
-            font-size: 12px;
             color: #00ffd9;
-            margin: 5px 0;
+            font-size: 11px;
+            margin: 6px 0;
         }
 
         .unstake-btn {
             width: 100%;
-            background: rgba(255,107,107,0.1);
+            background: rgba(255,107,107,0.2);
             border: 1px solid #ff6b6b;
             color: #ff6b6b;
-            padding: 10px;
+            padding: 8px;
             border-radius: 16px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s;
+            margin-top: 8px;
         }
 
-        .unstake-btn:hover:not(:disabled) {
-            background: rgba(255,107,107,0.2);
+        .unstake-btn:hover {
+            background: rgba(255,107,107,0.3);
         }
 
         .unstake-btn:disabled {
@@ -662,42 +812,79 @@
             color: white;
         }
 
-        /* Level Income Table */
-        .level-income-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(12,18,28,0.8);
-            border-radius: 16px;
-            overflow: hidden;
-            margin: 10px 0;
+        .wallet-settings {
+            background: rgba(12,18,28,0.95);
+            border-radius: 24px;
+            padding: 14px;
+            margin: 14px 0 60px;
+            border: 1px solid rgba(0,255,209,0.2);
         }
 
-        .level-income-table th {
+        .wallet-settings-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #00ffd9;
+        }
+
+        .wallet-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .wallet-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 18px;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .pin-small {
+            width: 80px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 18px;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .attach-btn {
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            color: #030507;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .income-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+
+        .income-table th {
             background: rgba(0,255,209,0.1);
             color: #00ffd9;
             font-weight: 600;
             font-size: 11px;
-            padding: 12px 8px;
+            padding: 8px;
             text-align: left;
+            border-bottom: 1px solid rgba(0,255,209,0.2);
         }
 
-        .level-income-table td {
-            padding: 10px 8px;
+        .income-table td {
+            padding: 8px;
             color: #cbd5e0;
             font-size: 11px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .level-income-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .level-badge {
-            background: rgba(0,255,209,0.1);
-            color: #00ffd9;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
         }
 
         .text-success {
@@ -708,64 +895,39 @@
             color: #8899aa;
         }
 
-        /* Rank Progress */
-        .rank-container {
-            background: rgba(12,18,28,0.8);
-            border-radius: 20px;
-            padding: 16px;
-            margin: 14px 0;
-        }
-
-        .rank-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .current-rank {
-            font-size: 18px;
-            font-weight: 700;
-            color: gold;
-        }
-
-        .progress-item {
-            margin-bottom: 12px;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
+        .note {
+            font-size: 9px;
             color: #8899aa;
-            margin-bottom: 4px;
+            font-style: italic;
         }
 
-        .progress-bar {
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            overflow: hidden;
+        .rank-progress {
+            background: rgba(12,18,28,0.95);
+            border-radius: 16px;
+            padding: 12px;
+            margin: 10px 0;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ffd9, #0099ff);
-            border-radius: 3px;
-            transition: width 0.3s;
+        .rank-progress p {
+            margin: 6px 0;
+            font-size: 11px;
+            color: #cbd5e0;
         }
 
-        /* Direct Members */
+        .rank-progress p strong {
+            color: #00ffd9;
+        }
+
         .members-list {
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .member-item {
-            background: rgba(12,18,28,0.6);
+            background: rgba(255,255,255,0.02);
             border: 1px solid rgba(0,255,209,0.1);
             border-radius: 14px;
-            padding: 12px;
-            margin-bottom: 8px;
+            padding: 10px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -774,183 +936,46 @@
         .member-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .member-avatar-small {
-            width: 36px;
-            height: 36px;
+        .member-avatar {
+            width: 30px;
+            height: 30px;
             background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #030507;
-        }
-
-        .member-details .name {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 12px;
         }
 
-        .member-details .id {
-            font-size: 10px;
+        .member-details {
+            font-size: 11px;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .member-id {
+            font-size: 9px;
             color: #8899aa;
         }
 
         .member-stats {
             text-align: right;
-        }
-
-        .member-stats .stake {
-            font-size: 12px;
-            color: #00ffd9;
-        }
-
-        .member-stats .rank {
             font-size: 10px;
-            color: gold;
         }
 
-        /* Wallet Settings */
-        .wallet-settings {
-            background: rgba(12,18,28,0.95);
-            border-radius: 24px;
-            padding: 16px;
-            margin: 20px 0 60px;
-            border: 1px solid rgba(0,255,209,0.2);
+        .member-rank {
+            color: #ffd700;
+            font-size: 9px;
         }
 
-        .wallet-input-group {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .wallet-input {
-            flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px;
-            padding: 12px;
-            color: #fff;
-        }
-
-        .pin-small {
-            width: 100px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 18px;
-            padding: 12px;
-            color: #fff;
-            text-align: center;
-        }
-
-        .attach-btn {
-            width: 100%;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none;
-            border-radius: 24px;
-            padding: 14px;
-            color: #030507;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
-        .modal-content {
-            background: rgba(12,18,28,0.95);
-            border: 1px solid rgba(0,255,209,0.3);
-            border-radius: 30px;
-            padding: 24px;
-            width: 100%;
-            max-width: 340px;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h3 {
-            color: #00ffd9;
-            font-size: 20px;
-        }
-
-        .close-modal {
-            font-size: 24px;
-            cursor: pointer;
-            color: #8899aa;
-        }
-
-        .close-modal:hover {
-            color: #ff6b6b;
-        }
-
-        .modal-input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 16px;
-            padding: 14px;
-            color: #fff;
-            margin: 10px 0;
-        }
-
-        .pin-input {
-            display: flex;
-            gap: 8px;
-            margin: 15px 0;
-            justify-content: center;
-        }
-
-        .pin-field {
-            width: 45px;
-            height: 45px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,255,209,0.2);
-            border-radius: 12px;
-            color: #fff;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .modal-btn {
-            width: 100%;
-            background: linear-gradient(145deg, #00ffd9, #0099ff);
-            border: none;
-            border-radius: 24px;
-            padding: 14px;
-            color: #030507;
-            font-weight: 700;
-            cursor: pointer;
-            margin: 8px 0;
-        }
-
-        .modal-btn.secondary {
-            background: transparent;
-            border: 1px solid #00ffd9;
-            color: #00ffd9;
-        }
-
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -971,13 +996,14 @@
             align-items: center;
             gap: 3px;
             color: #8899aa;
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
+            padding: 4px;
             transition: all 0.3s;
         }
 
         .nav-item i {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .nav-item.active {
@@ -985,7 +1011,120 @@
             transform: translateY(-2px);
         }
 
-        /* Toast */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: rgba(12,18,28,0.95);
+            border: 1px solid rgba(0,255,209,0.3);
+            border-radius: 30px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-header h3 {
+            color: #00ffd9;
+            font-size: 18px;
+        }
+
+        .close-modal {
+            font-size: 22px;
+            cursor: pointer;
+            color: #8899aa;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #ff6b6b;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 16px;
+            padding: 12px;
+            color: #fff;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #00ffd9, #0099ff);
+            border: none;
+            border-radius: 24px;
+            padding: 12px;
+            color: #030507;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 16px rgba(0,255,209,0.4);
+        }
+
+        .modal-btn.secondary {
+            background: transparent;
+            border: 1px solid #00ffd9;
+            color: #00ffd9;
+        }
+
+        .bonus-msg {
+            color: #00ffd9;
+            font-size: 11px;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        .pin-input {
+            display: flex;
+            gap: 6px;
+            margin: 12px 0;
+            justify-content: center;
+        }
+
+        .pin-field {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,209,0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #8899aa;
+            font-style: italic;
+        }
+
         .toast {
             position: fixed;
             bottom: 100px;
@@ -1008,17 +1147,42 @@
             to { bottom: 100px; opacity: 1; }
         }
 
-        .no-data {
-            text-align: center;
-            padding: 30px;
-            color: #8899aa;
-            font-style: italic;
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3,5,10,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0,255,209,0.1);
+            border-top: 3px solid #00ffd9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="premium-bg"></div>
     <div class="grid-overlay"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
     <div class="dashboard">
         <!-- Header -->
@@ -1037,24 +1201,10 @@
             </div>
         </div>
 
-        <!-- Quick Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalStaked">$0</div>
-                <div class="stat-label">Total Staked</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="totalEarned">$0</div>
-                <div class="stat-label">Total Earned</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="directCount">0</div>
-                <div class="stat-label">Direct</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="currentRank">0</div>
-                <div class="stat-label">Rank</div>
-            </div>
+        <!-- Current Rank Banner -->
+        <div class="current-rank-banner">
+            <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
+            <span class="rank-badge" id="topCurrentRank">0 ⭐</span>
         </div>
 
         <!-- Profile Section -->
@@ -1063,20 +1213,23 @@
                 <div class="profile-avatar" onclick="document.getElementById('avatarUpload').click()">
                     <i class="fas fa-user" id="avatarIcon"></i>
                     <img id="avatarImage" src="#" alt="avatar" style="display: none;">
+                    <div class="avatar-upload">Upload</div>
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                 </div>
                 <div class="profile-info">
-                    <input type="text" id="userName" value="User" onchange="saveProfile()">
-                    <div class="wallet-address-mini">
-                        <i class="fas fa-id-card"></i> ID: <span id="userId">Gainix100001</span>
-                    </div>
+                    <input type="text" id="userName" value="User">
+                    <p><i class="fas fa-id-card"></i> ID: <span id="userId">-</span></p>
+                    <p><i class="fas fa-envelope"></i> <span id="userEmail">-</span></p>
+                    <button class="save-profile-btn" onclick="saveProfile()">
+                        <i class="fas fa-save"></i> Save
+                    </button>
                 </div>
             </div>
 
             <!-- Wallet Address -->
             <div class="wallet-address-mini">
                 <i class="fas fa-wallet"></i>
-                <span id="walletAddressDisplay">0x5f3a...8e2b</span>
+                <span id="walletAddressDisplay">-</span>
                 <button class="copy-btn" onclick="copyWalletAddress()">Copy</button>
             </div>
 
@@ -1084,8 +1237,21 @@
             <div class="referral-box">
                 <div style="font-size: 10px; color: #8899aa; margin-bottom: 4px;">Referral Link</div>
                 <div class="referral-link">
-                    <span id="refLinkDisplay">gainixai.live/ref/User</span>
+                    <span id="refLinkDisplay">-</span>
                     <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
+                </div>
+                <input type="text" id="refLink" style="display: none;">
+            </div>
+
+            <!-- Staking Stats -->
+            <div class="staking-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalStaked">$0</div>
+                    <div class="stat-label">Total Staked</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stakingCount">0</div>
+                    <div class="stat-label">Positions</div>
                 </div>
             </div>
         </div>
@@ -1095,216 +1261,188 @@
             <div class="fund-wallet">
                 <div class="wallet-header">
                     <i class="fas fa-wallet"></i>
-                    <span class="wallet-title">FUND WALLET</span>
+                    <span class="wallet-title">FUND</span>
                 </div>
-                <div class="wallet-balance" id="fundWallet">$0.00</div>
+                <div class="wallet-balance" id="fundWallet">$0</div>
             </div>
             <div class="withdraw-wallet">
                 <div class="wallet-header">
                     <i class="fas fa-arrow-up"></i>
-                    <span class="wallet-title">WITHDRAW WALLET</span>
+                    <span class="wallet-title">WITHDRAW</span>
                 </div>
-                <div class="wallet-balance" id="withdrawWallet">$0.00</div>
+                <div class="wallet-balance" id="withdrawWallet">$0</div>
+            </div>
+        </div>
+
+        <!-- Income Summary -->
+        <div class="income-summary">
+            <div class="summary-box" onclick="goToHistory('level')">
+                <div class="summary-header">
+                    <div class="summary-icon"><i class="fas fa-sitemap" style="color: #00ffd9;"></i></div>
+                    <div class="summary-title">Total Level Income</div>
+                </div>
+                <div class="summary-total" id="totalLevelIncome">$0</div>
+                <div class="today-plus" id="levelIncomeToday">+$0 today</div>
+            </div>
+            <div class="summary-box" onclick="goToHistory('salary')">
+                <div class="summary-header">
+                    <div class="summary-icon"><i class="fas fa-star" style="color: #ffd700;"></i></div>
+                    <div class="summary-title">Total Salary Income</div>
+                </div>
+                <div class="summary-total" id="totalSalaryIncome">$0</div>
+                <div class="today-plus" id="salaryIncomeToday">+$0 today</div>
+            </div>
+        </div>
+
+        <!-- Income Cards -->
+        <div class="balance-grid-premium">
+            <div class="balance-card-3d" onclick="goToHistory('direct')">
+                <div class="balance-icon-3d"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="balance-amount" id="directIncome">$0</div>
+                <div class="balance-label">Direct Income</div>
+                <div class="today-plus" id="directToday">+$0 today</div>
+            </div>
+            <div class="balance-card-3d" onclick="goToHistory('staking')">
+                <div class="balance-icon-3d"><i class="fas fa-coins"></i></div>
+                <div class="balance-amount" id="stakingIncome">$0</div>
+                <div class="balance-label">Staking Income</div>
+                <div class="today-plus" id="stakingIncomeToday">+$0 today</div>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0;">
-            <button class="action-btn" onclick="openDepositModal()" style="background: rgba(0,255,209,0.1); border: 1px solid rgba(0,255,209,0.2); border-radius: 16px; padding: 12px; color: #00ffd9;">
-                <i class="fas fa-arrow-down"></i> Deposit
-            </button>
-            <button class="action-btn" onclick="openWithdrawModal()" style="background: rgba(0,255,209,0.1); border: 1px solid rgba(0,255,209,0.2); border-radius: 16px; padding: 12px; color: #00ffd9;">
-                <i class="fas fa-arrow-up"></i> Withdraw
-            </button>
-            <button class="action-btn" onclick="openP2PModal()" style="background: rgba(0,255,209,0.1); border: 1px solid rgba(0,255,209,0.2); border-radius: 16px; padding: 12px; color: #00ffd9;">
-                <i class="fas fa-handshake"></i> P2P
-            </button>
+        <div class="quick-actions">
+            <div class="action-btn" onclick="openDepositModal()">
+                <i class="fas fa-arrow-down"></i>
+                <span>Deposit</span>
+            </div>
+            <div class="action-btn" onclick="openWithdrawModal()">
+                <i class="fas fa-arrow-up"></i>
+                <span>Withdraw</span>
+            </div>
+            <div class="action-btn" onclick="openP2PModal()">
+                <i class="fas fa-handshake"></i>
+                <span>P2P</span>
+            </div>
         </div>
 
-        <!-- AI BOT SECTION - NEW UPDATED -->
-        <div class="ai-bot-section">
-            <div class="bot-header">
-                <div class="bot-icon">
+        <!-- Bot Section -->
+        <div class="unique-bot">
+            <div class="bot-3d-container">
+                <div class="bot-hologram">
                     <i class="fas fa-robot"></i>
                 </div>
                 <div class="bot-info">
-                    <h3>AI QUANTUM BOT</h3>
-                    <p>High-Frequency Trading | Risk Management | AI Advisory</p>
+                    <h3>AI QUANTUM</h3>
+                    <p>Window: 9:00-10:00 UTC</p>
                 </div>
             </div>
-
-            <div class="bot-stats-grid">
+            <div class="bot-stats">
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botTrades">1.2M</div>
-                    <div class="bot-stat-label">Daily Trades</div>
+                    <div class="bot-stat-value" id="botTrades">0</div>
+                    <div class="bot-stat-label">Trades</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botWinRate">94%</div>
+                    <div class="bot-stat-value" id="botWinRate">0%</div>
                     <div class="bot-stat-label">Win Rate</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botProfit">$3.2M</div>
-                    <div class="bot-stat-label">Total Profit</div>
+                    <div class="bot-stat-value" id="botProfit">$0</div>
+                    <div class="bot-stat-label">Profit</div>
                 </div>
             </div>
-
             <div class="window-timer">
-                <div class="timer-display" id="botTimer">00:00:00</div>
-                <div style="font-size: 11px; color: #8899aa; margin-top: 5px;">Next Trading Window</div>
+                <div class="window-time" id="botTimer">00:00</div>
+                <div class="window-label">Next window in</div>
             </div>
-
-            <div class="window-status" id="windowStatus">
-                ⏳ Window closed (9:00-10:00 UTC)
-            </div>
-
-            <button class="trade-btn" id="tradeButton" onclick="openTradeModal()" disabled>
-                <i class="fas fa-play"></i> PLACE TRADE
-            </button>
+            <div class="window-status" id="windowStatus">⏳ Window closed</div>
+            <button class="bot-button" id="botButton" onclick="openTradeModal()" disabled><i class="fas fa-play"></i> PLACE TRADE</button>
         </div>
 
-        <!-- STAKING PACKAGES SECTION - UPDATED AS PER PDF -->
-        <div class="section-title">
-            <i class="fas fa-box"></i> STAKING PACKAGES
-        </div>
-
-        <div class="packages-grid">
-            <!-- BASIC Package -->
+        <!-- Staking Packages -->
+        <div class="section-title"><i class="fas fa-box"></i> STAKING</div>
+        <div class="staking-packages" id="packagesContainer">
+            <!-- Packages will be loaded from API -->
             <div class="package-card" onclick="selectPackage(1)" id="package1">
                 <div class="package-name">BASIC</div>
-                <div class="package-duration">90 Days</div>
-                <div class="package-roi">1% - 1.3% <span>daily</span></div>
-                <div class="package-min">Minimum $20</div>
-                <div class="package-badge">5% Referral</div>
+                <div class="package-days">90 Days</div>
+                <div class="package-roi">1-1.3%</div>
+                <div class="referral-bonus">5% Ref</div>
+                <div class="package-min">$20</div>
             </div>
-
-            <!-- PRO Package -->
             <div class="package-card" onclick="selectPackage(2)" id="package2">
                 <div class="package-name">PRO</div>
-                <div class="package-duration">180 Days</div>
-                <div class="package-roi">1.3% - 1.6% <span>daily</span></div>
-                <div class="package-min">Minimum $150</div>
-                <div class="package-badge">7% Referral</div>
+                <div class="package-days">180 Days</div>
+                <div class="package-roi">1.3-1.6%</div>
+                <div class="referral-bonus">7% Ref</div>
+                <div class="package-min">$150</div>
             </div>
-
-            <!-- ELITE Package -->
             <div class="package-card" onclick="selectPackage(3)" id="package3">
                 <div class="package-name">ELITE</div>
-                <div class="package-duration">450 Days</div>
-                <div class="package-roi">1.5% - 2% <span>daily</span></div>
-                <div class="package-min">Minimum $300</div>
-                <div class="package-badge">10% Referral + $100 Bonus*</div>
+                <div class="package-days">450 Days</div>
+                <div class="package-roi">1.5-2%</div>
+                <div class="referral-bonus">10% Ref + $100 Bonus</div>
+                <div class="package-min">$300</div>
             </div>
         </div>
 
-        <!-- Special Elite Bonus Notice -->
-        <div style="background: rgba(255,215,0,0.1); border: 1px solid gold; border-radius: 16px; padding: 12px; margin: 10px 0; text-align: center;">
-            <i class="fas fa-gem" style="color: gold;"></i>
-            <span style="color: gold; font-size: 12px;"> Special Elite Bonus: Stake above $500 in ELITE package and receive 10% instant bonus credit!</span>
-        </div>
-
-        <!-- Staking Input -->
-        <div class="staking-input">
-            <input type="number" id="stakeAmount" placeholder="Enter amount (min $20)" oninput="validateStake()">
+        <!-- Package Input -->
+        <div class="package-input">
+            <input type="number" id="packageAmount" placeholder="Amount" min="20" oninput="showBonusMessage()">
             <input type="text" id="referralId" placeholder="Sponsor ID (Optional)">
-            <div id="bonusMessage" class="info-message"></div>
-            <button class="confirm-btn" id="stakeButton" onclick="createStaking()" disabled>STAKE NOW</button>
+            <div id="bonusMessage" class="bonus-msg"></div>
+            <button class="confirm-btn" onclick="createStaking()" id="stakeButton">STAKE NOW</button>
         </div>
 
-        <!-- ACTIVE STAKINGS -->
-        <div class="section-title">
-            <i class="fas fa-clock"></i> ACTIVE STAKINGS
-        </div>
-        <div class="stakings-list" id="activeStakingsList">
+        <!-- Active Stakings -->
+        <div class="section-title"><i class="fas fa-clock"></i> ACTIVE STAKINGS</div>
+        <div class="active-stakings" id="activeStakingsList">
             <div class="no-data">Loading stakings...</div>
         </div>
 
-        <!-- 5 LEVEL TEAM INCOME SYSTEM -->
-        <div class="section-title">
-            <i class="fas fa-sitemap"></i> 5 LEVEL TEAM INCOME
-        </div>
-
-        <div class="rank-container">
-            <table class="level-income-table">
+        <!-- Level Income Table -->
+        <div class="section-title"><i class="fas fa-sitemap"></i> LEVEL INCOME</div>
+        <div class="rank-progress" style="padding: 16px;">
+            <table class="income-table">
                 <thead>
                     <tr>
                         <th>Level</th>
-                        <th>Income %</th>
+                        <th>%</th>
                         <th>Today</th>
-                        <th>Total</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="levelIncomeBody">
                     <tr>
-                        <td colspan="5" class="no-data">Loading...</td>
+                        <td colspan="4" class="no-data">Loading...</td>
                     </tr>
                 </tbody>
             </table>
-            <div style="font-size: 10px; color: #8899aa; margin-top: 10px; text-align: center;">
-                <i class="fas fa-info-circle"></i> Levels unlock based on direct referrals: 1 direct = Level 1, 5 directs = All Levels
-            </div>
+            <p class="note">*Levels unlock with active referrals (who have staked)</p>
         </div>
 
-        <!-- STAR RANK LEADERSHIP SALARY SYSTEM -->
-        <div class="section-title">
-            <i class="fas fa-star"></i> STAR RANK SALARY
+        <!-- Salary Rank Progress -->
+        <div class="section-title"><i class="fas fa-star"></i> SALARY RANK</div>
+        <div class="rank-progress">
+            <p><strong>Current Rank:</strong> <span id="currentRank">Rank 0</span></p>
+            <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $750</span></p>
+            <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $2,500</span></p>
+            <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 2</span></p>
+            <p><strong>Next Rank:</strong> <span id="nextRank">Rank 1 ($25/week)</span></p>
         </div>
 
-        <div class="rank-container">
-            <div class="rank-header">
-                <span class="current-rank" id="currentRankDisplay">Rank 0</span>
-                <span style="color: #00ffd9;" id="weeklySalary">$0/week</span>
-            </div>
-
-            <div class="progress-item">
-                <div class="progress-label">
-                    <span>Direct Volume</span>
-                    <span id="directVolume">$0 / $750</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="directProgress" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div class="progress-item">
-                <div class="progress-label">
-                    <span>Team Volume</span>
-                    <span id="teamVolume">$0 / $2,500</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="teamProgress" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div class="progress-item">
-                <div class="progress-label">
-                    <span>Qualified Downlines</span>
-                    <span id="downlines">0 / 2</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="downlineProgress" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div style="margin-top: 15px; font-size: 12px; color: #8899aa;" id="nextRankInfo">
-                Next: Rank 1 ($25/week)
-            </div>
-        </div>
-
-        <!-- DIRECT MEMBERS -->
-        <div class="section-title">
-            <i class="fas fa-users"></i> DIRECT MEMBERS
-        </div>
-
-        <div class="rank-container">
-            <div class="members-list" id="directMembersList">
+        <!-- Direct Members -->
+        <div class="section-title"><i class="fas fa-users"></i> DIRECT MEMBERS</div>
+        <div class="rank-progress" style="padding: 12px;">
+            <p><strong>Total Direct:</strong> <span id="directCount">0</span></p>
+            <div id="directMembersList" class="members-list">
                 <div class="no-data">Loading members...</div>
             </div>
         </div>
 
-        <!-- WALLET SETTINGS -->
+        <!-- Wallet Settings -->
         <div class="wallet-settings">
-            <div class="wallet-settings-header" style="display: flex; align-items: center; gap: 8px; color: #00ffd9;">
+            <div class="wallet-settings-header">
                 <i class="fas fa-link"></i>
                 <span>Attach BEP20 Wallet</span>
             </div>
@@ -1316,8 +1454,6 @@
         </div>
     </div>
 
-    <!-- MODALS -->
-
     <!-- Deposit Modal -->
     <div id="depositModal" class="modal">
         <div class="modal-content">
@@ -1326,7 +1462,7 @@
                 <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
             </div>
             <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input">
-            <button class="modal-btn" onclick="processDeposit()">GENERATE ADDRESS</button>
+            <button class="modal-btn" onclick="processDeposit()">DEPOSIT</button>
         </div>
     </div>
 
@@ -1337,13 +1473,13 @@
                 <h3>Withdraw Funds</h3>
                 <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
             </div>
-            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input">
-            <input type="text" id="withdrawAddress" placeholder="BEP20 Address" class="modal-input">
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10">
+            <input type="text" id="withdrawWalletAddress" placeholder="BEP20 Wallet Address" class="modal-input">
             <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'withdrawModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'withdrawModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'withdrawModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'withdrawModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'withdrawModal')">
             </div>
             <button class="modal-btn" onclick="processWithdraw()">WITHDRAW</button>
         </div>
@@ -1359,10 +1495,10 @@
             <input type="text" id="recipientId" placeholder="Recipient User ID" class="modal-input">
             <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
             <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'p2pModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'p2pModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'p2pModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'p2pModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'p2pModal')">
             </div>
             <button class="modal-btn" onclick="processP2P()">SEND</button>
         </div>
@@ -1375,12 +1511,10 @@
                 <h3>Confirm Stake</h3>
                 <span class="close-modal" onclick="closeInvestModal()">&times;</span>
             </div>
-            <p>Package: <span id="modalPackage"></span></p>
+            <p>Package: <span id="modalPkg"></span></p>
             <p>Amount: $<span id="modalAmount"></span></p>
-            <p>Daily ROI: <span id="modalROI"></span></p>
-            <p>Referral Bonus: <span id="modalRefBonus"></span></p>
-            <p id="modalSpecialBonus" style="color: gold;"></p>
-            <button class="modal-btn" onclick="confirmStake()">CONFIRM STAKE</button>
+            <p id="modalBonus" style="color: #00ffd9; font-size: 12px;"></p>
+            <button class="modal-btn" onclick="confirmStake()">CONFIRM</button>
             <button class="modal-btn secondary" onclick="closeInvestModal()">CANCEL</button>
         </div>
     </div>
@@ -1392,13 +1526,13 @@
                 <h3>Place Trade</h3>
                 <span class="close-modal" onclick="closeTradeModal()">&times;</span>
             </div>
-            <p>AI Quantum Bot - Window Trading</p>
-            <input type="number" id="tradeAmount" placeholder="Amount (Min $10)" class="modal-input">
+            <p>AI Quantum Bot</p>
+            <input type="number" id="tradeAmount" placeholder="Amount" class="modal-input" min="10">
             <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0,'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1,'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2,'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3,'tradeModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'tradeModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'tradeModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'tradeModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'tradeModal')">
             </div>
             <button class="modal-btn" onclick="processTrade()">PLACE TRADE</button>
         </div>
@@ -1409,131 +1543,349 @@
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="nav-item" onclick="navigateTo('salary')"><i class="fas fa-star"></i><span>Salary</span></div>
-        <div class="nav-item" onclick="navigateTo('team')"><i class="fas fa-users"></i><span>Team</span></div>
-        <div class="nav-item" onclick="navigateTo('p2p')"><i class="fas fa-handshake"></i><span>P2P</span></div>
-        <div class="nav-item" onclick="navigateTo('history')"><i class="fas fa-history"></i><span>History</span></div>
+        <div class="nav-item active" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item" onclick="window.location.href='salary.html'"><i class="fas fa-star"></i><span>Salary</span></div>
+        <div class="nav-item" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><span>Team</span></div>
+        <div class="nav-item" onclick="window.location.href='p2p.html'"><i class="fas fa-handshake"></i><span>P2P</span></div>
+        <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = 'https://your-backend-url.com/api';
-        
-        // Auth Token
-        let authToken = localStorage.getItem('token');
+        // ==================== CONFIGURATION ====================
+        const API_BASE_URL = 'https://gainixai-backend.onrender.com/api';
+        const authToken = localStorage.getItem('token');
+
+        // Check authentication
         if (!authToken) {
             window.location.href = 'index.html';
         }
 
-        // User Data
-        let userData = {
-            userId: 'Gainix100001',
-            userName: 'User',
-            email: 'user@example.com',
-            walletAddress: '0x5f3a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a',
-            fundWallet: 2540.75,
-            withdrawWallet: 680.50,
-            totalStaked: 1250.00,
-            totalEarned: 342.80,
-            directCount: 3,
-            rank: 1,
-            referralCode: 'User123',
-            bep20Address: '',
-            pin: '',
-            directVolume: 450,
-            teamVolume: 1250,
-            qualifiedDownlines: 1,
-            directIncome: 125.50,
-            stakingIncome: 78.30,
-            levelIncome: 45.25,
-            salaryIncome: 25.00
-        };
-
-        // Packages Data
-        const packages = {
-            1: { name: 'BASIC', min: 20, days: 90, minRoi: 1.0, maxRoi: 1.3, refBonus: 5 },
-            2: { name: 'PRO', min: 150, days: 180, minRoi: 1.3, maxRoi: 1.6, refBonus: 7 },
-            3: { name: 'ELITE', min: 300, days: 450, minRoi: 1.5, maxRoi: 2.0, refBonus: 10, specialBonus: { threshold: 500, bonus: 10 } }
-        };
-
-        // Level Income Data
-        const levelIncomeData = [
-            { level: 1, percent: 10, today: 4.50, total: 45.20, status: 'Active', required: 1 },
-            { level: 2, percent: 7, today: 3.15, total: 31.64, status: 'Active', required: 2 },
-            { level: 3, percent: 5, today: 2.25, total: 22.60, status: 'Active', required: 3 },
-            { level: 4, percent: 3, today: 1.35, total: 13.56, status: 'Active', required: 4 },
-            { level: 5, percent: 1, today: 0.45, total: 4.52, status: 'Locked', required: 5 }
-        ];
-
-        // Direct Members
-        const directMembers = [
-            { id: 'Gainix100002', name: 'Alice Johnson', stake: 150, rank: 0, joinDate: '2024-01-15' },
-            { id: 'Gainix100003', name: 'Bob Smith', stake: 75, rank: 0, joinDate: '2024-01-20' },
-            { id: 'Gainix100004', name: 'Charlie Brown', stake: 200, rank: 1, joinDate: '2024-02-01' }
-        ];
-
-        // Active Stakings
-        let activeStakings = [
-            { id: 1, package: 'BASIC', amount: 250, startDate: '2024-01-15', endDate: '2024-04-15', roi: 1.2, earned: 90 },
-            { id: 2, package: 'PRO', amount: 500, startDate: '2024-02-01', endDate: '2024-07-30', roi: 1.5, earned: 112.5 }
-        ];
-
-        // Bot Stats
-        let botStats = {
-            dailyTrades: 1247000,
-            winRate: 94,
-            totalProfit: 3200000
-        };
-
-        // Selected Package
+        // ==================== GLOBAL VARIABLES ====================
+        let userData = {};
+        let packages = [];
+        let activeStakings = [];
+        let levelIncome = [];
+        let directMembers = [];
+        let rankData = {};
+        let botStats = {};
         let selectedPackage = 1;
         let currentStakeAmount = 0;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateUI();
-            updateUTCTime();
-            setInterval(updateUTCTime, 1000);
-            startBotTimer();
-            setInterval(checkBotWindow, 1000);
-            renderActiveStakings();
-            renderLevelIncome();
-            renderDirectMembers();
-            updateRankProgress();
-            selectPackage(1);
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', async function() {
+            showLoading(true);
+            try {
+                await loadAllData();
+                startTimers();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Failed to load data. Please refresh.', 'error');
+            } finally {
+                showLoading(false);
+            }
         });
 
-        // Update UI
-        function updateUI() {
-            document.getElementById('totalStaked').textContent = '$' + userData.totalStaked.toFixed(2);
-            document.getElementById('totalEarned').textContent = '$' + userData.totalEarned.toFixed(2);
-            document.getElementById('directCount').textContent = userData.directCount;
-            document.getElementById('currentRank').textContent = userData.rank;
-            document.getElementById('userId').textContent = userData.userId;
-            document.getElementById('userName').value = userData.userName;
-            document.getElementById('walletAddressDisplay').textContent = 
-                userData.walletAddress.substring(0, 6) + '...' + userData.walletAddress.substring(userData.walletAddress.length - 4);
-            document.getElementById('refLinkDisplay').textContent = `gainixai.live/ref/${userData.referralCode}`;
-            document.getElementById('fundWallet').textContent = '$' + userData.fundWallet.toFixed(2);
-            document.getElementById('withdrawWallet').textContent = '$' + userData.withdrawWallet.toFixed(2);
+        // ==================== LOAD ALL DATA ====================
+        async function loadAllData() {
+            await Promise.all([
+                loadUserProfile(),
+                loadPackages(),
+                loadActiveStakings(),
+                loadLevelIncome(),
+                loadDirectMembers(),
+                loadRankProgress(),
+                loadBotStats()
+            ]);
+        }
+
+        // Load User Profile
+        async function loadUserProfile() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/profile`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load profile');
+                userData = await response.json();
+                updateProfileUI();
+            } catch (error) {
+                console.error('Profile error:', error);
+                showToast('Error loading profile', 'error');
+            }
+        }
+
+        // Load Packages
+        async function loadPackages() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/staking/packages`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load packages');
+                packages = await response.json();
+                updatePackagesUI();
+            } catch (error) {
+                console.error('Packages error:', error);
+            }
+        }
+
+        // Load Active Stakings
+        async function loadActiveStakings() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/staking/active`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load stakings');
+                activeStakings = await response.json();
+                renderActiveStakings();
+            } catch (error) {
+                console.error('Stakings error:', error);
+                document.getElementById('activeStakingsList').innerHTML = '<div class="no-data">No active stakings</div>';
+            }
+        }
+
+        // Load Level Income
+        async function loadLevelIncome() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/income/level`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load level income');
+                levelIncome = await response.json();
+                renderLevelIncome();
+            } catch (error) {
+                console.error('Level income error:', error);
+                document.getElementById('levelIncomeBody').innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
+            }
+        }
+
+        // Load Direct Members
+        async function loadDirectMembers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/team/direct`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load members');
+                directMembers = await response.json();
+                renderDirectMembers();
+            } catch (error) {
+                console.error('Direct members error:', error);
+                document.getElementById('directMembersList').innerHTML = '<div class="no-data">No members</div>';
+            }
+        }
+
+        // Load Rank Progress
+        async function loadRankProgress() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/rank/progress`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load rank progress');
+                rankData = await response.json();
+                updateRankProgress();
+            } catch (error) {
+                console.error('Rank error:', error);
+            }
+        }
+
+        // Load Bot Stats
+        async function loadBotStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/bot/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to load bot stats');
+                botStats = await response.json();
+                updateBotStats();
+            } catch (error) {
+                console.error('Bot stats error:', error);
+            }
+        }
+
+        // ==================== UPDATE UI FUNCTIONS ====================
+        function updateProfileUI() {
+            document.getElementById('userId').textContent = userData.userId || '-';
+            document.getElementById('userName').value = userData.userName || 'User';
+            document.getElementById('userEmail').textContent = userData.email || '-';
             
-            // Bot Stats
-            document.getElementById('botTrades').textContent = (botStats.dailyTrades / 1000000).toFixed(1) + 'M';
-            document.getElementById('botWinRate').textContent = botStats.winRate + '%';
-            document.getElementById('botProfit').textContent = '$' + (botStats.totalProfit / 1000000).toFixed(1) + 'M';
+            const walletAddr = userData.walletAddress || 'Not connected';
+            document.getElementById('walletAddressDisplay').textContent = 
+                walletAddr.length > 10 ? walletAddr.substring(0,6) + '...' + walletAddr.substring(walletAddr.length-4) : walletAddr;
+            
+            document.getElementById('refLinkDisplay').textContent = `gainixai.live/ref/${userData.referralCode || 'user'}`;
+            document.getElementById('fundWallet').textContent = `$${(userData.fundWallet || 0).toFixed(2)}`;
+            document.getElementById('withdrawWallet').textContent = `$${(userData.withdrawWallet || 0).toFixed(2)}`;
+            document.getElementById('totalStaked').textContent = `$${(userData.totalStaked || 0).toFixed(2)}`;
+            document.getElementById('stakingCount').textContent = userData.stakingCount || 0;
+            
+            // Income
+            document.getElementById('directIncome').textContent = `$${(userData.directIncome || 0).toFixed(2)}`;
+            document.getElementById('stakingIncome').textContent = `$${(userData.stakingIncome || 0).toFixed(2)}`;
+            document.getElementById('totalLevelIncome').textContent = `$${(userData.levelIncome || 0).toFixed(2)}`;
+            document.getElementById('totalSalaryIncome').textContent = `$${(userData.salaryIncome || 0).toFixed(2)}`;
+            
+            // Today's earnings
+            document.getElementById('directToday').innerHTML = `+$${(userData.directIncomeToday || 0).toFixed(2)} today`;
+            document.getElementById('stakingIncomeToday').innerHTML = `+$${(userData.stakingIncomeToday || 0).toFixed(2)} today`;
+            document.getElementById('levelIncomeToday').innerHTML = `+$${(userData.levelIncomeToday || 0).toFixed(2)} today`;
+            document.getElementById('salaryIncomeToday').innerHTML = `+$${(userData.salaryIncomeToday || 0).toFixed(2)} today`;
+            
+            // Rank
+            document.getElementById('topCurrentRank').textContent = `${userData.rank || 0} ⭐`;
+            
+            // Avatar
+            if (userData.avatar) {
+                document.getElementById('avatarIcon').style.display = 'none';
+                document.getElementById('avatarImage').src = userData.avatar;
+                document.getElementById('avatarImage').style.display = 'block';
+            }
+            
+            // Wallet fields
+            if (userData.bep20Address) {
+                document.getElementById('bep20Address').value = userData.bep20Address;
+            }
         }
 
-        // UTC Time
-        function updateUTCTime() {
-            const now = new Date();
-            document.getElementById('utcDisplay').textContent = now.toUTCString().split(' ')[4];
+        function updatePackagesUI() {
+            const container = document.getElementById('packagesContainer');
+            if (!packages || packages.length === 0) return;
+            
+            container.innerHTML = '';
+            packages.forEach(pkg => {
+                const pkgDiv = document.createElement('div');
+                pkgDiv.className = 'package-card';
+                pkgDiv.id = `package${pkg.id}`;
+                pkgDiv.setAttribute('onclick', `selectPackage(${pkg.id})`);
+                pkgDiv.innerHTML = `
+                    <div class="package-name">${pkg.name}</div>
+                    <div class="package-days">${pkg.days} Days</div>
+                    <div class="package-roi">${pkg.minRoi}-${pkg.maxRoi}%</div>
+                    <div class="referral-bonus">${pkg.refBonus}% Ref</div>
+                    ${pkg.cashBonus ? '<div class="referral-bonus">+$' + pkg.cashBonus + ' Bonus</div>' : ''}
+                    <div class="package-min">$${pkg.minAmount}</div>
+                `;
+                container.appendChild(pkgDiv);
+            });
+            
+            if (packages.length > 0) selectPackage(packages[0].id);
         }
 
-        // Bot Timer
-        function startBotTimer() {
+        function renderActiveStakings() {
+            const container = document.getElementById('activeStakingsList');
+            
+            if (!activeStakings || activeStakings.length === 0) {
+                container.innerHTML = '<div class="no-data">No active stakings</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            activeStakings.forEach(stake => {
+                const stakeDiv = document.createElement('div');
+                stakeDiv.className = 'staking-item';
+                
+                const canUnstake = new Date(stake.endDate) <= new Date();
+                
+                stakeDiv.innerHTML = `
+                    <div class="staking-header">
+                        <span class="staking-package">${stake.package}</span>
+                        <span class="staking-amount">$${stake.amount.toFixed(2)}</span>
+                    </div>
+                    <div class="staking-dates">
+                        <span>Start: ${stake.startDate}</span>
+                        <span>End: ${stake.endDate}</span>
+                    </div>
+                    <div class="staking-roi">Daily ROI: ${stake.roi}% | Earned: $${(stake.earned || 0).toFixed(2)}</div>
+                    <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
+                            onclick="unstakeStaking(${stake.id})" 
+                            ${canUnstake ? '' : 'disabled'}>
+                        ${canUnstake ? 'UNSTAKE NOW' : 'Locked'}
+                    </button>
+                `;
+                container.appendChild(stakeDiv);
+            });
+        }
+
+        function renderLevelIncome() {
+            const tbody = document.getElementById('levelIncomeBody');
+            
+            if (!levelIncome || levelIncome.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            levelIncome.forEach(level => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>Level ${level.level}</td>
+                    <td>${level.percent}%</td>
+                    <td>$${(level.today || 0).toFixed(2)}</td>
+                    <td class="${level.status === 'Active' ? 'text-success' : 'text-muted'}">${level.status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderDirectMembers() {
+            const container = document.getElementById('directMembersList');
+            document.getElementById('directCount').textContent = directMembers?.length || 0;
+            
+            if (!directMembers || directMembers.length === 0) {
+                container.innerHTML = '<div class="no-data">No direct referrals yet</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            directMembers.forEach(member => {
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'member-item';
+                memberDiv.innerHTML = `
+                    <div class="member-info">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="member-details">
+                            <div class="member-name">${member.name || 'User'}</div>
+                            <div class="member-id">${member.userId}</div>
+                        </div>
+                    </div>
+                    <div class="member-stats">
+                        <div>$${(member.staked || 0).toFixed(2)}</div>
+                        <div class="member-rank">Rank ${member.rank || 0}</div>
+                    </div>
+                `;
+                container.appendChild(memberDiv);
+            });
+        }
+
+        function updateRankProgress() {
+            if (!rankData) return;
+            
+            document.getElementById('currentRank').textContent = rankData.currentRank || 'Rank 0';
+            document.getElementById('directBusiness').textContent = `$${(rankData.directVolume || 0).toFixed(2)} / $${(rankData.directTarget || 750).toFixed(2)}`;
+            document.getElementById('teamBusiness').textContent = `$${(rankData.teamVolume || 0).toFixed(2)} / $${(rankData.teamTarget || 2500).toFixed(2)}`;
+            document.getElementById('qualifiedDownlines').textContent = `${rankData.qualifiedDownlines || 0} / ${rankData.downlineTarget || 2}`;
+            document.getElementById('nextRank').textContent = rankData.nextRank || 'Rank 1 ($25/week)';
+        }
+
+        function updateBotStats() {
+            document.getElementById('botTrades').textContent = botStats.trades?.toLocaleString() || '0';
+            document.getElementById('botWinRate').textContent = (botStats.winRate || 0) + '%';
+            document.getElementById('botProfit').textContent = '$' + (botStats.profit || 0).toFixed(2);
+        }
+
+        // ==================== TIMER FUNCTIONS ====================
+        function startTimers() {
+            updateUTCTime();
+            setInterval(updateUTCTime, 1000);
             updateBotTimer();
             setInterval(updateBotTimer, 1000);
+            checkBotWindow();
+            setInterval(checkBotWindow, 1000);
+        }
+
+        function updateUTCTime() {
+            const now = new Date();
+            const utcString = now.toUTCString().split(' ')[4];
+            document.getElementById('utcDisplay').textContent = utcString;
         }
 
         function updateBotTimer() {
@@ -1552,7 +1904,7 @@
             const diff = nextWindow - now;
             
             if (diff <= 0) {
-                document.getElementById('botTimer').textContent = '00:00:00';
+                document.getElementById('botTimer').textContent = '00:00';
             } else {
                 const hours = Math.floor(diff / 3600000);
                 const minutes = Math.floor((diff % 3600000) / 60000);
@@ -1568,236 +1920,141 @@
             const windowOpen = utcHours === 9;
             
             document.getElementById('windowStatus').textContent = windowOpen 
-                ? '✅ Window Open - Trade Now!' 
-                : '⏳ Window Closed (9:00-10:00 UTC)';
-            document.getElementById('tradeButton').disabled = !windowOpen;
+                ? '✅ Window open - Trade now!' 
+                : '⏳ Window closed (9:00-10:00 UTC)';
+            document.getElementById('botButton').disabled = !windowOpen;
         }
 
-        // Package Selection
+        // ==================== STAKING FUNCTIONS ====================
         function selectPackage(pkgId) {
             selectedPackage = pkgId;
-            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-            document.getElementById(`package${pkgId}`).classList.add('selected');
-            document.getElementById('stakeAmount').min = packages[pkgId].min;
-            document.getElementById('stakeAmount').placeholder = `Min $${packages[pkgId].min}`;
-            validateStake();
+            
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            const selectedEl = document.getElementById(`package${pkgId}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            
+            const pkg = packages.find(p => p.id === pkgId) || { minAmount: 20 };
+            document.getElementById('packageAmount').min = pkg.minAmount;
+            document.getElementById('packageAmount').placeholder = `Min $${pkg.minAmount}`;
+            
+            showBonusMessage();
         }
 
-        function validateStake() {
-            const amount = parseFloat(document.getElementById('stakeAmount').value) || 0;
-            const pkg = packages[selectedPackage];
-            const button = document.getElementById('stakeButton');
-            const message = document.getElementById('bonusMessage');
+        function showBonusMessage() {
+            const amount = parseFloat(document.getElementById('packageAmount').value) || 0;
+            const pkg = packages.find(p => p.id === selectedPackage) || { minAmount: 20, refBonus: 5 };
+            const bonusDiv = document.getElementById('bonusMessage');
             
-            if (amount < pkg.min) {
-                button.disabled = true;
-                message.textContent = `Minimum amount: $${pkg.min}`;
-                message.style.color = '#ff6b6b';
-            } else if (amount > userData.fundWallet) {
-                button.disabled = true;
-                message.textContent = 'Insufficient fund wallet balance';
-                message.style.color = '#ff6b6b';
+            if (amount < pkg.minAmount) {
+                bonusDiv.textContent = `Minimum amount: $${pkg.minAmount}`;
+                bonusDiv.style.color = '#ff6b6b';
+                document.getElementById('stakeButton').disabled = true;
+            } else if (amount > (userData.fundWallet || 0)) {
+                bonusDiv.textContent = 'Insufficient fund wallet balance';
+                bonusDiv.style.color = '#ff6b6b';
+                document.getElementById('stakeButton').disabled = true;
             } else {
-                button.disabled = false;
-                let bonusText = `💰 Referral Bonus: ${pkg.refBonus}%`;
-                if (selectedPackage === 3 && amount >= 500) {
-                    bonusText += ' + 10% Instant Elite Bonus!';
+                bonusDiv.textContent = `💰 Referral Bonus: ${pkg.refBonus}%`;
+                if (pkg.cashBonus && amount >= pkg.minAmount * 2) {
+                    bonusDiv.textContent += ` + $${pkg.cashBonus} cash bonus!`;
                 }
-                message.textContent = bonusText;
-                message.style.color = '#00ffd9';
+                bonusDiv.style.color = '#00ffd9';
+                document.getElementById('stakeButton').disabled = false;
             }
         }
 
         function createStaking() {
-            const amount = parseFloat(document.getElementById('stakeAmount').value);
-            const pkg = packages[selectedPackage];
+            const amount = parseFloat(document.getElementById('packageAmount').value);
+            const referralId = document.getElementById('referralId').value;
+            const pkg = packages.find(p => p.id === selectedPackage) || { name: 'BASIC', minAmount: 20 };
             
-            if (!amount || amount < pkg.min) {
-                showToast(`Minimum amount is $${pkg.min}`);
+            if (!amount || amount < pkg.minAmount) {
+                showToast(`Minimum amount is $${pkg.minAmount}`);
                 return;
             }
             
-            if (amount > userData.fundWallet) {
-                showToast('Insufficient balance');
+            if (amount > (userData.fundWallet || 0)) {
+                showToast('Insufficient balance in fund wallet');
                 return;
             }
             
-            document.getElementById('modalPackage').textContent = pkg.name;
+            document.getElementById('modalPkg').textContent = pkg.name;
             document.getElementById('modalAmount').textContent = amount.toFixed(2);
-            document.getElementById('modalROI').textContent = `${pkg.minRoi}%-${pkg.maxRoi}% daily`;
-            document.getElementById('modalRefBonus').textContent = `${pkg.refBonus}%`;
             
-            if (selectedPackage === 3 && amount >= 500) {
-                document.getElementById('modalSpecialBonus').textContent = '🎁 +10% Instant Elite Bonus!';
-            } else {
-                document.getElementById('modalSpecialBonus').textContent = '';
+            let bonusText = '';
+            if (pkg.cashBonus && amount >= pkg.minAmount * 2) {
+                bonusText = `🎁 +$${pkg.cashBonus} Elite Bonus!`;
             }
+            if (referralId) {
+                bonusText += (bonusText ? ' ' : '') + `🤝 Referral: ${referralId}`;
+            }
+            document.getElementById('modalBonus').textContent = bonusText;
             
             currentStakeAmount = amount;
             document.getElementById('investModal').style.display = 'flex';
         }
 
-        function confirmStake() {
-            const pkg = packages[selectedPackage];
+        async function confirmStake() {
+            const referralId = document.getElementById('referralId').value;
             
-            // Update user data
-            userData.fundWallet -= currentStakeAmount;
-            userData.totalStaked += currentStakeAmount;
-            
-            // Add to active stakings
-            const startDate = new Date().toISOString().split('T')[0];
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() + pkg.days);
-            
-            activeStakings.push({
-                id: activeStakings.length + 1,
-                package: pkg.name,
-                amount: currentStakeAmount,
-                startDate: startDate,
-                endDate: endDate.toISOString().split('T')[0],
-                roi: (pkg.minRoi + pkg.maxRoi) / 2,
-                earned: 0
-            });
-            
-            // Add bonus if Elite $500+
-            if (selectedPackage === 3 && currentStakeAmount >= 500) {
-                const bonus = currentStakeAmount * 0.10;
-                userData.withdrawWallet += bonus;
-                showToast(`🎉 Elite Bonus: $${bonus.toFixed(2)} added to withdraw wallet!`);
-            }
-            
-            updateUI();
-            renderActiveStakings();
-            showToast(`Successfully staked $${currentStakeAmount} in ${pkg.name}!`);
-            closeInvestModal();
-            document.getElementById('stakeAmount').value = '';
-        }
-
-        function renderActiveStakings() {
-            const container = document.getElementById('activeStakingsList');
-            
-            if (activeStakings.length === 0) {
-                container.innerHTML = '<div class="no-data">No active stakings</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            activeStakings.forEach(stake => {
-                const canUnstake = new Date(stake.endDate) <= new Date();
-                const item = document.createElement('div');
-                item.className = 'staking-item';
-                item.innerHTML = `
-                    <div class="staking-header">
-                        <span class="staking-package">${stake.package}</span>
-                        <span class="staking-amount">$${stake.amount.toFixed(2)}</span>
-                    </div>
-                    <div class="staking-dates">
-                        <span>Start: ${stake.startDate}</span>
-                        <span>End: ${stake.endDate}</span>
-                    </div>
-                    <div class="staking-roi">Daily ROI: ${stake.roi}% | Earned: $${stake.earned.toFixed(2)}</div>
-                    <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
-                            onclick="unstakeStaking(${stake.id})" 
-                            ${canUnstake ? '' : 'disabled'}>
-                        ${canUnstake ? 'UNSTAKE NOW' : 'Locked'}
-                    </button>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function unstakeStaking(stakeId) {
-            const stake = activeStakings.find(s => s.id === stakeId);
-            if (!stake) return;
-            
-            if (confirm(`Unstake $${stake.amount} from ${stake.package}?`)) {
-                userData.withdrawWallet += stake.amount;
-                userData.totalStaked -= stake.amount;
-                activeStakings = activeStakings.filter(s => s.id !== stakeId);
-                updateUI();
-                renderActiveStakings();
-                showToast(`$${stake.amount} unstaked successfully!`);
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/staking/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        packageId: selectedPackage,
+                        amount: currentStakeAmount,
+                        referralId: referralId || null
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Staking failed');
+                
+                await loadAllData();
+                showToast(`Successfully staked $${currentStakeAmount}!`);
+                closeInvestModal();
+                document.getElementById('packageAmount').value = '';
+                document.getElementById('referralId').value = '';
+                
+            } catch (error) {
+                console.error('Staking error:', error);
+                showToast('Staking failed', 'error');
+            } finally {
+                showLoading(false);
             }
         }
 
-        function renderLevelIncome() {
-            const tbody = document.getElementById('levelIncomeBody');
-            tbody.innerHTML = '';
+        async function unstakeStaking(stakeId) {
+            if (!confirm('Are you sure you want to unstake?')) return;
             
-            levelIncomeData.forEach(level => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><span class="level-badge">Level ${level.level}</span></td>
-                    <td>${level.percent}%</td>
-                    <td>$${level.today.toFixed(2)}</td>
-                    <td>$${level.total.toFixed(2)}</td>
-                    <td class="${level.status === 'Active' ? 'text-success' : 'text-muted'}">${level.status}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderDirectMembers() {
-            const container = document.getElementById('directMembersList');
-            
-            if (directMembers.length === 0) {
-                container.innerHTML = '<div class="no-data">No direct referrals yet</div>';
-                return;
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/staking/unstake/${stakeId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                
+                if (!response.ok) throw new Error('Unstaking failed');
+                
+                await loadAllData();
+                showToast('Unstaked successfully!');
+                
+            } catch (error) {
+                console.error('Unstaking error:', error);
+                showToast('Unstaking failed', 'error');
+            } finally {
+                showLoading(false);
             }
-            
-            container.innerHTML = '';
-            directMembers.forEach(member => {
-                const item = document.createElement('div');
-                item.className = 'member-item';
-                item.innerHTML = `
-                    <div class="member-info">
-                        <div class="member-avatar-small">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="member-details">
-                            <div class="name">${member.name}</div>
-                            <div class="id">${member.id}</div>
-                        </div>
-                    </div>
-                    <div class="member-stats">
-                        <div class="stake">$${member.stake}</div>
-                        <div class="rank">Rank ${member.rank}</div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
         }
 
-        function updateRankProgress() {
-            const rankData = [
-                { rank: 1, direct: 750, team: 2500, downlines: 2, salary: 25 },
-                { rank: 2, direct: 1500, team: 7500, downlines: 2, salary: 60 },
-                { rank: 3, direct: 3000, team: 25000, downlines: 2, salary: 150 }
-            ];
-            
-            const currentRank = rankData[userData.rank - 1] || rankData[0];
-            const nextRank = rankData[userData.rank] || rankData[userData.rank - 1];
-            
-            document.getElementById('currentRankDisplay').textContent = `Rank ${userData.rank}`;
-            document.getElementById('weeklySalary').textContent = `$${currentRank.salary}/week`;
-            
-            const directProgress = Math.min(100, (userData.directVolume / currentRank.direct) * 100);
-            const teamProgress = Math.min(100, (userData.teamVolume / currentRank.team) * 100);
-            const downlineProgress = Math.min(100, (userData.qualifiedDownlines / currentRank.downlines) * 100);
-            
-            document.getElementById('directProgress').style.width = directProgress + '%';
-            document.getElementById('teamProgress').style.width = teamProgress + '%';
-            document.getElementById('downlineProgress').style.width = downlineProgress + '%';
-            
-            document.getElementById('directVolume').textContent = `$${userData.directVolume} / $${currentRank.direct}`;
-            document.getElementById('teamVolume').textContent = `$${userData.teamVolume} / $${currentRank.team}`;
-            document.getElementById('downlines').textContent = `${userData.qualifiedDownlines} / ${currentRank.downlines}`;
-            
-            document.getElementById('nextRankInfo').textContent = 
-                `Next: Rank ${userData.rank + 1} ($${nextRank.salary}/week)`;
-        }
-
-        // Modal Functions
+        // ==================== MODAL FUNCTIONS ====================
         function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
         function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
         function openP2PModal() { document.getElementById('p2pModal').style.display = 'flex'; }
@@ -1807,153 +2064,360 @@
         function closeInvestModal() { document.getElementById('investModal').style.display = 'none'; }
         function closeTradeModal() { document.getElementById('tradeModal').style.display = 'none'; }
 
-        // Process Functions
-        function processDeposit() {
+        // ==================== PROCESS FUNCTIONS ====================
+        async function processDeposit() {
             const amount = parseFloat(document.getElementById('depositAmount').value);
+            
             if (!amount || amount < 20) {
                 showToast('Minimum deposit is $20');
                 return;
             }
-            showToast(`Deposit address generated for $${amount}`);
-            closeModal('depositModal');
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/wallet/deposit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ amount })
+                });
+                
+                if (!response.ok) throw new Error('Deposit failed');
+                
+                const result = await response.json();
+                showToast(`Deposit address: ${result.address}`);
+                closeModal('depositModal');
+                document.getElementById('depositAmount').value = '';
+                
+            } catch (error) {
+                console.error('Deposit error:', error);
+                showToast('Deposit failed', 'error');
+            } finally {
+                showLoading(false);
+            }
         }
 
-        function processWithdraw() {
+        async function processWithdraw() {
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const address = document.getElementById('withdrawAddress').value;
+            const address = document.getElementById('withdrawWalletAddress').value;
+            
             const pinFields = document.querySelectorAll('#withdrawModal .pin-field');
             const pin = Array.from(pinFields).map(f => f.value).join('');
             
-            if (!amount || amount < 10) { showToast('Minimum withdrawal is $10'); return; }
-            if (!address || !address.startsWith('0x')) { showToast('Invalid address'); return; }
-            if (pin.length !== 4) { showToast('Enter 4-digit PIN'); return; }
-            if (amount > userData.withdrawWallet) { showToast('Insufficient balance'); return; }
-            
-            userData.withdrawWallet -= amount;
-            updateUI();
-            showToast(`Withdrawal request for $${amount} submitted!`);
-            closeModal('withdrawModal');
-        }
-
-        function processP2P() {
-            const recipient = document.getElementById('recipientId').value;
-            const amount = parseFloat(document.getElementById('p2pAmount').value);
-            const pinFields = document.querySelectorAll('#p2pModal .pin-field');
-            const pin = Array.from(pinFields).map(f => f.value).join('');
-            
-            if (!recipient) { showToast('Enter recipient ID'); return; }
-            if (!amount || amount < 1) { showToast('Enter valid amount'); return; }
-            if (pin.length !== 4) { showToast('Enter 4-digit PIN'); return; }
-            if (amount > userData.fundWallet) { showToast('Insufficient balance'); return; }
-            
-            userData.fundWallet -= amount;
-            updateUI();
-            showToast(`$${amount} sent to ${recipient}!`);
-            closeModal('p2pModal');
-        }
-
-        function processTrade() {
-            const amount = parseFloat(document.getElementById('tradeAmount').value);
-            const pinFields = document.querySelectorAll('#tradeModal .pin-field');
-            const pin = Array.from(pinFields).map(f => f.value).join('');
-            
-            if (!amount || amount < 10) { showToast('Minimum trade is $10'); return; }
-            if (pin.length !== 4) { showToast('Enter 4-digit PIN'); return; }
-            if (amount > userData.fundWallet) { showToast('Insufficient balance'); return; }
-            
-            const win = Math.random() > 0.3; // 70% win rate
-            const profit = win ? amount * 0.15 : -amount * 0.1;
-            
-            userData.fundWallet -= amount;
-            
-            if (win) {
-                userData.withdrawWallet += amount + profit;
-                showToast(`🎉 Trade won! Profit: $${profit.toFixed(2)}`);
-            } else {
-                userData.withdrawWallet += amount * 0.9;
-                showToast(`😞 Trade lost. Loss: $${Math.abs(profit).toFixed(2)}`);
+            if (!amount || amount < 10) {
+                showToast('Minimum withdrawal is $10');
+                return;
             }
             
-            updateUI();
-            closeTradeModal();
-        }
-
-        function attachWallet() {
-            const address = document.getElementById('bep20Address').value;
-            const pin = document.getElementById('walletPin').value;
-            
-            if (!address || !address.startsWith('0x')) {
+            if (!address || !address.startsWith('0x') || address.length < 42) {
                 showToast('Invalid BEP20 address');
                 return;
             }
-            if (!pin || pin.length !== 4) {
+            
+            if (pin.length !== 4) {
+                showToast('Enter 4-digit PIN');
+                return;
+            }
+            
+            if (amount > (userData.withdrawWallet || 0)) {
+                showToast('Insufficient withdrawal balance');
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/wallet/withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ amount, address, pin })
+                });
+                
+                if (!response.ok) throw new Error('Withdrawal failed');
+                
+                await loadUserProfile();
+                showToast('Withdrawal request submitted!');
+                closeModal('withdrawModal');
+                
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('withdrawWalletAddress').value = '';
+                pinFields.forEach(f => f.value = '');
+                
+            } catch (error) {
+                console.error('Withdrawal error:', error);
+                showToast('Withdrawal failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function processP2P() {
+            const recipient = document.getElementById('recipientId').value;
+            const amount = parseFloat(document.getElementById('p2pAmount').value);
+            
+            const pinFields = document.querySelectorAll('#p2pModal .pin-field');
+            const pin = Array.from(pinFields).map(f => f.value).join('');
+            
+            if (!recipient) {
+                showToast('Enter recipient ID');
+                return;
+            }
+            
+            if (!amount || amount < 1) {
+                showToast('Enter valid amount');
+                return;
+            }
+            
+            if (pin.length !== 4) {
+                showToast('Enter 4-digit PIN');
+                return;
+            }
+            
+            if (amount > (userData.fundWallet || 0)) {
+                showToast('Insufficient balance');
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ recipient, amount, pin })
+                });
+                
+                if (!response.ok) throw new Error('P2P transfer failed');
+                
+                await loadUserProfile();
+                showToast(`$${amount} sent to ${recipient}!`);
+                closeModal('p2pModal');
+                
+                document.getElementById('recipientId').value = '';
+                document.getElementById('p2pAmount').value = '';
+                pinFields.forEach(f => f.value = '');
+                
+            } catch (error) {
+                console.error('P2P error:', error);
+                showToast('Transfer failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function processTrade() {
+            const amount = parseFloat(document.getElementById('tradeAmount').value);
+            
+            const pinFields = document.querySelectorAll('#tradeModal .pin-field');
+            const pin = Array.from(pinFields).map(f => f.value).join('');
+            
+            if (!amount || amount < 10) {
+                showToast('Minimum trade amount is $10');
+                return;
+            }
+            
+            if (pin.length !== 4) {
+                showToast('Enter 4-digit PIN');
+                return;
+            }
+            
+            if (amount > (userData.fundWallet || 0)) {
+                showToast('Insufficient balance');
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/bot/trade`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ amount, pin })
+                });
+                
+                if (!response.ok) throw new Error('Trade failed');
+                
+                const result = await response.json();
+                await loadUserProfile();
+                await loadBotStats();
+                
+                if (result.win) {
+                    showToast(`🎉 Trade won! Profit: $${result.profit.toFixed(2)}`);
+                } else {
+                    showToast(`😞 Trade lost. Loss: $${Math.abs(result.profit).toFixed(2)}`);
+                }
+                
+                closeTradeModal();
+                document.getElementById('tradeAmount').value = '';
+                pinFields.forEach(f => f.value = '');
+                
+            } catch (error) {
+                console.error('Trade error:', error);
+                showToast('Trade failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function attachWallet() {
+            const address = document.getElementById('bep20Address').value;
+            const pin = document.getElementById('walletPin').value;
+            
+            if (!address || !address.startsWith('0x') || address.length < 42) {
+                showToast('Invalid BEP20 address');
+                return;
+            }
+            
+            if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) {
                 showToast('PIN must be 4 digits');
                 return;
             }
             
-            userData.bep20Address = address;
-            userData.pin = pin;
-            showToast('Wallet attached successfully!');
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/wallet/attach`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ address, pin })
+                });
+                
+                if (!response.ok) throw new Error('Failed to attach wallet');
+                
+                await loadUserProfile();
+                showToast('Wallet attached successfully!');
+                document.getElementById('walletPin').value = '';
+                
+            } catch (error) {
+                console.error('Attach wallet error:', error);
+                showToast('Failed to attach wallet', 'error');
+            } finally {
+                showLoading(false);
+            }
         }
 
-        // Utility Functions
+        async function saveProfile() {
+            const newName = document.getElementById('userName').value;
+            
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ userName: newName })
+                });
+                
+                if (!response.ok) throw new Error('Failed to update profile');
+                
+                userData.userName = newName;
+                showToast('Profile saved!');
+                
+            } catch (error) {
+                console.error('Profile update error:', error);
+                showToast('Failed to update profile', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.style.backgroundColor = type === 'error' ? '#ff6b6b' : '#00ffd9';
+            toast.style.color = type === 'error' ? '#fff' : '#030507';
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
         }
 
         function moveToNext(current, index, modalId) {
             if (current.value.length === 1) {
                 const fields = document.querySelectorAll(`#${modalId} .pin-field`);
-                if (index < fields.length - 1) fields[index + 1].focus();
+                if (index < fields.length - 1) {
+                    fields[index + 1].focus();
+                }
             }
         }
 
         function copyWalletAddress() {
-            navigator.clipboard.writeText(userData.walletAddress);
+            navigator.clipboard.writeText(userData.walletAddress || '');
             showToast('Wallet address copied!');
         }
 
         function copyReferralLink() {
-            navigator.clipboard.writeText(`https://gainixai.live/ref/${userData.referralCode}`);
+            const link = `https://gainixai.live/ref/${userData.referralCode || 'user'}`;
+            navigator.clipboard.writeText(link);
             showToast('Referral link copied!');
         }
 
         function uploadAvatar(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
+            if (!input.files || !input.files[0]) return;
+            
+            const file = input.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('Image too large (max 2MB)', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('avatar', file);
+            
+            showLoading(true);
+            fetch(`${API_BASE_URL}/user/avatar`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${authToken}` },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
                     document.getElementById('avatarIcon').style.display = 'none';
-                    document.getElementById('avatarImage').src = e.target.result;
+                    document.getElementById('avatarImage').src = data.avatarUrl;
                     document.getElementById('avatarImage').style.display = 'block';
                     showToast('Avatar updated!');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function saveProfile() {
-            userData.userName = document.getElementById('userName').value;
-            showToast('Profile saved!');
+                }
+            })
+            .catch(err => {
+                console.error('Avatar upload error:', err);
+                showToast('Upload failed', 'error');
+            })
+            .finally(() => showLoading(false));
         }
 
         function logout() {
-            if (confirm('Are you sure?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('token');
                 window.location.href = 'index.html';
             }
         }
 
-        function navigateTo(page) {
-            window.location.href = page + '.html';
+        function goToHistory(type) {
+            window.location.href = `history.html?type=${type}`;
         }
 
-        // Make functions global
+        // ==================== GLOBAL FUNCTIONS ====================
         window.selectPackage = selectPackage;
-        window.validateStake = validateStake;
+        window.showBonusMessage = showBonusMessage;
         window.createStaking = createStaking;
         window.confirmStake = confirmStake;
         window.unstakeStaking = unstakeStaking;
@@ -1969,12 +2433,12 @@
         window.processP2P = processP2P;
         window.processTrade = processTrade;
         window.attachWallet = attachWallet;
+        window.saveProfile = saveProfile;
         window.copyWalletAddress = copyWalletAddress;
         window.copyReferralLink = copyReferralLink;
         window.uploadAvatar = uploadAvatar;
-        window.saveProfile = saveProfile;
         window.logout = logout;
-        window.navigateTo = navigateTo;
+        window.goToHistory = goToHistory;
         window.moveToNext = moveToNext;
     </script>
 </body>
