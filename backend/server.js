@@ -4,7 +4,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 const sundayCheck = require('./middleware/sundayCheck');
-const { initCronJobs } = require('./controllers/cronController');
 
 // Load environment variables
 dotenv.config();
