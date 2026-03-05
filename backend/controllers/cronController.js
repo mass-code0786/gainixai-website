@@ -2,8 +2,8 @@ const cron = require('node-cron');
 const Staking = require('../models/staking');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
-const LevelIncome = require('../models/LevelIncome');
-const BotSettings = require('../models/BotSettings');
+const LevelIncome = require('../models/levelIncome');
+const BotSettings = require('../models/BotSetting');
 
 // ============================================
 // DAILY ROI DISTRIBUTION
