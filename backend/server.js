@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 const sundayCheck = require('./middleware/sundayCheck');
+const { initCronJobs } = require('./controllers/cronController');
 
 // Load environment variables
 dotenv.config();
@@ -13,9 +14,11 @@ connectDB();
 
 const app = express();
 
-// Middleware
+// ============================================
+// MIDDLEWARE
+// ============================================
 app.use(cors({
-    origin: ['https://gainixai-frontend.onrender.com', 'http://localhost:5500'],
+    origin: ['https://gainixai-frontend.onrender.com', 'http://localhost:5500', 'http://127.0.0.1:5500'],
     credentials: true
 }));
 app.use(express.json());
@@ -24,8 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 // ============================================
 // PUBLIC ROUTES
 // ============================================
-
-// Health check route
 app.get('/', (req, res) => {
     res.json({ 
         success: true,
@@ -36,7 +37,6 @@ app.get('/', (req, res) => {
     });
 });
 
-// API test route
 app.get('/api/test', (req, res) => {
     res.json({
         success: true,
@@ -51,42 +51,79 @@ app.get('/api/test', (req, res) => {
             team: '/api/team',
             p2p: '/api/p2p',
             settings: '/api/settings',
-            admin: '/api/admin'
+            admin: '/api/admin',
+            withdrawal: '/api/withdrawal',
+            wallet: '/api/wallet',
+            trade: '/api/trade',
+            bot: '/api/bot'
         }
     });
 });
 
 // ============================================
-// API ROUTES
+// AUTH ROUTES - Login/Register
 // ============================================
-
-// Auth Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 
-// Staking Routes
+// ============================================
+// STAKING ROUTES - Package buy, unstake, stats
+// ============================================
 app.use('/api/staking', sundayCheck, require('./routes/stakingRoutes'));
 
-// Level Routes
+// ============================================
+// LEVEL INCOME ROUTES - 5-level team income
+// ============================================
 app.use('/api/level', sundayCheck, require('./routes/levelRoutes'));
 
-// Salary Routes
+// ============================================
+// SALARY RANK ROUTES - 9 ranks weekly salary
+// ============================================
 app.use('/api/salary', require('./routes/salaryRoutes'));
 
-// Referral Routes
+// ============================================
+// REFERRAL ROUTES - Direct referral bonus
+// ============================================
 app.use('/api/referral', sundayCheck, require('./routes/referralRoutes'));
 
-// Team Routes
+// ============================================
+// TEAM ROUTES - Team structure and downlines
+// ============================================
 app.use('/api/team', require('./routes/teamRoutes'));
 
-// P2P Routes
+// ============================================
+// P2P ROUTES - Peer to peer transfers
+// ============================================
 app.use('/api/p2p', sundayCheck, require('./routes/p2pRoutes'));
 
-// Settings Routes
+// ============================================
+// SETTINGS ROUTES - Platform configuration
+// ============================================
 app.use('/api/settings', require('./routes/settingRoutes'));
 
-// Admin Routes
+// ============================================
+// ADMIN ROUTES - Admin panel
+// ============================================
 app.use('/api/admin', require('./routes/adminRoutes'));
+
+// ============================================
+// WITHDRAWAL ROUTES - Withdrawal requests
+// ============================================
 app.use('/api/withdrawal', require('./routes/withdrawalRoutes'));
+
+// ============================================
+// WALLET ROUTES - Fund and withdraw wallets
+// ============================================
+app.use('/api/wallet', require('./routes/walletRoutes'));
+
+// ============================================
+// TRADE ROUTES - Trading bot
+// ============================================
+app.use('/api/trade', require('./routes/tradeRoutes'));
+
+// ============================================
+// BOT ROUTES - Bot settings and stats
+// ============================================
+app.use('/api/bot', require('./routes/botRoutes'));
 
 // ============================================
 // SYSTEM STATUS ROUTE
@@ -109,9 +146,29 @@ app.get('/api/status', (req, res) => {
             status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
             name: mongoose.connection.name,
             host: mongoose.connection.host
+        },
+        routes: {
+            auth: '/api/auth',
+            staking: '/api/staking',
+            level: '/api/level',
+            salary: '/api/salary',
+            referral: '/api/referral',
+            team: '/api/team',
+            p2p: '/api/p2p',
+            settings: '/api/settings',
+            admin: '/api/admin',
+            withdrawal: '/api/withdrawal',
+            wallet: '/api/wallet',
+            trade: '/api/trade',
+            bot: '/api/bot'
         }
     });
 });
+
+// ============================================
+// INITIALIZE CRON JOBS
+// ============================================
+initCronJobs();
 
 // ============================================
 // 404 HANDLER
@@ -122,7 +179,42 @@ app.use('*', (req, res) => {
         message: '❌ Route not found',
         path: req.originalUrl,
         method: req.method,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        availableRoutes: [
+            'GET  /',
+            'GET  /api/test',
+            'GET  /api/status',
+            'POST /api/auth/register',
+            'POST /api/auth/login',
+            'POST /api/staking/create',
+            'GET  /api/staking/active',
+            'GET  /api/staking/stats',
+            'POST /api/staking/unstake/:id',
+            'GET  /api/level/summary',
+            'GET  /api/level/team/:level',
+            'GET  /api/level/history',
+            'GET  /api/salary/ranks',
+            'GET  /api/salary/my-rank',
+            'POST /api/salary/check-rank',
+            'GET  /api/salary/history',
+            'POST /api/salary/distribute',
+            'GET  /api/referral/summary',
+            'GET  /api/team/tabs/:level',
+            'POST /api/p2p/send',
+            'GET  /api/p2p/history',
+            'GET  /api/settings',
+            'POST /api/admin/login',
+            'GET  /api/admin/dashboard',
+            'GET  /api/admin/users',
+            'GET  /api/admin/withdrawals',
+            'POST /api/withdrawal/create',
+            'GET  /api/withdrawal/my-withdrawals',
+            'GET  /api/wallet/balances',
+            'POST /api/wallet/deposit',
+            'POST /api/trade/place',
+            'GET  /api/trade/history',
+            'GET  /api/bot/stats'
+        ]
     });
 });
 
@@ -130,8 +222,15 @@ app.use('*', (req, res) => {
 // ERROR HANDLER
 // ============================================
 app.use((err, req, res, next) => {
-    console.error('❌ Server Error:', err);
-    res.status(500).json({
+    console.error('❌ Server Error:', {
+        message: err.message,
+        stack: err.stack,
+        url: req.originalUrl,
+        method: req.method,
+        timestamp: new Date().toISOString()
+    });
+
+    res.status(err.status || 500).json({
         success: false,
         message: 'Internal server error',
         error: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
@@ -140,79 +239,83 @@ app.use((err, req, res, next) => {
 });
 
 // ============================================
-// START SERVER - PORT BINDING WITH AUTO-RETRY
+// START SERVER
 // ============================================
-const startServer = (port) => {
-    const server = app.listen(port)
-        .on('listening', () => {
-            console.log(`\n=================================`);
-            console.log(`🚀 GAINIX AI BACKEND SERVER`);
-            console.log(`=================================`);
-            console.log(`📡 Server    : http://localhost:${port}`);
-            console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`✅ MongoDB    : Connected to gainixai`);
-            console.log(`⏰ Time       : ${new Date().toUTCString()}`);
-            console.log(`📅 Day        : ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}`);
-            console.log(`=================================\n`);
-            
-            // Print all routes
-            console.log('📌 Available Routes:\n');
-            const routes = [
-                'GET  /',
-                'GET  /api/test',
-                'GET  /api/status',
-                'POST /api/auth/register',
-                'POST /api/auth/login',
-                'POST /api/staking/create',
-                'GET  /api/staking/active',
-                'GET  /api/staking/stats',
-                'POST /api/staking/unstake/:id',
-                'GET  /api/level/summary',
-                'GET  /api/level/team/:level',
-                'GET  /api/level/history',
-                'GET  /api/salary/ranks',
-                'GET  /api/salary/my-rank',
-                'POST /api/salary/check-rank',
-                'GET  /api/salary/history',
-                'POST /api/salary/distribute',
-                'GET  /api/referral/summary',
-                'GET  /api/team/level/:level',
-                'GET  /api/team/tabs/:level',
-                'POST /api/p2p/send',
-                'GET  /api/p2p/history',
-                'GET  /api/settings',
-                'POST /api/admin/login',
-                'GET  /api/admin/dashboard',
-                'GET  /api/admin/users',
-                'GET  /api/admin/withdrawals'
-            ];
-            routes.forEach(route => console.log(`   ${route}`));
-            console.log(`\n=================================\n`);
-        })
-        .on('error', (err) => {
-            if (err.code === 'EADDRINUSE') {
-                console.log(`❌ Port ${port} is busy, trying ${port + 1}...`);
-                startServer(port + 1);
-            } else {
-                console.error('❌ Server error:', err);
-                process.exit(1);
-            }
-        });
-};
+const PORT = process.env.PORT || 8080;
 
-// Start server with initial port
-const initialPort = parseInt(process.env.PORT) || 8080;
-startServer(initialPort);
+const server = app.listen(PORT, () => {
+    console.log(`\n=================================`);
+    console.log(`🚀 GAINIX AI BACKEND SERVER`);
+    console.log(`=================================`);
+    console.log(`📡 Server    : http://localhost:${PORT}`);
+    console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`✅ MongoDB    : Connected to gainixai`);
+    console.log(`⏰ Time       : ${new Date().toUTCString()}`);
+    console.log(`📅 Day        : ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}`);
+    console.log(`=================================\n`);
+    
+    // Print all routes
+    console.log('📌 Available Routes:\n');
+    const routes = [
+        'GET  /',
+        'GET  /api/test',
+        'GET  /api/status',
+        'POST /api/auth/register',
+        'POST /api/auth/login',
+        'POST /api/staking/create',
+        'GET  /api/staking/active',
+        'GET  /api/staking/stats',
+        'POST /api/staking/unstake/:id',
+        'GET  /api/level/summary',
+        'GET  /api/level/team/:level',
+        'GET  /api/level/history',
+        'GET  /api/salary/ranks',
+        'GET  /api/salary/my-rank',
+        'POST /api/salary/check-rank',
+        'GET  /api/salary/history',
+        'POST /api/salary/distribute',
+        'GET  /api/referral/summary',
+        'GET  /api/team/tabs/:level',
+        'POST /api/p2p/send',
+        'GET  /api/p2p/history',
+        'GET  /api/settings',
+        'POST /api/admin/login',
+        'GET  /api/admin/dashboard',
+        'GET  /api/admin/users',
+        'GET  /api/admin/withdrawals',
+        'POST /api/withdrawal/create',
+        'GET  /api/withdrawal/my-withdrawals',
+        'GET  /api/wallet/balances',
+        'POST /api/wallet/deposit',
+        'POST /api/trade/place',
+        'GET  /api/trade/history',
+        'GET  /api/bot/stats'
+    ];
+    routes.forEach(route => console.log(`   ${route}`));
+    console.log(`\n=================================\n`);
+});
 
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
     console.log('🛑 SIGTERM received. Closing server...');
-    process.exit(0);
+    server.close(() => {
+        console.log('✅ Server closed');
+        mongoose.connection.close(false, () => {
+            console.log('✅ MongoDB connection closed');
+            process.exit(0);
+        });
+    });
 });
 
 process.on('SIGINT', () => {
     console.log('🛑 SIGINT received. Closing server...');
-    process.exit(0);
+    server.close(() => {
+        console.log('✅ Server closed');
+        mongoose.connection.close(false, () => {
+            console.log('✅ MongoDB connection closed');
+            process.exit(0);
+        });
+    });
 });
 
 module.exports = app;
