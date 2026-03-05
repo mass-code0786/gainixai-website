@@ -86,6 +86,7 @@ app.use('/api/settings', require('./routes/settingRoutes'));
 
 // Admin Routes
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/withdrawal', require('./routes/withdrawalRoutes'));
 
 // ============================================
 // SYSTEM STATUS ROUTE
