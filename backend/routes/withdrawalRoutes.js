@@ -1,3 +1,4 @@
+console.log('🚀🚀🚀 withdrawalRoutes.js LOADED!');
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/auth');
@@ -15,9 +16,10 @@ const {
 // ============================================
 router.post('/create', protect, createWithdrawal);
 router.get('/my-withdrawals', protect, getUserWithdrawals);
-router.post('/test', (req, res) => {
+router.get('/test', (req, res) => {
     res.json({ success: true, message: 'Test route working' });
 });
+
 // ============================================
 // ADMIN ROUTES
 // ============================================
