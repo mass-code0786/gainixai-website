@@ -94,12 +94,6 @@ app.use('/api/team', require('./routes/teamRoutes'));
 // P2P ROUTES - Peer to peer transfers
 // ============================================
 app.use('/api/p2p', sundayCheck, require('./routes/p2pRoutes'));
-
-// ============================================
-// SETTINGS ROUTES - Platform configuration
-// ============================================
-app.use('/api/settings', require('./routes/settingRoutes'));
-
 // ============================================
 // ADMIN ROUTES - Admin panel
 // ============================================
@@ -114,16 +108,6 @@ app.use('/api/withdrawal', require('./routes/withdrawalRoutes'));
 // WALLET ROUTES - Fund and withdraw wallets
 // ============================================
 app.use('/api/wallet', require('./routes/walletRoutes'));
-
-// ============================================
-// TRADE ROUTES - Trading bot
-// ============================================
-app.use('/api/trade', require('./routes/tradeRoutes'));
-
-// ============================================
-// BOT ROUTES - Bot settings and stats
-// ============================================
-app.use('/api/bot', require('./routes/botRoutes'));
 
 // ============================================
 // SYSTEM STATUS ROUTE
