@@ -1138,6 +1138,41 @@
             color: #8899aa;
             font-style: italic;
         }
+
+        .transaction-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(0,255,209,0.1);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .text-warning {
+            color: #ffc107;
+        }
+
+        .text-danger {
+            color: #ff6b6b;
+        }
+
+        .withdrawal-pending, .p2p-notification {
+            animation: slideDown 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1216,7 +1251,7 @@
             </div>
         </div>
 
-        <!-- Wallets - Deposit, Withdraw, P2P -->
+        <!-- Wallets - Deposit, Withdraw, P2P (Ek baar hi) -->
         <div class="wallet-container">
             <div class="wallet-card" onclick="openDepositModal()">
                 <div class="wallet-icon"><i class="fas fa-arrow-down"></i></div>
@@ -1300,15 +1335,15 @@
             </div>
             <div class="bot-stats">
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botTrades">0</div>
+                    <div class="bot-stat-value" id="botTrades">125,789</div>
                     <div class="bot-stat-label">Trades</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botWinRate">0%</div>
+                    <div class="bot-stat-value" id="botWinRate">94.2%</div>
                     <div class="bot-stat-label">Win Rate</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botProfit">$0</div>
+                    <div class="bot-stat-value" id="botProfit">$24,567</div>
                     <div class="bot-stat-label">Profit</div>
                 </div>
             </div>
@@ -1428,47 +1463,157 @@
         <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
     </div>
 
-    <!-- Deposit Modal -->
+    <!-- ============================================ -->
+    <!-- DEPOSIT MODAL - Only USDT BEP20 with NowPayments -->
+    <!-- ============================================ -->
     <div id="depositModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Deposit Funds</h3>
+                <h3>Deposit USDT (BEP20)</h3>
                 <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
             </div>
+            
+            <div style="background: rgba(0,255,209,0.1); padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+                <i class="fas fa-info-circle" style="color: #00ffd9;"></i>
+                <span style="font-size: 12px;"> Only USDT on BEP20 Network</span>
+            </div>
+            
             <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input" min="20">
-            <button class="modal-btn" onclick="processDeposit()">DEPOSIT</button>
+            
+            <div style="background: rgba(0,255,209,0.05); padding: 16px; border-radius: 16px; margin: 15px 0;">
+                <p style="font-size: 11px; color: #8899aa; margin-bottom: 10px;">Send exactly this amount to:</p>
+                
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; margin-bottom: 10px;">
+                    <i class="fas fa-qrcode" style="color: #00ffd9; font-size: 20px;"></i>
+                    <span id="depositAddress" style="font-size: 11px; word-break: break-all; flex: 1;">Click GENERATE to get address</span>
+                </div>
+                
+                <div style="display: flex; gap: 8px;">
+                    <button class="copy-btn" onclick="copyDepositAddress()" style="flex: 1; padding: 8px;">Copy Address</button>
+                    <button class="copy-btn" onclick="window.open('https://nowpayments.io', '_blank')" style="flex: 1; padding: 8px;">Check Status</button>
+                </div>
+                
+                <p style="font-size: 10px; color: #8899aa; margin-top: 10px;">
+                    <i class="fas fa-clock"></i> Confirmation: 3 network confirmations
+                </p>
+                <p id="depositTxId" style="font-size: 9px; color: #8899aa; word-break: break-all;"></p>
+            </div>
+            
+            <button class="modal-btn" onclick="processDeposit()">GENERATE PAYMENT ADDRESS</button>
+            
+            <div style="margin-top: 15px; font-size: 10px; color: #8899aa; text-align: center;">
+                Powered by NowPayments.io
+            </div>
         </div>
     </div>
 
-    <!-- Withdraw Modal -->
+    <!-- ============================================ -->
+    <!-- WITHDRAWAL MODAL - Only USDT BEP20 with Admin Request -->
+    <!-- ============================================ -->
     <div id="withdrawModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Withdraw Funds</h3>
+                <h3>Withdraw USDT (BEP20)</h3>
                 <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
             </div>
-            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10">
-            <input type="text" id="withdrawWalletAddress" placeholder="BEP20 Wallet Address" class="modal-input">
-            <button class="modal-btn" onclick="processWithdraw()">WITHDRAW</button>
+            
+            <div style="background: rgba(255,193,7,0.1); padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+                <i class="fas fa-clock" style="color: #ffc107;"></i>
+                <span style="font-size: 12px;"> Admin will process within 24 hours</span>
+            </div>
+            
+            <input type="number" id="withdrawAmount" placeholder="Amount" class="modal-input" min="10" oninput="calculateWithdrawFee()">
+            
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8899aa; margin: 5px 0;">
+                <span>Available: $<span id="withdrawWallet">0</span></span>
+                <span>Min: $10 | Max: $10,000</span>
+            </div>
+            
+            <input type="text" id="withdrawWalletAddress" placeholder="Your BEP20 Wallet Address (0x...)" class="modal-input">
+            
+            <div style="background: rgba(255,0,0,0.1); padding: 12px; border-radius: 12px; margin: 15px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                    <span>Fee (1%):</span>
+                    <span id="withdrawFeeAmount">$0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-top: 5px;">
+                    <span>You'll Receive:</span>
+                    <span id="withdrawNetAmount" style="color: #00ffd9;">$0.00</span>
+                </div>
+            </div>
+            
+            <div style="margin: 15px 0;">
+                <p style="font-size: 11px; color: #8899aa; margin-bottom: 5px;">Enter 4-digit PIN:</p>
+                <div class="pin-input">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'withdrawModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'withdrawModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'withdrawModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'withdrawModal')">
+                </div>
+            </div>
+            
+            <button class="modal-btn" onclick="processWithdraw()">REQUEST WITHDRAWAL</button>
+            
+            <p style="font-size: 10px; color: #8899aa; text-align: center; margin-top: 15px;">
+                <i class="fas fa-shield-alt"></i> Admin will verify and send USDT to your wallet
+            </p>
         </div>
     </div>
 
-    <!-- P2P Modal -->
+    <!-- ============================================ -->
+    <!-- P2P MODAL - Internal Transfer -->
+    <!-- ============================================ -->
     <div id="p2pModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>P2P Transfer</h3>
                 <span class="close-modal" onclick="closeModal('p2pModal')">&times;</span>
             </div>
-            <input type="text" id="recipientId" placeholder="Recipient User ID" class="modal-input">
-            <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
-            <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0)">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1)">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2)">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3)">
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button id="p2pSendBtn" class="package-card selected" style="flex: 1;" onclick="setP2PType('send')">Send</button>
+                <button id="p2pRequestBtn" class="package-card" style="flex: 1;" onclick="setP2PType('request')">Request</button>
             </div>
-            <button class="modal-btn" onclick="processP2P()">SEND</button>
+            
+            <div style="background: rgba(0,255,209,0.05); padding: 10px; border-radius: 12px; margin-bottom: 10px; text-align: center;">
+                <span>1 USDT = 1 USDT (No exchange)</span>
+            </div>
+            
+            <label style="font-size: 11px; color: #8899aa;" id="p2pRecipientLabel">Recipient User ID</label>
+            <input type="text" id="recipientId" placeholder="Enter User ID" class="modal-input" onkeyup="lookupRecipient()">
+            
+            <div id="p2pRecipientInfo" style="display: none; margin: 5px 0 10px;"></div>
+            
+            <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input" oninput="calculateP2PFee()">
+            
+            <input type="text" id="p2pNote" placeholder="Note (Optional)" class="modal-input">
+            
+            <div style="background: rgba(0,255,209,0.05); padding: 12px; border-radius: 12px; margin: 15px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                    <span>Fee (0.5%):</span>
+                    <span id="p2pFee">$0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-top: 5px;">
+                    <span>Net Amount:</span>
+                    <span id="p2pNetAmount" style="color: #00ffd9;">$0.00</span>
+                </div>
+            </div>
+            
+            <div style="margin: 15px 0;">
+                <p style="font-size: 11px; color: #8899aa; margin-bottom: 5px;">Enter 4-digit PIN:</p>
+                <div class="pin-input">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'p2pModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'p2pModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'p2pModal')">
+                    <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'p2pModal')">
+                </div>
+            </div>
+            
+            <button id="p2pActionBtn" class="modal-btn" onclick="processP2P()">SEND</button>
+            
+            <p style="font-size: 10px; color: #8899aa; text-align: center; margin-top: 10px;">
+                <i class="fas fa-bolt"></i> Instant internal transfer
+            </p>
         </div>
     </div>
 
