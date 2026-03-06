@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* Tumhare existing styles yahan rahenge - koi change nahi */
         * {
             margin: 0;
             padding: 0;
@@ -144,6 +145,7 @@
             font-weight: 700;
             font-size: 14px;
             box-shadow: 0 8px 20px rgba(255,215,0,0.3);
+            cursor: pointer;
         }
 
         .rank-badge {
@@ -335,33 +337,40 @@
 
         .wallet-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
             margin-bottom: 14px;
         }
 
-        .fund-wallet,
-        .withdraw-wallet {
+        .wallet-card {
             background: linear-gradient(145deg, #1a3f3a, #0d2a25);
             border: 1px solid #00ffd9;
             border-radius: 20px;
-            padding: 14px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .wallet-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
+        .wallet-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,255,209,0.3);
+        }
+
+        .wallet-icon {
+            font-size: 20px;
+            color: #00ffd9;
+            margin-bottom: 4px;
         }
 
         .wallet-title {
-            font-size: 11px;
+            font-size: 10px;
             color: #8899aa;
+            margin-bottom: 4px;
         }
 
         .wallet-balance {
-            font-size: 22px;
+            font-size: 16px;
             font-weight: 700;
             color: #00ffd9;
         }
@@ -1202,7 +1211,7 @@
         </div>
 
         <!-- Current Rank Banner -->
-        <div class="current-rank-banner">
+        <div class="current-rank-banner" onclick="openRankDetails()">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
             <span class="rank-badge" id="topCurrentRank">0 ⭐</span>
         </div>
@@ -1217,7 +1226,7 @@
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                 </div>
                 <div class="profile-info">
-                    <input type="text" id="userName" value="User">
+                    <input type="text" id="userName" value="Loading...">
                     <p><i class="fas fa-id-card"></i> ID: <span id="userId">-</span></p>
                     <p><i class="fas fa-envelope"></i> <span id="userEmail">-</span></p>
                     <button class="save-profile-btn" onclick="saveProfile()">
@@ -1256,21 +1265,22 @@
             </div>
         </div>
 
-        <!-- Wallets -->
+        <!-- Wallets - Deposit, Withdraw, P2P -->
         <div class="wallet-container">
-            <div class="fund-wallet">
-                <div class="wallet-header">
-                    <i class="fas fa-wallet"></i>
-                    <span class="wallet-title">FUND</span>
-                </div>
+            <div class="wallet-card" onclick="openDepositModal()">
+                <div class="wallet-icon"><i class="fas fa-arrow-down"></i></div>
+                <div class="wallet-title">DEPOSIT</div>
                 <div class="wallet-balance" id="fundWallet">$0</div>
             </div>
-            <div class="withdraw-wallet">
-                <div class="wallet-header">
-                    <i class="fas fa-arrow-up"></i>
-                    <span class="wallet-title">WITHDRAW</span>
-                </div>
+            <div class="wallet-card" onclick="openWithdrawModal()">
+                <div class="wallet-icon"><i class="fas fa-arrow-up"></i></div>
+                <div class="wallet-title">WITHDRAW</div>
                 <div class="wallet-balance" id="withdrawWallet">$0</div>
+            </div>
+            <div class="wallet-card" onclick="openP2PModal()">
+                <div class="wallet-icon"><i class="fas fa-handshake"></i></div>
+                <div class="wallet-title">P2P</div>
+                <div class="wallet-balance" id="p2pBalance">$0</div>
             </div>
         </div>
 
@@ -1326,7 +1336,7 @@
             </div>
         </div>
 
-        <!-- Bot Section -->
+        <!-- Bot Section - Hardcoded (as per your instruction) -->
         <div class="unique-bot">
             <div class="bot-3d-container">
                 <div class="bot-hologram">
@@ -1339,59 +1349,38 @@
             </div>
             <div class="bot-stats">
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botTrades">0</div>
+                    <div class="bot-stat-value" id="botTrades">125,789</div>
                     <div class="bot-stat-label">Trades</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botWinRate">0%</div>
+                    <div class="bot-stat-value" id="botWinRate">94.2%</div>
                     <div class="bot-stat-label">Win Rate</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botProfit">$0</div>
+                    <div class="bot-stat-value" id="botProfit">$24,567</div>
                     <div class="bot-stat-label">Profit</div>
                 </div>
             </div>
             <div class="window-timer">
-                <div class="window-time" id="botTimer">00:00</div>
+                <div class="window-time" id="botTimer">00:00:00</div>
                 <div class="window-label">Next window in</div>
             </div>
             <div class="window-status" id="windowStatus">⏳ Window closed</div>
-            <button class="bot-button" id="botButton" onclick="openTradeModal()" disabled><i class="fas fa-play"></i> PLACE TRADE</button>
+            <button class="bot-button" id="botButton" onclick="openTradeModal()"><i class="fas fa-play"></i> PLACE TRADE</button>
         </div>
 
         <!-- Staking Packages -->
         <div class="section-title"><i class="fas fa-box"></i> STAKING</div>
         <div class="staking-packages" id="packagesContainer">
             <!-- Packages will be loaded from API -->
-            <div class="package-card" onclick="selectPackage(1)" id="package1">
-                <div class="package-name">BASIC</div>
-                <div class="package-days">90 Days</div>
-                <div class="package-roi">1-1.3%</div>
-                <div class="referral-bonus">5% Ref</div>
-                <div class="package-min">$20</div>
-            </div>
-            <div class="package-card" onclick="selectPackage(2)" id="package2">
-                <div class="package-name">PRO</div>
-                <div class="package-days">180 Days</div>
-                <div class="package-roi">1.3-1.6%</div>
-                <div class="referral-bonus">7% Ref</div>
-                <div class="package-min">$150</div>
-            </div>
-            <div class="package-card" onclick="selectPackage(3)" id="package3">
-                <div class="package-name">ELITE</div>
-                <div class="package-days">450 Days</div>
-                <div class="package-roi">1.5-2%</div>
-                <div class="referral-bonus">10% Ref + $100 Bonus</div>
-                <div class="package-min">$300</div>
-            </div>
         </div>
 
         <!-- Package Input -->
         <div class="package-input">
-            <input type="number" id="packageAmount" placeholder="Amount" min="20" oninput="showBonusMessage()">
+            <input type="number" id="packageAmount" placeholder="Amount" min="0" oninput="showBonusMessage()">
             <input type="text" id="referralId" placeholder="Sponsor ID (Optional)">
             <div id="bonusMessage" class="bonus-msg"></div>
-            <button class="confirm-btn" onclick="createStaking()" id="stakeButton">STAKE NOW</button>
+            <button class="confirm-btn" onclick="createStaking()" id="stakeButton" disabled>STAKE NOW</button>
         </div>
 
         <!-- Active Stakings -->
@@ -1425,10 +1414,10 @@
         <div class="section-title"><i class="fas fa-star"></i> SALARY RANK</div>
         <div class="rank-progress">
             <p><strong>Current Rank:</strong> <span id="currentRank">Rank 0</span></p>
-            <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $750</span></p>
-            <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $2,500</span></p>
-            <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 2</span></p>
-            <p><strong>Next Rank:</strong> <span id="nextRank">Rank 1 ($25/week)</span></p>
+            <p><strong>Direct Business:</strong> <span id="directBusiness">$0 / $0</span></p>
+            <p><strong>Team Business:</strong> <span id="teamBusiness">$0 / $0</span></p>
+            <p><strong>Qualified Downlines:</strong> <span id="qualifiedDownlines">0 / 0</span></p>
+            <p><strong>Next Rank:</strong> <span id="nextRank">-</span></p>
         </div>
 
         <!-- Direct Members -->
@@ -1454,6 +1443,15 @@
         </div>
     </div>
 
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-item" onclick="window.location.href='salary.html'"><i class="fas fa-star"></i><span>Salary</span></div>
+        <div class="nav-item" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><span>Team</span></div>
+        <div class="nav-item" onclick="window.location.href='p2p.html'"><i class="fas fa-handshake"></i><span>P2P</span></div>
+        <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
+    </div>
+
     <!-- Deposit Modal -->
     <div id="depositModal" class="modal">
         <div class="modal-content">
@@ -1461,8 +1459,17 @@
                 <h3>Deposit Funds</h3>
                 <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
             </div>
-            <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input">
-            <button class="modal-btn" onclick="processDeposit()">DEPOSIT</button>
+            <select id="depositMethod" class="modal-input">
+                <option value="USDT_TRC20">USDT (TRC20)</option>
+                <option value="USDT_ERC20">USDT (ERC20)</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+            </select>
+            <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input" min="20">
+            <div style="background: rgba(0,255,209,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
+                <p style="font-size: 11px; color: #8899aa;">Deposit Address:</p>
+                <p style="font-size: 12px; word-break: break-all;" id="depositAddress">Loading...</p>
+            </div>
+            <button class="modal-btn" onclick="processDeposit()">GENERATE ADDRESS</button>
         </div>
     </div>
 
@@ -1473,8 +1480,17 @@
                 <h3>Withdraw Funds</h3>
                 <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
             </div>
-            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10">
+            <select id="withdrawMethod" class="modal-input">
+                <option value="USDT_TRC20">USDT (TRC20)</option>
+                <option value="USDT_ERC20">USDT (ERC20)</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+            </select>
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10" oninput="updateWithdrawFee()">
             <input type="text" id="withdrawWalletAddress" placeholder="BEP20 Wallet Address" class="modal-input">
+            <div style="background: rgba(255,0,0,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
+                <p style="font-size: 11px; color: #ff4444;">Fee: 1% (min $1)</p>
+                <p style="font-size: 12px;" id="withdrawFee">You will receive: $0.00</p>
+            </div>
             <div class="pin-input">
                 <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'withdrawModal')">
                 <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'withdrawModal')">
@@ -1491,6 +1507,10 @@
             <div class="modal-header">
                 <h3>P2P Transfer</h3>
                 <span class="close-modal" onclick="closeModal('p2pModal')">&times;</span>
+            </div>
+            <div style="display: flex; gap: 10px; margin: 10px 0;">
+                <button class="package-card" style="flex: 1;" onclick="setP2PType('send')">Send</button>
+                <button class="package-card" style="flex: 1;" onclick="setP2PType('request')">Request</button>
             </div>
             <input type="text" id="recipientId" placeholder="Recipient User ID" class="modal-input">
             <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
@@ -1528,6 +1548,9 @@
             </div>
             <p>AI Quantum Bot</p>
             <input type="number" id="tradeAmount" placeholder="Amount" class="modal-input" min="10">
+            <div style="background: rgba(0,255,209,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
+                <p style="font-size: 11px; color: #8899aa;">Potential Return: 2% - 5% in 5 minutes</p>
+            </div>
             <div class="pin-input">
                 <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'tradeModal')">
                 <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'tradeModal')">
@@ -1541,41 +1564,36 @@
     <!-- Toast -->
     <div id="toast" class="toast"></div>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="nav-item" onclick="window.location.href='salary.html'"><i class="fas fa-star"></i><span>Salary</span></div>
-        <div class="nav-item" onclick="window.location.href='team.html'"><i class="fas fa-users"></i><span>Team</span></div>
-        <div class="nav-item" onclick="window.location.href='p2p.html'"><i class="fas fa-handshake"></i><span>P2P</span></div>
-        <div class="nav-item" onclick="window.location.href='history.html'"><i class="fas fa-history"></i><span>History</span></div>
-    </div>
-
     <script>
         // ==================== CONFIGURATION ====================
         const API_BASE_URL = 'https://gainixai-backend.onrender.com/api';
         const authToken = localStorage.getItem('token');
-
-        // Check authentication
+        
+        // Agar token nahi hai toh login page pe bhejo
         if (!authToken) {
             window.location.href = 'index.html';
         }
 
         // ==================== GLOBAL VARIABLES ====================
-        let userData = {};
-        let packages = [];
-        let activeStakings = [];
-        let levelIncome = [];
-        let directMembers = [];
-        let rankData = {};
-        let botStats = {};
-        let selectedPackage = 1;
+        let selectedPackage = null;
         let currentStakeAmount = 0;
+        let p2pType = 'send';
+        let packages = [];
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', async function() {
             showLoading(true);
             try {
-                await loadAllData();
+                // Saare API calls ek saath
+                await Promise.all([
+                    loadUserProfile(),
+                    loadPackages(),
+                    loadActiveStakings(),
+                    loadLevelIncome(),
+                    loadDirectMembers(),
+                    loadRankProgress(),
+                    loadDepositAddress()
+                ]);
                 startTimers();
             } catch (error) {
                 console.error('Initialization error:', error);
@@ -1585,291 +1603,285 @@
             }
         });
 
-        // ==================== LOAD ALL DATA ====================
-        async function loadAllData() {
-            await Promise.all([
-                loadUserProfile(),
-                loadPackages(),
-                loadActiveStakings(),
-                loadLevelIncome(),
-                loadDirectMembers(),
-                loadRankProgress(),
-                loadBotStats()
-            ]);
-        }
-
-        // Load User Profile
+        // ==================== API CALLS ====================
+        
+        // 1. User Profile API
         async function loadUserProfile() {
             try {
                 const response = await fetch(`${API_BASE_URL}/user/profile`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
+                    headers: { 
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
-                if (!response.ok) throw new Error('Failed to load profile');
-                userData = await response.json();
-                updateProfileUI();
+                
+                if (!response.ok) {
+                    throw new Error('Profile load failed');
+                }
+                
+                const data = await response.json();
+                
+                // Update UI with API data
+                document.getElementById('userName').value = data.userName || 'User';
+                document.getElementById('userId').textContent = data.userId || '-';
+                document.getElementById('userEmail').textContent = data.email || '-';
+                
+                const walletAddr = data.walletAddress || 'Not connected';
+                document.getElementById('walletAddressDisplay').textContent = 
+                    walletAddr.length > 10 ? walletAddr.substring(0,6) + '...' + walletAddr.substring(walletAddr.length-4) : walletAddr;
+                
+                document.getElementById('refLinkDisplay').textContent = `gainixai.live/ref/${data.referralCode || 'user'}`;
+                
+                // Balances
+                document.getElementById('fundWallet').textContent = `$${(data.fundWallet || 0).toFixed(2)}`;
+                document.getElementById('withdrawWallet').textContent = `$${(data.withdrawWallet || 0).toFixed(2)}`;
+                document.getElementById('p2pBalance').textContent = `$${(data.p2pBalance || 0).toFixed(2)}`;
+                document.getElementById('totalStaked').textContent = `$${(data.totalStaked || 0).toFixed(2)}`;
+                document.getElementById('stakingCount').textContent = data.stakingCount || 0;
+                
+                // Income
+                document.getElementById('directIncome').textContent = `$${(data.directIncome || 0).toFixed(2)}`;
+                document.getElementById('stakingIncome').textContent = `$${(data.stakingIncome || 0).toFixed(2)}`;
+                document.getElementById('totalLevelIncome').textContent = `$${(data.levelIncome || 0).toFixed(2)}`;
+                document.getElementById('totalSalaryIncome').textContent = `$${(data.salaryIncome || 0).toFixed(2)}`;
+                
+                // Today's earnings
+                document.getElementById('directToday').innerHTML = `+$${(data.directIncomeToday || 0).toFixed(2)} today`;
+                document.getElementById('stakingIncomeToday').innerHTML = `+$${(data.stakingIncomeToday || 0).toFixed(2)} today`;
+                document.getElementById('levelIncomeToday').innerHTML = `+$${(data.levelIncomeToday || 0).toFixed(2)} today`;
+                document.getElementById('salaryIncomeToday').innerHTML = `+$${(data.salaryIncomeToday || 0).toFixed(2)} today`;
+                
+                // Rank
+                const stars = '⭐'.repeat(data.rank || 0);
+                document.getElementById('topCurrentRank').innerHTML = `${data.rank || 0} ${stars}`;
+                
+                // Avatar
+                if (data.avatar) {
+                    document.getElementById('avatarIcon').style.display = 'none';
+                    document.getElementById('avatarImage').src = data.avatar;
+                    document.getElementById('avatarImage').style.display = 'block';
+                }
+                
+                // Wallet fields
+                if (data.bep20Address) {
+                    document.getElementById('bep20Address').value = data.bep20Address;
+                }
+                
             } catch (error) {
-                console.error('Profile error:', error);
-                showToast('Error loading profile', 'error');
+                console.error('Profile API error:', error);
+                showToast('Profile load failed', 'error');
+                
+                // Default values dikhao but error nahi
+                document.getElementById('userName').value = 'User';
+                document.getElementById('userId').textContent = 'ERROR';
+                document.getElementById('userEmail').textContent = 'error@load.com';
             }
         }
 
-        // Load Packages
+        // 2. Packages API
         async function loadPackages() {
             try {
                 const response = await fetch(`${API_BASE_URL}/staking/packages`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load packages');
+                
+                if (!response.ok) throw new Error('Packages load failed');
+                
                 packages = await response.json();
-                updatePackagesUI();
+                
+                const container = document.getElementById('packagesContainer');
+                container.innerHTML = '';
+                
+                packages.forEach(pkg => {
+                    const pkgDiv = document.createElement('div');
+                    pkgDiv.className = 'package-card';
+                    pkgDiv.id = `package${pkg.id}`;
+                    pkgDiv.setAttribute('onclick', `selectPackage(${pkg.id})`);
+                    pkgDiv.innerHTML = `
+                        <div class="package-name">${pkg.name}</div>
+                        <div class="package-days">${pkg.days} Days</div>
+                        <div class="package-roi">${pkg.minRoi}-${pkg.maxRoi}%</div>
+                        <div class="referral-bonus">${pkg.refBonus}% Ref</div>
+                        ${pkg.cashBonus ? '<div class="referral-bonus">+$' + pkg.cashBonus + ' Bonus</div>' : ''}
+                        <div class="package-min">$${pkg.minAmount}</div>
+                    `;
+                    container.appendChild(pkgDiv);
+                });
+                
+                if (packages.length > 0) selectPackage(packages[0].id);
+                
             } catch (error) {
-                console.error('Packages error:', error);
+                console.error('Packages API error:', error);
+                document.getElementById('packagesContainer').innerHTML = '<div class="no-data">Packages unavailable</div>';
             }
         }
 
-        // Load Active Stakings
+        // 3. Active Stakings API
         async function loadActiveStakings() {
             try {
                 const response = await fetch(`${API_BASE_URL}/staking/active`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load stakings');
-                activeStakings = await response.json();
-                renderActiveStakings();
+                
+                if (!response.ok) throw new Error('Stakings load failed');
+                
+                const stakes = await response.json();
+                const container = document.getElementById('activeStakingsList');
+                
+                if (!stakes || stakes.length === 0) {
+                    container.innerHTML = '<div class="no-data">No active stakings</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                stakes.forEach(stake => {
+                    const stakeDiv = document.createElement('div');
+                    stakeDiv.className = 'staking-item';
+                    
+                    const canUnstake = new Date(stake.endDate) <= new Date();
+                    
+                    stakeDiv.innerHTML = `
+                        <div class="staking-header">
+                            <span class="staking-package">${stake.package}</span>
+                            <span class="staking-amount">$${stake.amount.toFixed(2)}</span>
+                        </div>
+                        <div class="staking-dates">
+                            <span>Start: ${stake.startDate}</span>
+                            <span>End: ${stake.endDate}</span>
+                        </div>
+                        <div class="staking-roi">Daily ROI: ${stake.roi}% | Earned: $${(stake.earned || 0).toFixed(2)}</div>
+                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 8px 0;">
+                            <div style="width: ${stake.progress}%; height: 100%; background: linear-gradient(90deg, #00ffd9, #0099ff); border-radius: 2px;"></div>
+                        </div>
+                        <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
+                                onclick="unstakeStaking(${stake.id})" 
+                                ${canUnstake ? '' : 'disabled'}>
+                            ${canUnstake ? 'UNSTAKE NOW' : 'Locked until ' + stake.endDate}
+                        </button>
+                    `;
+                    container.appendChild(stakeDiv);
+                });
+                
             } catch (error) {
-                console.error('Stakings error:', error);
+                console.error('Stakings API error:', error);
                 document.getElementById('activeStakingsList').innerHTML = '<div class="no-data">No active stakings</div>';
             }
         }
 
-        // Load Level Income
+        // 4. Level Income API
         async function loadLevelIncome() {
             try {
                 const response = await fetch(`${API_BASE_URL}/income/level`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load level income');
-                levelIncome = await response.json();
-                renderLevelIncome();
+                
+                if (!response.ok) throw new Error('Level income load failed');
+                
+                const levels = await response.json();
+                const tbody = document.getElementById('levelIncomeBody');
+                
+                tbody.innerHTML = '';
+                levels.forEach(level => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>Level ${level.level}</td>
+                        <td>${level.percent}%</td>
+                        <td>$${level.today.toFixed(2)}</td>
+                        <td class="${level.status === 'Active' ? 'text-success' : 'text-muted'}">${level.status}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
             } catch (error) {
-                console.error('Level income error:', error);
+                console.error('Level income API error:', error);
                 document.getElementById('levelIncomeBody').innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
             }
         }
 
-        // Load Direct Members
+        // 5. Direct Members API
         async function loadDirectMembers() {
             try {
                 const response = await fetch(`${API_BASE_URL}/team/direct`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load members');
-                directMembers = await response.json();
-                renderDirectMembers();
+                
+                if (!response.ok) throw new Error('Direct members load failed');
+                
+                const members = await response.json();
+                const container = document.getElementById('directMembersList');
+                document.getElementById('directCount').textContent = members.length;
+                
+                if (!members || members.length === 0) {
+                    container.innerHTML = '<div class="no-data">No direct referrals yet</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                members.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = 'member-item';
+                    memberDiv.innerHTML = `
+                        <div class="member-info">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="member-details">
+                                <div class="member-name">${member.name || 'User'}</div>
+                                <div class="member-id">${member.userId}</div>
+                            </div>
+                        </div>
+                        <div class="member-stats">
+                            <div>$${(member.staked || 0).toFixed(2)}</div>
+                            <div class="member-rank">${'⭐'.repeat(member.rank || 0)}</div>
+                        </div>
+                    `;
+                    container.appendChild(memberDiv);
+                });
+                
             } catch (error) {
-                console.error('Direct members error:', error);
+                console.error('Direct members API error:', error);
                 document.getElementById('directMembersList').innerHTML = '<div class="no-data">No members</div>';
             }
         }
 
-        // Load Rank Progress
+        // 6. Rank Progress API
         async function loadRankProgress() {
             try {
                 const response = await fetch(`${API_BASE_URL}/rank/progress`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load rank progress');
-                rankData = await response.json();
-                updateRankProgress();
+                
+                if (!response.ok) throw new Error('Rank progress load failed');
+                
+                const rank = await response.json();
+                
+                document.getElementById('currentRank').textContent = rank.currentRank || 'Rank 0';
+                document.getElementById('directBusiness').textContent = `$${rank.directVolume || 0} / $${rank.directTarget || 0}`;
+                document.getElementById('teamBusiness').textContent = `$${rank.teamVolume || 0} / $${rank.teamTarget || 0}`;
+                document.getElementById('qualifiedDownlines').textContent = `${rank.qualifiedDownlines || 0} / ${rank.downlineTarget || 0}`;
+                document.getElementById('nextRank').textContent = rank.nextRank || '-';
+                
             } catch (error) {
-                console.error('Rank error:', error);
+                console.error('Rank progress API error:', error);
             }
         }
 
-        // Load Bot Stats
-        async function loadBotStats() {
+        // 7. Deposit Address API
+        async function loadDepositAddress() {
             try {
-                const response = await fetch(`${API_BASE_URL}/bot/stats`, {
+                const response = await fetch(`${API_BASE_URL}/wallet/deposit-address`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-                if (!response.ok) throw new Error('Failed to load bot stats');
-                botStats = await response.json();
-                updateBotStats();
+                
+                if (!response.ok) throw new Error('Deposit address load failed');
+                
+                const data = await response.json();
+                document.getElementById('depositAddress').textContent = data.address || 'TXYZ123...';
+                
             } catch (error) {
-                console.error('Bot stats error:', error);
+                console.error('Deposit address API error:', error);
+                document.getElementById('depositAddress').textContent = 'Please select method';
             }
-        }
-
-        // ==================== UPDATE UI FUNCTIONS ====================
-        function updateProfileUI() {
-            document.getElementById('userId').textContent = userData.userId || '-';
-            document.getElementById('userName').value = userData.userName || 'User';
-            document.getElementById('userEmail').textContent = userData.email || '-';
-            
-            const walletAddr = userData.walletAddress || 'Not connected';
-            document.getElementById('walletAddressDisplay').textContent = 
-                walletAddr.length > 10 ? walletAddr.substring(0,6) + '...' + walletAddr.substring(walletAddr.length-4) : walletAddr;
-            
-            document.getElementById('refLinkDisplay').textContent = `gainixai.live/ref/${userData.referralCode || 'user'}`;
-            document.getElementById('fundWallet').textContent = `$${(userData.fundWallet || 0).toFixed(2)}`;
-            document.getElementById('withdrawWallet').textContent = `$${(userData.withdrawWallet || 0).toFixed(2)}`;
-            document.getElementById('totalStaked').textContent = `$${(userData.totalStaked || 0).toFixed(2)}`;
-            document.getElementById('stakingCount').textContent = userData.stakingCount || 0;
-            
-            // Income
-            document.getElementById('directIncome').textContent = `$${(userData.directIncome || 0).toFixed(2)}`;
-            document.getElementById('stakingIncome').textContent = `$${(userData.stakingIncome || 0).toFixed(2)}`;
-            document.getElementById('totalLevelIncome').textContent = `$${(userData.levelIncome || 0).toFixed(2)}`;
-            document.getElementById('totalSalaryIncome').textContent = `$${(userData.salaryIncome || 0).toFixed(2)}`;
-            
-            // Today's earnings
-            document.getElementById('directToday').innerHTML = `+$${(userData.directIncomeToday || 0).toFixed(2)} today`;
-            document.getElementById('stakingIncomeToday').innerHTML = `+$${(userData.stakingIncomeToday || 0).toFixed(2)} today`;
-            document.getElementById('levelIncomeToday').innerHTML = `+$${(userData.levelIncomeToday || 0).toFixed(2)} today`;
-            document.getElementById('salaryIncomeToday').innerHTML = `+$${(userData.salaryIncomeToday || 0).toFixed(2)} today`;
-            
-            // Rank
-            document.getElementById('topCurrentRank').textContent = `${userData.rank || 0} ⭐`;
-            
-            // Avatar
-            if (userData.avatar) {
-                document.getElementById('avatarIcon').style.display = 'none';
-                document.getElementById('avatarImage').src = userData.avatar;
-                document.getElementById('avatarImage').style.display = 'block';
-            }
-            
-            // Wallet fields
-            if (userData.bep20Address) {
-                document.getElementById('bep20Address').value = userData.bep20Address;
-            }
-        }
-
-        function updatePackagesUI() {
-            const container = document.getElementById('packagesContainer');
-            if (!packages || packages.length === 0) return;
-            
-            container.innerHTML = '';
-            packages.forEach(pkg => {
-                const pkgDiv = document.createElement('div');
-                pkgDiv.className = 'package-card';
-                pkgDiv.id = `package${pkg.id}`;
-                pkgDiv.setAttribute('onclick', `selectPackage(${pkg.id})`);
-                pkgDiv.innerHTML = `
-                    <div class="package-name">${pkg.name}</div>
-                    <div class="package-days">${pkg.days} Days</div>
-                    <div class="package-roi">${pkg.minRoi}-${pkg.maxRoi}%</div>
-                    <div class="referral-bonus">${pkg.refBonus}% Ref</div>
-                    ${pkg.cashBonus ? '<div class="referral-bonus">+$' + pkg.cashBonus + ' Bonus</div>' : ''}
-                    <div class="package-min">$${pkg.minAmount}</div>
-                `;
-                container.appendChild(pkgDiv);
-            });
-            
-            if (packages.length > 0) selectPackage(packages[0].id);
-        }
-
-        function renderActiveStakings() {
-            const container = document.getElementById('activeStakingsList');
-            
-            if (!activeStakings || activeStakings.length === 0) {
-                container.innerHTML = '<div class="no-data">No active stakings</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            activeStakings.forEach(stake => {
-                const stakeDiv = document.createElement('div');
-                stakeDiv.className = 'staking-item';
-                
-                const canUnstake = new Date(stake.endDate) <= new Date();
-                
-                stakeDiv.innerHTML = `
-                    <div class="staking-header">
-                        <span class="staking-package">${stake.package}</span>
-                        <span class="staking-amount">$${stake.amount.toFixed(2)}</span>
-                    </div>
-                    <div class="staking-dates">
-                        <span>Start: ${stake.startDate}</span>
-                        <span>End: ${stake.endDate}</span>
-                    </div>
-                    <div class="staking-roi">Daily ROI: ${stake.roi}% | Earned: $${(stake.earned || 0).toFixed(2)}</div>
-                    <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
-                            onclick="unstakeStaking(${stake.id})" 
-                            ${canUnstake ? '' : 'disabled'}>
-                        ${canUnstake ? 'UNSTAKE NOW' : 'Locked'}
-                    </button>
-                `;
-                container.appendChild(stakeDiv);
-            });
-        }
-
-        function renderLevelIncome() {
-            const tbody = document.getElementById('levelIncomeBody');
-            
-            if (!levelIncome || levelIncome.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = '';
-            levelIncome.forEach(level => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>Level ${level.level}</td>
-                    <td>${level.percent}%</td>
-                    <td>$${(level.today || 0).toFixed(2)}</td>
-                    <td class="${level.status === 'Active' ? 'text-success' : 'text-muted'}">${level.status}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderDirectMembers() {
-            const container = document.getElementById('directMembersList');
-            document.getElementById('directCount').textContent = directMembers?.length || 0;
-            
-            if (!directMembers || directMembers.length === 0) {
-                container.innerHTML = '<div class="no-data">No direct referrals yet</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            directMembers.forEach(member => {
-                const memberDiv = document.createElement('div');
-                memberDiv.className = 'member-item';
-                memberDiv.innerHTML = `
-                    <div class="member-info">
-                        <div class="member-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="member-details">
-                            <div class="member-name">${member.name || 'User'}</div>
-                            <div class="member-id">${member.userId}</div>
-                        </div>
-                    </div>
-                    <div class="member-stats">
-                        <div>$${(member.staked || 0).toFixed(2)}</div>
-                        <div class="member-rank">Rank ${member.rank || 0}</div>
-                    </div>
-                `;
-                container.appendChild(memberDiv);
-            });
-        }
-
-        function updateRankProgress() {
-            if (!rankData) return;
-            
-            document.getElementById('currentRank').textContent = rankData.currentRank || 'Rank 0';
-            document.getElementById('directBusiness').textContent = `$${(rankData.directVolume || 0).toFixed(2)} / $${(rankData.directTarget || 750).toFixed(2)}`;
-            document.getElementById('teamBusiness').textContent = `$${(rankData.teamVolume || 0).toFixed(2)} / $${(rankData.teamTarget || 2500).toFixed(2)}`;
-            document.getElementById('qualifiedDownlines').textContent = `${rankData.qualifiedDownlines || 0} / ${rankData.downlineTarget || 2}`;
-            document.getElementById('nextRank').textContent = rankData.nextRank || 'Rank 1 ($25/week)';
-        }
-
-        function updateBotStats() {
-            document.getElementById('botTrades').textContent = botStats.trades?.toLocaleString() || '0';
-            document.getElementById('botWinRate').textContent = (botStats.winRate || 0) + '%';
-            document.getElementById('botProfit').textContent = '$' + (botStats.profit || 0).toFixed(2);
         }
 
         // ==================== TIMER FUNCTIONS ====================
@@ -1884,42 +1896,42 @@
 
         function updateUTCTime() {
             const now = new Date();
-            const utcString = now.toUTCString().split(' ')[4];
-            document.getElementById('utcDisplay').textContent = utcString;
+            const hours = now.getUTCHours().toString().padStart(2, '0');
+            const minutes = now.getUTCMinutes().toString().padStart(2, '0');
+            const seconds = now.getUTCSeconds().toString().padStart(2, '0');
+            document.getElementById('utcDisplay').textContent = `${hours}:${minutes}:${seconds} UTC`;
         }
 
         function updateBotTimer() {
             const now = new Date();
             const utcHours = now.getUTCHours();
             
-            let nextWindow;
+            let target = new Date(now);
+            
             if (utcHours < 9) {
-                nextWindow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 9, 0, 0));
+                target.setUTCHours(9, 0, 0, 0);
             } else if (utcHours >= 10) {
-                nextWindow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 9, 0, 0));
+                target.setUTCDate(target.getUTCDate() + 1);
+                target.setUTCHours(9, 0, 0, 0);
             } else {
-                nextWindow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 10, 0, 0));
+                target.setUTCHours(10, 0, 0, 0);
             }
             
-            const diff = nextWindow - now;
+            const diff = target - now;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
             
-            if (diff <= 0) {
-                document.getElementById('botTimer').textContent = '00:00';
-            } else {
-                const hours = Math.floor(diff / 3600000);
-                const minutes = Math.floor((diff % 3600000) / 60000);
-                const seconds = Math.floor((diff % 60000) / 1000);
-                document.getElementById('botTimer').textContent = 
-                    `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-            }
+            document.getElementById('botTimer').textContent = 
+                `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
         }
 
         function checkBotWindow() {
             const now = new Date();
             const utcHours = now.getUTCHours();
-            const windowOpen = utcHours === 9;
+            const windowOpen = utcHours >= 9 && utcHours < 10;
             
-            document.getElementById('windowStatus').textContent = windowOpen 
+            document.getElementById('windowStatus').innerHTML = windowOpen 
                 ? '✅ Window open - Trade now!' 
                 : '⏳ Window closed (9:00-10:00 UTC)';
             document.getElementById('botButton').disabled = !windowOpen;
@@ -1936,31 +1948,32 @@
             const selectedEl = document.getElementById(`package${pkgId}`);
             if (selectedEl) selectedEl.classList.add('selected');
             
-            const pkg = packages.find(p => p.id === pkgId) || { minAmount: 20 };
-            document.getElementById('packageAmount').min = pkg.minAmount;
-            document.getElementById('packageAmount').placeholder = `Min $${pkg.minAmount}`;
+            const pkg = packages.find(p => p.id === pkgId);
+            if (pkg) {
+                document.getElementById('packageAmount').min = pkg.minAmount;
+                document.getElementById('packageAmount').placeholder = `Min $${pkg.minAmount}`;
+            }
             
             showBonusMessage();
         }
 
         function showBonusMessage() {
             const amount = parseFloat(document.getElementById('packageAmount').value) || 0;
-            const pkg = packages.find(p => p.id === selectedPackage) || { minAmount: 20, refBonus: 5 };
+            const pkg = packages.find(p => p.id === selectedPackage);
             const bonusDiv = document.getElementById('bonusMessage');
+            
+            if (!pkg) return;
             
             if (amount < pkg.minAmount) {
                 bonusDiv.textContent = `Minimum amount: $${pkg.minAmount}`;
                 bonusDiv.style.color = '#ff6b6b';
                 document.getElementById('stakeButton').disabled = true;
-            } else if (amount > (userData.fundWallet || 0)) {
-                bonusDiv.textContent = 'Insufficient fund wallet balance';
-                bonusDiv.style.color = '#ff6b6b';
-                document.getElementById('stakeButton').disabled = true;
             } else {
-                bonusDiv.textContent = `💰 Referral Bonus: ${pkg.refBonus}%`;
+                let msg = `💰 Referral Bonus: ${pkg.refBonus}%`;
                 if (pkg.cashBonus && amount >= pkg.minAmount * 2) {
-                    bonusDiv.textContent += ` + $${pkg.cashBonus} cash bonus!`;
+                    msg += ` + $${pkg.cashBonus} cash bonus!`;
                 }
+                bonusDiv.textContent = msg;
                 bonusDiv.style.color = '#00ffd9';
                 document.getElementById('stakeButton').disabled = false;
             }
@@ -1968,37 +1981,24 @@
 
         function createStaking() {
             const amount = parseFloat(document.getElementById('packageAmount').value);
-            const referralId = document.getElementById('referralId').value;
-            const pkg = packages.find(p => p.id === selectedPackage) || { name: 'BASIC', minAmount: 20 };
+            const pkg = packages.find(p => p.id === selectedPackage);
+            
+            if (!pkg) return;
             
             if (!amount || amount < pkg.minAmount) {
                 showToast(`Minimum amount is $${pkg.minAmount}`);
                 return;
             }
             
-            if (amount > (userData.fundWallet || 0)) {
-                showToast('Insufficient balance in fund wallet');
-                return;
-            }
-            
             document.getElementById('modalPkg').textContent = pkg.name;
             document.getElementById('modalAmount').textContent = amount.toFixed(2);
-            
-            let bonusText = '';
-            if (pkg.cashBonus && amount >= pkg.minAmount * 2) {
-                bonusText = `🎁 +$${pkg.cashBonus} Elite Bonus!`;
-            }
-            if (referralId) {
-                bonusText += (bonusText ? ' ' : '') + `🤝 Referral: ${referralId}`;
-            }
-            document.getElementById('modalBonus').textContent = bonusText;
-            
-            currentStakeAmount = amount;
             document.getElementById('investModal').style.display = 'flex';
+            currentStakeAmount = amount;
         }
 
         async function confirmStake() {
             const referralId = document.getElementById('referralId').value;
+            const amount = currentStakeAmount;
             
             showLoading(true);
             try {
@@ -2010,15 +2010,22 @@
                     },
                     body: JSON.stringify({
                         packageId: selectedPackage,
-                        amount: currentStakeAmount,
+                        amount: amount,
                         referralId: referralId || null
                     })
                 });
                 
                 if (!response.ok) throw new Error('Staking failed');
                 
-                await loadAllData();
-                showToast(`Successfully staked $${currentStakeAmount}!`);
+                const result = await response.json();
+                
+                // Reload data
+                await Promise.all([
+                    loadUserProfile(),
+                    loadActiveStakings()
+                ]);
+                
+                showToast(`Successfully staked $${amount}!`);
                 closeInvestModal();
                 document.getElementById('packageAmount').value = '';
                 document.getElementById('referralId').value = '';
@@ -2043,7 +2050,11 @@
                 
                 if (!response.ok) throw new Error('Unstaking failed');
                 
-                await loadAllData();
+                await Promise.all([
+                    loadUserProfile(),
+                    loadActiveStakings()
+                ]);
+                
                 showToast('Unstaked successfully!');
                 
             } catch (error) {
@@ -2056,17 +2067,38 @@
 
         // ==================== MODAL FUNCTIONS ====================
         function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
-        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function openWithdrawModal() { 
+            document.getElementById('withdrawModal').style.display = 'flex';
+            updateWithdrawFee();
+        }
         function openP2PModal() { document.getElementById('p2pModal').style.display = 'flex'; }
         function openTradeModal() { document.getElementById('tradeModal').style.display = 'flex'; }
+        function openRankDetails() { window.location.href = 'salary.html'; }
         
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
         function closeInvestModal() { document.getElementById('investModal').style.display = 'none'; }
         function closeTradeModal() { document.getElementById('tradeModal').style.display = 'none'; }
 
+        function setP2PType(type) {
+            p2pType = type;
+            document.querySelectorAll('#p2pModal .package-card').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function updateWithdrawFee() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+            const fee = Math.max(amount * 0.01, 1);
+            const receive = amount - fee;
+            document.getElementById('withdrawFee').innerHTML = 
+                `You will receive: $${receive.toFixed(2)} (Fee: $${fee.toFixed(2)})`;
+        }
+
         // ==================== PROCESS FUNCTIONS ====================
         async function processDeposit() {
             const amount = parseFloat(document.getElementById('depositAmount').value);
+            const method = document.getElementById('depositMethod').value;
             
             if (!amount || amount < 20) {
                 showToast('Minimum deposit is $20');
@@ -2081,15 +2113,14 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${authToken}`
                     },
-                    body: JSON.stringify({ amount })
+                    body: JSON.stringify({ amount, method })
                 });
                 
                 if (!response.ok) throw new Error('Deposit failed');
                 
-                const result = await response.json();
-                showToast(`Deposit address: ${result.address}`);
-                closeModal('depositModal');
-                document.getElementById('depositAmount').value = '';
+                const data = await response.json();
+                document.getElementById('depositAddress').textContent = data.address;
+                showToast('Deposit address generated!');
                 
             } catch (error) {
                 console.error('Deposit error:', error);
@@ -2101,6 +2132,7 @@
 
         async function processWithdraw() {
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('withdrawMethod').value;
             const address = document.getElementById('withdrawWalletAddress').value;
             
             const pinFields = document.querySelectorAll('#withdrawModal .pin-field');
@@ -2121,11 +2153,6 @@
                 return;
             }
             
-            if (amount > (userData.withdrawWallet || 0)) {
-                showToast('Insufficient withdrawal balance');
-                return;
-            }
-            
             showLoading(true);
             try {
                 const response = await fetch(`${API_BASE_URL}/wallet/withdraw`, {
@@ -2134,7 +2161,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${authToken}`
                     },
-                    body: JSON.stringify({ amount, address, pin })
+                    body: JSON.stringify({ amount, method, address, pin })
                 });
                 
                 if (!response.ok) throw new Error('Withdrawal failed');
@@ -2177,14 +2204,9 @@
                 return;
             }
             
-            if (amount > (userData.fundWallet || 0)) {
-                showToast('Insufficient balance');
-                return;
-            }
-            
             showLoading(true);
             try {
-                const response = await fetch(`${API_BASE_URL}/p2p/send`, {
+                const response = await fetch(`${API_BASE_URL}/p2p/${p2pType}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2211,7 +2233,8 @@
             }
         }
 
-        async function processTrade() {
+        // Trade function - Hardcoded as per your instruction
+        function processTrade() {
             const amount = parseFloat(document.getElementById('tradeAmount').value);
             
             const pinFields = document.querySelectorAll('#tradeModal .pin-field');
@@ -2227,44 +2250,23 @@
                 return;
             }
             
-            if (amount > (userData.fundWallet || 0)) {
-                showToast('Insufficient balance');
-                return;
-            }
-            
             showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/bot/trade`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ amount, pin })
-                });
+            setTimeout(() => {
+                const win = Math.random() > 0.3;
+                const profitPercent = win ? (Math.random() * 3 + 2) : -(Math.random() * 2 + 1);
+                const profit = amount * profitPercent / 100;
                 
-                if (!response.ok) throw new Error('Trade failed');
-                
-                const result = await response.json();
-                await loadUserProfile();
-                await loadBotStats();
-                
-                if (result.win) {
-                    showToast(`🎉 Trade won! Profit: $${result.profit.toFixed(2)}`);
+                if (win) {
+                    showToast(`🎉 Trade won! Profit: $${profit.toFixed(2)}`);
                 } else {
-                    showToast(`😞 Trade lost. Loss: $${Math.abs(result.profit).toFixed(2)}`);
+                    showToast(`😞 Trade lost. Loss: $${Math.abs(profit).toFixed(2)}`);
                 }
                 
                 closeTradeModal();
                 document.getElementById('tradeAmount').value = '';
                 pinFields.forEach(f => f.value = '');
-                
-            } catch (error) {
-                console.error('Trade error:', error);
-                showToast('Trade failed', 'error');
-            } finally {
                 showLoading(false);
-            }
+            }, 2000);
         }
 
         async function attachWallet() {
@@ -2322,7 +2324,6 @@
                 
                 if (!response.ok) throw new Error('Failed to update profile');
                 
-                userData.userName = newName;
                 showToast('Profile saved!');
                 
             } catch (error) {
@@ -2360,14 +2361,19 @@
         }
 
         function copyWalletAddress() {
-            navigator.clipboard.writeText(userData.walletAddress || '');
-            showToast('Wallet address copied!');
+            const addr = document.getElementById('walletAddressDisplay').textContent;
+            if (addr && addr !== '-') {
+                navigator.clipboard.writeText(addr);
+                showToast('Wallet address copied!');
+            }
         }
 
         function copyReferralLink() {
-            const link = `https://gainixai.live/ref/${userData.referralCode || 'user'}`;
-            navigator.clipboard.writeText(link);
-            showToast('Referral link copied!');
+            const link = document.getElementById('refLinkDisplay').textContent;
+            if (link && link !== '-') {
+                navigator.clipboard.writeText(`https://${link}`);
+                showToast('Referral link copied!');
+            }
         }
 
         function uploadAvatar(input) {
@@ -2425,9 +2431,11 @@
         window.openWithdrawModal = openWithdrawModal;
         window.openP2PModal = openP2PModal;
         window.openTradeModal = openTradeModal;
+        window.openRankDetails = openRankDetails;
         window.closeModal = closeModal;
         window.closeInvestModal = closeInvestModal;
         window.closeTradeModal = closeTradeModal;
+        window.setP2PType = setP2PType;
         window.processDeposit = processDeposit;
         window.processWithdraw = processWithdraw;
         window.processP2P = processP2P;
@@ -2440,6 +2448,7 @@
         window.logout = logout;
         window.goToHistory = goToHistory;
         window.moveToNext = moveToNext;
+        window.updateWithdrawFee = updateWithdrawFee;
     </script>
 </body>
 </html>
