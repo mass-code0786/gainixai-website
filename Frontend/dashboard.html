@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>GAINIX AI - Dashboard</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Tumhare existing styles yahan rahenge - koi change nahi */
         * {
             margin: 0;
             padding: 0;
@@ -723,7 +721,7 @@
             margin: 14px 0;
         }
 
-        .package-input input {
+        .package-input input, .package-input select {
             width: 100%;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,255,209,0.2);
@@ -734,9 +732,13 @@
             margin-bottom: 8px;
         }
 
-        .package-input input::placeholder {
+        .package-input input::placeholder, .package-input select {
             color: #8899aa;
-            font-size: 11px;
+        }
+
+        .package-input select option {
+            background: #0a121c;
+            color: #fff;
         }
 
         .confirm-btn {
@@ -780,18 +782,21 @@
             font-size: 14px;
         }
 
-        .staking-dates {
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
+        .staking-details {
+            font-size: 11px;
             color: #8899aa;
-            margin: 4px 0;
         }
 
         .staking-roi {
             color: #00ffd9;
             font-size: 11px;
             margin: 6px 0;
+        }
+
+        .staking-dates, .staking-days {
+            font-size: 10px;
+            color: #8899aa;
+            margin: 2px 0;
         }
 
         .unstake-btn {
@@ -1133,65 +1138,11 @@
             color: #8899aa;
             font-style: italic;
         }
-
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #00ffd9;
-            color: #030507;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 3000;
-            display: none;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        @keyframes slideUp {
-            from { bottom: 50px; opacity: 0; }
-            to { bottom: 100px; opacity: 1; }
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(3,5,10,0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0,255,209,0.1);
-            border-top: 3px solid #00ffd9;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
     <div class="premium-bg"></div>
     <div class="grid-overlay"></div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-    </div>
 
     <div class="dashboard">
         <!-- Header -->
@@ -1211,7 +1162,7 @@
         </div>
 
         <!-- Current Rank Banner -->
-        <div class="current-rank-banner" onclick="openRankDetails()">
+        <div class="current-rank-banner" onclick="window.location.href='salary.html'">
             <span><i class="fas fa-star" style="color: #030507;"></i> Current Rank</span>
             <span class="rank-badge" id="topCurrentRank">0 ⭐</span>
         </div>
@@ -1226,7 +1177,7 @@
                     <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
                 </div>
                 <div class="profile-info">
-                    <input type="text" id="userName" value="Loading...">
+                    <input type="text" id="userName" value="User">
                     <p><i class="fas fa-id-card"></i> ID: <span id="userId">-</span></p>
                     <p><i class="fas fa-envelope"></i> <span id="userEmail">-</span></p>
                     <button class="save-profile-btn" onclick="saveProfile()">
@@ -1336,7 +1287,7 @@
             </div>
         </div>
 
-        <!-- Bot Section - Hardcoded (as per your instruction) -->
+        <!-- Bot Section -->
         <div class="unique-bot">
             <div class="bot-3d-container">
                 <div class="bot-hologram">
@@ -1349,15 +1300,15 @@
             </div>
             <div class="bot-stats">
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botTrades">125,789</div>
+                    <div class="bot-stat-value" id="botTrades">0</div>
                     <div class="bot-stat-label">Trades</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botWinRate">94.2%</div>
+                    <div class="bot-stat-value" id="botWinRate">0%</div>
                     <div class="bot-stat-label">Win Rate</div>
                 </div>
                 <div class="bot-stat">
-                    <div class="bot-stat-value" id="botProfit">$24,567</div>
+                    <div class="bot-stat-value" id="botProfit">$0</div>
                     <div class="bot-stat-label">Profit</div>
                 </div>
             </div>
@@ -1371,16 +1322,41 @@
 
         <!-- Staking Packages -->
         <div class="section-title"><i class="fas fa-box"></i> STAKING</div>
-        <div class="staking-packages" id="packagesContainer">
-            <!-- Packages will be loaded from API -->
+        <div class="staking-packages">
+            <div class="package-card selected" onclick="selectPackage(1)" id="package1">
+                <div class="package-name">BASIC</div>
+                <div class="package-days">90 Days</div>
+                <div class="package-roi">1-1.3%</div>
+                <div class="referral-bonus">5% Ref</div>
+                <div class="package-min">$20</div>
+            </div>
+            <div class="package-card" onclick="selectPackage(2)" id="package2">
+                <div class="package-name">PRO</div>
+                <div class="package-days">180 Days</div>
+                <div class="package-roi">1.3-1.6%</div>
+                <div class="referral-bonus">7% Ref</div>
+                <div class="package-min">$150</div>
+            </div>
+            <div class="package-card" onclick="selectPackage(3)" id="package3">
+                <div class="package-name">ELITE</div>
+                <div class="package-days">450 Days</div>
+                <div class="package-roi">1.5-2%</div>
+                <div class="referral-bonus">10% Ref + $100 Bonus</div>
+                <div class="package-min">$300</div>
+            </div>
         </div>
 
         <!-- Package Input -->
         <div class="package-input">
-            <input type="number" id="packageAmount" placeholder="Amount" min="0" oninput="showBonusMessage()">
+            <select id="packageSelect" onchange="showBonusMessage()">
+                <option value="BASIC">BASIC (90 Days)</option>
+                <option value="PRO">PRO (180 Days)</option>
+                <option value="ELITE">ELITE (450 Days)</option>
+            </select>
+            <input type="number" id="packageAmount" placeholder="Amount" min="20" oninput="showBonusMessage()">
             <input type="text" id="referralId" placeholder="Sponsor ID (Optional)">
             <div id="bonusMessage" class="bonus-msg"></div>
-            <button class="confirm-btn" onclick="createStaking()" id="stakeButton" disabled>STAKE NOW</button>
+            <button class="confirm-btn" onclick="showInvestModal()">STAKE NOW</button>
         </div>
 
         <!-- Active Stakings -->
@@ -1459,17 +1435,8 @@
                 <h3>Deposit Funds</h3>
                 <span class="close-modal" onclick="closeModal('depositModal')">&times;</span>
             </div>
-            <select id="depositMethod" class="modal-input">
-                <option value="USDT_TRC20">USDT (TRC20)</option>
-                <option value="USDT_ERC20">USDT (ERC20)</option>
-                <option value="BTC">Bitcoin (BTC)</option>
-            </select>
             <input type="number" id="depositAmount" placeholder="Amount (Min $20)" class="modal-input" min="20">
-            <div style="background: rgba(0,255,209,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
-                <p style="font-size: 11px; color: #8899aa;">Deposit Address:</p>
-                <p style="font-size: 12px; word-break: break-all;" id="depositAddress">Loading...</p>
-            </div>
-            <button class="modal-btn" onclick="processDeposit()">GENERATE ADDRESS</button>
+            <button class="modal-btn" onclick="processDeposit()">DEPOSIT</button>
         </div>
     </div>
 
@@ -1480,23 +1447,8 @@
                 <h3>Withdraw Funds</h3>
                 <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
             </div>
-            <select id="withdrawMethod" class="modal-input">
-                <option value="USDT_TRC20">USDT (TRC20)</option>
-                <option value="USDT_ERC20">USDT (ERC20)</option>
-                <option value="BTC">Bitcoin (BTC)</option>
-            </select>
-            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10" oninput="updateWithdrawFee()">
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min $10)" class="modal-input" min="10">
             <input type="text" id="withdrawWalletAddress" placeholder="BEP20 Wallet Address" class="modal-input">
-            <div style="background: rgba(255,0,0,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
-                <p style="font-size: 11px; color: #ff4444;">Fee: 1% (min $1)</p>
-                <p style="font-size: 12px;" id="withdrawFee">You will receive: $0.00</p>
-            </div>
-            <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'withdrawModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'withdrawModal')">
-            </div>
             <button class="modal-btn" onclick="processWithdraw()">WITHDRAW</button>
         </div>
     </div>
@@ -1508,17 +1460,13 @@
                 <h3>P2P Transfer</h3>
                 <span class="close-modal" onclick="closeModal('p2pModal')">&times;</span>
             </div>
-            <div style="display: flex; gap: 10px; margin: 10px 0;">
-                <button class="package-card" style="flex: 1;" onclick="setP2PType('send')">Send</button>
-                <button class="package-card" style="flex: 1;" onclick="setP2PType('request')">Request</button>
-            </div>
             <input type="text" id="recipientId" placeholder="Recipient User ID" class="modal-input">
             <input type="number" id="p2pAmount" placeholder="Amount" class="modal-input">
             <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'p2pModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'p2pModal')">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2)">
+                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3)">
             </div>
             <button class="modal-btn" onclick="processP2P()">SEND</button>
         </div>
@@ -1534,921 +1482,12 @@
             <p>Package: <span id="modalPkg"></span></p>
             <p>Amount: $<span id="modalAmount"></span></p>
             <p id="modalBonus" style="color: #00ffd9; font-size: 12px;"></p>
-            <button class="modal-btn" onclick="confirmStake()">CONFIRM</button>
+            <button class="modal-btn" onclick="createStaking()">CONFIRM</button>
             <button class="modal-btn secondary" onclick="closeInvestModal()">CANCEL</button>
         </div>
     </div>
 
-    <!-- Trade Modal -->
-    <div id="tradeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Place Trade</h3>
-                <span class="close-modal" onclick="closeTradeModal()">&times;</span>
-            </div>
-            <p>AI Quantum Bot</p>
-            <input type="number" id="tradeAmount" placeholder="Amount" class="modal-input" min="10">
-            <div style="background: rgba(0,255,209,0.1); padding: 12px; border-radius: 12px; margin: 8px 0;">
-                <p style="font-size: 11px; color: #8899aa;">Potential Return: 2% - 5% in 5 minutes</p>
-            </div>
-            <div class="pin-input">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,0, 'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,1, 'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,2, 'tradeModal')">
-                <input type="password" class="pin-field" maxlength="1" onkeyup="moveToNext(this,3, 'tradeModal')">
-            </div>
-            <button class="modal-btn" onclick="processTrade()">PLACE TRADE</button>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div id="toast" class="toast"></div>
-
-    <script>
-        // ==================== CONFIGURATION ====================
-        const API_BASE_URL = 'https://gainixai-backend.onrender.com/api';
-        const authToken = localStorage.getItem('token');
-        
-        // Agar token nahi hai toh login page pe bhejo
-        if (!authToken) {
-            window.location.href = 'index.html';
-        }
-
-        // ==================== GLOBAL VARIABLES ====================
-        let selectedPackage = null;
-        let currentStakeAmount = 0;
-        let p2pType = 'send';
-        let packages = [];
-
-        // ==================== INITIALIZATION ====================
-        document.addEventListener('DOMContentLoaded', async function() {
-            showLoading(true);
-            try {
-                // Saare API calls ek saath
-                await Promise.all([
-                    loadUserProfile(),
-                    loadPackages(),
-                    loadActiveStakings(),
-                    loadLevelIncome(),
-                    loadDirectMembers(),
-                    loadRankProgress(),
-                    loadDepositAddress()
-                ]);
-                startTimers();
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showToast('Failed to load data. Please refresh.', 'error');
-            } finally {
-                showLoading(false);
-            }
-        });
-
-        // ==================== API CALLS ====================
-        
-        // 1. User Profile API
-        async function loadUserProfile() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/user/profile`, {
-                    headers: { 
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Profile load failed');
-                }
-                
-                const data = await response.json();
-                
-                // Update UI with API data
-                document.getElementById('userName').value = data.userName || 'User';
-                document.getElementById('userId').textContent = data.userId || '-';
-                document.getElementById('userEmail').textContent = data.email || '-';
-                
-                const walletAddr = data.walletAddress || 'Not connected';
-                document.getElementById('walletAddressDisplay').textContent = 
-                    walletAddr.length > 10 ? walletAddr.substring(0,6) + '...' + walletAddr.substring(walletAddr.length-4) : walletAddr;
-                
-                document.getElementById('refLinkDisplay').textContent = `gainixai.live/ref/${data.referralCode || 'user'}`;
-                
-                // Balances
-                document.getElementById('fundWallet').textContent = `$${(data.fundWallet || 0).toFixed(2)}`;
-                document.getElementById('withdrawWallet').textContent = `$${(data.withdrawWallet || 0).toFixed(2)}`;
-                document.getElementById('p2pBalance').textContent = `$${(data.p2pBalance || 0).toFixed(2)}`;
-                document.getElementById('totalStaked').textContent = `$${(data.totalStaked || 0).toFixed(2)}`;
-                document.getElementById('stakingCount').textContent = data.stakingCount || 0;
-                
-                // Income
-                document.getElementById('directIncome').textContent = `$${(data.directIncome || 0).toFixed(2)}`;
-                document.getElementById('stakingIncome').textContent = `$${(data.stakingIncome || 0).toFixed(2)}`;
-                document.getElementById('totalLevelIncome').textContent = `$${(data.levelIncome || 0).toFixed(2)}`;
-                document.getElementById('totalSalaryIncome').textContent = `$${(data.salaryIncome || 0).toFixed(2)}`;
-                
-                // Today's earnings
-                document.getElementById('directToday').innerHTML = `+$${(data.directIncomeToday || 0).toFixed(2)} today`;
-                document.getElementById('stakingIncomeToday').innerHTML = `+$${(data.stakingIncomeToday || 0).toFixed(2)} today`;
-                document.getElementById('levelIncomeToday').innerHTML = `+$${(data.levelIncomeToday || 0).toFixed(2)} today`;
-                document.getElementById('salaryIncomeToday').innerHTML = `+$${(data.salaryIncomeToday || 0).toFixed(2)} today`;
-                
-                // Rank
-                const stars = '⭐'.repeat(data.rank || 0);
-                document.getElementById('topCurrentRank').innerHTML = `${data.rank || 0} ${stars}`;
-                
-                // Avatar
-                if (data.avatar) {
-                    document.getElementById('avatarIcon').style.display = 'none';
-                    document.getElementById('avatarImage').src = data.avatar;
-                    document.getElementById('avatarImage').style.display = 'block';
-                }
-                
-                // Wallet fields
-                if (data.bep20Address) {
-                    document.getElementById('bep20Address').value = data.bep20Address;
-                }
-                
-            } catch (error) {
-                console.error('Profile API error:', error);
-                showToast('Profile load failed', 'error');
-                
-                // Default values dikhao but error nahi
-                document.getElementById('userName').value = 'User';
-                document.getElementById('userId').textContent = 'ERROR';
-                document.getElementById('userEmail').textContent = 'error@load.com';
-            }
-        }
-
-        // 2. Packages API
-        async function loadPackages() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/staking/packages`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Packages load failed');
-                
-                packages = await response.json();
-                
-                const container = document.getElementById('packagesContainer');
-                container.innerHTML = '';
-                
-                packages.forEach(pkg => {
-                    const pkgDiv = document.createElement('div');
-                    pkgDiv.className = 'package-card';
-                    pkgDiv.id = `package${pkg.id}`;
-                    pkgDiv.setAttribute('onclick', `selectPackage(${pkg.id})`);
-                    pkgDiv.innerHTML = `
-                        <div class="package-name">${pkg.name}</div>
-                        <div class="package-days">${pkg.days} Days</div>
-                        <div class="package-roi">${pkg.minRoi}-${pkg.maxRoi}%</div>
-                        <div class="referral-bonus">${pkg.refBonus}% Ref</div>
-                        ${pkg.cashBonus ? '<div class="referral-bonus">+$' + pkg.cashBonus + ' Bonus</div>' : ''}
-                        <div class="package-min">$${pkg.minAmount}</div>
-                    `;
-                    container.appendChild(pkgDiv);
-                });
-                
-                if (packages.length > 0) selectPackage(packages[0].id);
-                
-            } catch (error) {
-                console.error('Packages API error:', error);
-                document.getElementById('packagesContainer').innerHTML = '<div class="no-data">Packages unavailable</div>';
-            }
-        }
-
-        // 3. Active Stakings API
-        async function loadActiveStakings() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/staking/active`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Stakings load failed');
-                
-                const stakes = await response.json();
-                const container = document.getElementById('activeStakingsList');
-                
-                if (!stakes || stakes.length === 0) {
-                    container.innerHTML = '<div class="no-data">No active stakings</div>';
-                    return;
-                }
-                
-                container.innerHTML = '';
-                stakes.forEach(stake => {
-                    const stakeDiv = document.createElement('div');
-                    stakeDiv.className = 'staking-item';
-                    
-                    const canUnstake = new Date(stake.endDate) <= new Date();
-                    
-                    stakeDiv.innerHTML = `
-                        <div class="staking-header">
-                            <span class="staking-package">${stake.package}</span>
-                            <span class="staking-amount">$${stake.amount.toFixed(2)}</span>
-                        </div>
-                        <div class="staking-dates">
-                            <span>Start: ${stake.startDate}</span>
-                            <span>End: ${stake.endDate}</span>
-                        </div>
-                        <div class="staking-roi">Daily ROI: ${stake.roi}% | Earned: $${(stake.earned || 0).toFixed(2)}</div>
-                        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 8px 0;">
-                            <div style="width: ${stake.progress}%; height: 100%; background: linear-gradient(90deg, #00ffd9, #0099ff); border-radius: 2px;"></div>
-                        </div>
-                        <button class="unstake-btn ${canUnstake ? 'active' : ''}" 
-                                onclick="unstakeStaking(${stake.id})" 
-                                ${canUnstake ? '' : 'disabled'}>
-                            ${canUnstake ? 'UNSTAKE NOW' : 'Locked until ' + stake.endDate}
-                        </button>
-                    `;
-                    container.appendChild(stakeDiv);
-                });
-                
-            } catch (error) {
-                console.error('Stakings API error:', error);
-                document.getElementById('activeStakingsList').innerHTML = '<div class="no-data">No active stakings</div>';
-            }
-        }
-
-        // 4. Level Income API
-        async function loadLevelIncome() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/income/level`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Level income load failed');
-                
-                const levels = await response.json();
-                const tbody = document.getElementById('levelIncomeBody');
-                
-                tbody.innerHTML = '';
-                levels.forEach(level => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>Level ${level.level}</td>
-                        <td>${level.percent}%</td>
-                        <td>$${level.today.toFixed(2)}</td>
-                        <td class="${level.status === 'Active' ? 'text-success' : 'text-muted'}">${level.status}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-                
-            } catch (error) {
-                console.error('Level income API error:', error);
-                document.getElementById('levelIncomeBody').innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
-            }
-        }
-
-        // 5. Direct Members API
-        async function loadDirectMembers() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/team/direct`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Direct members load failed');
-                
-                const members = await response.json();
-                const container = document.getElementById('directMembersList');
-                document.getElementById('directCount').textContent = members.length;
-                
-                if (!members || members.length === 0) {
-                    container.innerHTML = '<div class="no-data">No direct referrals yet</div>';
-                    return;
-                }
-                
-                container.innerHTML = '';
-                members.forEach(member => {
-                    const memberDiv = document.createElement('div');
-                    memberDiv.className = 'member-item';
-                    memberDiv.innerHTML = `
-                        <div class="member-info">
-                            <div class="member-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="member-details">
-                                <div class="member-name">${member.name || 'User'}</div>
-                                <div class="member-id">${member.userId}</div>
-                            </div>
-                        </div>
-                        <div class="member-stats">
-                            <div>$${(member.staked || 0).toFixed(2)}</div>
-                            <div class="member-rank">${'⭐'.repeat(member.rank || 0)}</div>
-                        </div>
-                    `;
-                    container.appendChild(memberDiv);
-                });
-                
-            } catch (error) {
-                console.error('Direct members API error:', error);
-                document.getElementById('directMembersList').innerHTML = '<div class="no-data">No members</div>';
-            }
-        }
-
-        // 6. Rank Progress API
-        async function loadRankProgress() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/rank/progress`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Rank progress load failed');
-                
-                const rank = await response.json();
-                
-                document.getElementById('currentRank').textContent = rank.currentRank || 'Rank 0';
-                document.getElementById('directBusiness').textContent = `$${rank.directVolume || 0} / $${rank.directTarget || 0}`;
-                document.getElementById('teamBusiness').textContent = `$${rank.teamVolume || 0} / $${rank.teamTarget || 0}`;
-                document.getElementById('qualifiedDownlines').textContent = `${rank.qualifiedDownlines || 0} / ${rank.downlineTarget || 0}`;
-                document.getElementById('nextRank').textContent = rank.nextRank || '-';
-                
-            } catch (error) {
-                console.error('Rank progress API error:', error);
-            }
-        }
-
-        // 7. Deposit Address API
-        async function loadDepositAddress() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/wallet/deposit-address`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Deposit address load failed');
-                
-                const data = await response.json();
-                document.getElementById('depositAddress').textContent = data.address || 'TXYZ123...';
-                
-            } catch (error) {
-                console.error('Deposit address API error:', error);
-                document.getElementById('depositAddress').textContent = 'Please select method';
-            }
-        }
-
-        // ==================== TIMER FUNCTIONS ====================
-        function startTimers() {
-            updateUTCTime();
-            setInterval(updateUTCTime, 1000);
-            updateBotTimer();
-            setInterval(updateBotTimer, 1000);
-            checkBotWindow();
-            setInterval(checkBotWindow, 1000);
-        }
-
-        function updateUTCTime() {
-            const now = new Date();
-            const hours = now.getUTCHours().toString().padStart(2, '0');
-            const minutes = now.getUTCMinutes().toString().padStart(2, '0');
-            const seconds = now.getUTCSeconds().toString().padStart(2, '0');
-            document.getElementById('utcDisplay').textContent = `${hours}:${minutes}:${seconds} UTC`;
-        }
-
-        function updateBotTimer() {
-            const now = new Date();
-            const utcHours = now.getUTCHours();
-            
-            let target = new Date(now);
-            
-            if (utcHours < 9) {
-                target.setUTCHours(9, 0, 0, 0);
-            } else if (utcHours >= 10) {
-                target.setUTCDate(target.getUTCDate() + 1);
-                target.setUTCHours(9, 0, 0, 0);
-            } else {
-                target.setUTCHours(10, 0, 0, 0);
-            }
-            
-            const diff = target - now;
-            const hours = Math.floor(diff / 3600000);
-            const minutes = Math.floor((diff % 3600000) / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
-            
-            document.getElementById('botTimer').textContent = 
-                `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-        }
-
-        function checkBotWindow() {
-            const now = new Date();
-            const utcHours = now.getUTCHours();
-            const windowOpen = utcHours >= 9 && utcHours < 10;
-            
-            document.getElementById('windowStatus').innerHTML = windowOpen 
-                ? '✅ Window open - Trade now!' 
-                : '⏳ Window closed (9:00-10:00 UTC)';
-            document.getElementById('botButton').disabled = !windowOpen;
-        }
-
-        // ==================== STAKING FUNCTIONS ====================
-        function selectPackage(pkgId) {
-            selectedPackage = pkgId;
-            
-            document.querySelectorAll('.package-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            const selectedEl = document.getElementById(`package${pkgId}`);
-            if (selectedEl) selectedEl.classList.add('selected');
-            
-            const pkg = packages.find(p => p.id === pkgId);
-            if (pkg) {
-                document.getElementById('packageAmount').min = pkg.minAmount;
-                document.getElementById('packageAmount').placeholder = `Min $${pkg.minAmount}`;
-            }
-            
-            showBonusMessage();
-        }
-
-        function showBonusMessage() {
-            const amount = parseFloat(document.getElementById('packageAmount').value) || 0;
-            const pkg = packages.find(p => p.id === selectedPackage);
-            const bonusDiv = document.getElementById('bonusMessage');
-            
-            if (!pkg) return;
-            
-            if (amount < pkg.minAmount) {
-                bonusDiv.textContent = `Minimum amount: $${pkg.minAmount}`;
-                bonusDiv.style.color = '#ff6b6b';
-                document.getElementById('stakeButton').disabled = true;
-            } else {
-                let msg = `💰 Referral Bonus: ${pkg.refBonus}%`;
-                if (pkg.cashBonus && amount >= pkg.minAmount * 2) {
-                    msg += ` + $${pkg.cashBonus} cash bonus!`;
-                }
-                bonusDiv.textContent = msg;
-                bonusDiv.style.color = '#00ffd9';
-                document.getElementById('stakeButton').disabled = false;
-            }
-        }
-
-        function createStaking() {
-            const amount = parseFloat(document.getElementById('packageAmount').value);
-            const pkg = packages.find(p => p.id === selectedPackage);
-            
-            if (!pkg) return;
-            
-            if (!amount || amount < pkg.minAmount) {
-                showToast(`Minimum amount is $${pkg.minAmount}`);
-                return;
-            }
-            
-            document.getElementById('modalPkg').textContent = pkg.name;
-            document.getElementById('modalAmount').textContent = amount.toFixed(2);
-            document.getElementById('investModal').style.display = 'flex';
-            currentStakeAmount = amount;
-        }
-
-        async function confirmStake() {
-            const referralId = document.getElementById('referralId').value;
-            const amount = currentStakeAmount;
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/staking/create`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({
-                        packageId: selectedPackage,
-                        amount: amount,
-                        referralId: referralId || null
-                    })
-                });
-                
-                if (!response.ok) throw new Error('Staking failed');
-                
-                const result = await response.json();
-                
-                // Reload data
-                await Promise.all([
-                    loadUserProfile(),
-                    loadActiveStakings()
-                ]);
-                
-                showToast(`Successfully staked $${amount}!`);
-                closeInvestModal();
-                document.getElementById('packageAmount').value = '';
-                document.getElementById('referralId').value = '';
-                
-            } catch (error) {
-                console.error('Staking error:', error);
-                showToast('Staking failed', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function unstakeStaking(stakeId) {
-            if (!confirm('Are you sure you want to unstake?')) return;
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/staking/unstake/${stakeId}`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                
-                if (!response.ok) throw new Error('Unstaking failed');
-                
-                await Promise.all([
-                    loadUserProfile(),
-                    loadActiveStakings()
-                ]);
-                
-                showToast('Unstaked successfully!');
-                
-            } catch (error) {
-                console.error('Unstaking error:', error);
-                showToast('Unstaking failed', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ==================== MODAL FUNCTIONS ====================
-        function openDepositModal() { document.getElementById('depositModal').style.display = 'flex'; }
-        function openWithdrawModal() { 
-            document.getElementById('withdrawModal').style.display = 'flex';
-            updateWithdrawFee();
-        }
-        function openP2PModal() { document.getElementById('p2pModal').style.display = 'flex'; }
-        function openTradeModal() { document.getElementById('tradeModal').style.display = 'flex'; }
-        function openRankDetails() { window.location.href = 'salary.html'; }
-        
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-        function closeInvestModal() { document.getElementById('investModal').style.display = 'none'; }
-        function closeTradeModal() { document.getElementById('tradeModal').style.display = 'none'; }
-
-        function setP2PType(type) {
-            p2pType = type;
-            document.querySelectorAll('#p2pModal .package-card').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-        }
-
-        function updateWithdrawFee() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-            const fee = Math.max(amount * 0.01, 1);
-            const receive = amount - fee;
-            document.getElementById('withdrawFee').innerHTML = 
-                `You will receive: $${receive.toFixed(2)} (Fee: $${fee.toFixed(2)})`;
-        }
-
-        // ==================== PROCESS FUNCTIONS ====================
-        async function processDeposit() {
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            const method = document.getElementById('depositMethod').value;
-            
-            if (!amount || amount < 20) {
-                showToast('Minimum deposit is $20');
-                return;
-            }
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/wallet/deposit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ amount, method })
-                });
-                
-                if (!response.ok) throw new Error('Deposit failed');
-                
-                const data = await response.json();
-                document.getElementById('depositAddress').textContent = data.address;
-                showToast('Deposit address generated!');
-                
-            } catch (error) {
-                console.error('Deposit error:', error);
-                showToast('Deposit failed', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function processWithdraw() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const method = document.getElementById('withdrawMethod').value;
-            const address = document.getElementById('withdrawWalletAddress').value;
-            
-            const pinFields = document.querySelectorAll('#withdrawModal .pin-field');
-            const pin = Array.from(pinFields).map(f => f.value).join('');
-            
-            if (!amount || amount < 10) {
-                showToast('Minimum withdrawal is $10');
-                return;
-            }
-            
-            if (!address || !address.startsWith('0x') || address.length < 42) {
-                showToast('Invalid BEP20 address');
-                return;
-            }
-            
-            if (pin.length !== 4) {
-                showToast('Enter 4-digit PIN');
-                return;
-            }
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/wallet/withdraw`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ amount, method, address, pin })
-                });
-                
-                if (!response.ok) throw new Error('Withdrawal failed');
-                
-                await loadUserProfile();
-                showToast('Withdrawal request submitted!');
-                closeModal('withdrawModal');
-                
-                document.getElementById('withdrawAmount').value = '';
-                document.getElementById('withdrawWalletAddress').value = '';
-                pinFields.forEach(f => f.value = '');
-                
-            } catch (error) {
-                console.error('Withdrawal error:', error);
-                showToast('Withdrawal failed', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function processP2P() {
-            const recipient = document.getElementById('recipientId').value;
-            const amount = parseFloat(document.getElementById('p2pAmount').value);
-            
-            const pinFields = document.querySelectorAll('#p2pModal .pin-field');
-            const pin = Array.from(pinFields).map(f => f.value).join('');
-            
-            if (!recipient) {
-                showToast('Enter recipient ID');
-                return;
-            }
-            
-            if (!amount || amount < 1) {
-                showToast('Enter valid amount');
-                return;
-            }
-            
-            if (pin.length !== 4) {
-                showToast('Enter 4-digit PIN');
-                return;
-            }
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/p2p/${p2pType}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ recipient, amount, pin })
-                });
-                
-                if (!response.ok) throw new Error('P2P transfer failed');
-                
-                await loadUserProfile();
-                showToast(`$${amount} sent to ${recipient}!`);
-                closeModal('p2pModal');
-                
-                document.getElementById('recipientId').value = '';
-                document.getElementById('p2pAmount').value = '';
-                pinFields.forEach(f => f.value = '');
-                
-            } catch (error) {
-                console.error('P2P error:', error);
-                showToast('Transfer failed', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Trade function - Hardcoded as per your instruction
-        function processTrade() {
-            const amount = parseFloat(document.getElementById('tradeAmount').value);
-            
-            const pinFields = document.querySelectorAll('#tradeModal .pin-field');
-            const pin = Array.from(pinFields).map(f => f.value).join('');
-            
-            if (!amount || amount < 10) {
-                showToast('Minimum trade amount is $10');
-                return;
-            }
-            
-            if (pin.length !== 4) {
-                showToast('Enter 4-digit PIN');
-                return;
-            }
-            
-            showLoading(true);
-            setTimeout(() => {
-                const win = Math.random() > 0.3;
-                const profitPercent = win ? (Math.random() * 3 + 2) : -(Math.random() * 2 + 1);
-                const profit = amount * profitPercent / 100;
-                
-                if (win) {
-                    showToast(`🎉 Trade won! Profit: $${profit.toFixed(2)}`);
-                } else {
-                    showToast(`😞 Trade lost. Loss: $${Math.abs(profit).toFixed(2)}`);
-                }
-                
-                closeTradeModal();
-                document.getElementById('tradeAmount').value = '';
-                pinFields.forEach(f => f.value = '');
-                showLoading(false);
-            }, 2000);
-        }
-
-        async function attachWallet() {
-            const address = document.getElementById('bep20Address').value;
-            const pin = document.getElementById('walletPin').value;
-            
-            if (!address || !address.startsWith('0x') || address.length < 42) {
-                showToast('Invalid BEP20 address');
-                return;
-            }
-            
-            if (!pin || pin.length !== 4 || !/^\d+$/.test(pin)) {
-                showToast('PIN must be 4 digits');
-                return;
-            }
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/wallet/attach`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ address, pin })
-                });
-                
-                if (!response.ok) throw new Error('Failed to attach wallet');
-                
-                await loadUserProfile();
-                showToast('Wallet attached successfully!');
-                document.getElementById('walletPin').value = '';
-                
-            } catch (error) {
-                console.error('Attach wallet error:', error);
-                showToast('Failed to attach wallet', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function saveProfile() {
-            const newName = document.getElementById('userName').value;
-            
-            showLoading(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/user/profile`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify({ userName: newName })
-                });
-                
-                if (!response.ok) throw new Error('Failed to update profile');
-                
-                showToast('Profile saved!');
-                
-            } catch (error) {
-                console.error('Profile update error:', error);
-                showToast('Failed to update profile', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ==================== UTILITY FUNCTIONS ====================
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
-        }
-
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.style.backgroundColor = type === 'error' ? '#ff6b6b' : '#00ffd9';
-            toast.style.color = type === 'error' ? '#fff' : '#030507';
-            toast.style.display = 'block';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        function moveToNext(current, index, modalId) {
-            if (current.value.length === 1) {
-                const fields = document.querySelectorAll(`#${modalId} .pin-field`);
-                if (index < fields.length - 1) {
-                    fields[index + 1].focus();
-                }
-            }
-        }
-
-        function copyWalletAddress() {
-            const addr = document.getElementById('walletAddressDisplay').textContent;
-            if (addr && addr !== '-') {
-                navigator.clipboard.writeText(addr);
-                showToast('Wallet address copied!');
-            }
-        }
-
-        function copyReferralLink() {
-            const link = document.getElementById('refLinkDisplay').textContent;
-            if (link && link !== '-') {
-                navigator.clipboard.writeText(`https://${link}`);
-                showToast('Referral link copied!');
-            }
-        }
-
-        function uploadAvatar(input) {
-            if (!input.files || !input.files[0]) return;
-            
-            const file = input.files[0];
-            if (file.size > 2 * 1024 * 1024) {
-                showToast('Image too large (max 2MB)', 'error');
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('avatar', file);
-            
-            showLoading(true);
-            fetch(`${API_BASE_URL}/user/avatar`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('avatarIcon').style.display = 'none';
-                    document.getElementById('avatarImage').src = data.avatarUrl;
-                    document.getElementById('avatarImage').style.display = 'block';
-                    showToast('Avatar updated!');
-                }
-            })
-            .catch(err => {
-                console.error('Avatar upload error:', err);
-                showToast('Upload failed', 'error');
-            })
-            .finally(() => showLoading(false));
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                window.location.href = 'index.html';
-            }
-        }
-
-        function goToHistory(type) {
-            window.location.href = `history.html?type=${type}`;
-        }
-
-        // ==================== GLOBAL FUNCTIONS ====================
-        window.selectPackage = selectPackage;
-        window.showBonusMessage = showBonusMessage;
-        window.createStaking = createStaking;
-        window.confirmStake = confirmStake;
-        window.unstakeStaking = unstakeStaking;
-        window.openDepositModal = openDepositModal;
-        window.openWithdrawModal = openWithdrawModal;
-        window.openP2PModal = openP2PModal;
-        window.openTradeModal = openTradeModal;
-        window.openRankDetails = openRankDetails;
-        window.closeModal = closeModal;
-        window.closeInvestModal = closeInvestModal;
-        window.closeTradeModal = closeTradeModal;
-        window.setP2PType = setP2PType;
-        window.processDeposit = processDeposit;
-        window.processWithdraw = processWithdraw;
-        window.processP2P = processP2P;
-        window.processTrade = processTrade;
-        window.attachWallet = attachWallet;
-        window.saveProfile = saveProfile;
-        window.copyWalletAddress = copyWalletAddress;
-        window.copyReferralLink = copyReferralLink;
-        window.uploadAvatar = uploadAvatar;
-        window.logout = logout;
-        window.goToHistory = goToHistory;
-        window.moveToNext = moveToNext;
-        window.updateWithdrawFee = updateWithdrawFee;
-    </script>
+    <!-- Include Dashboard JS -->
+    <script src="dashboard.js"></script>
 </body>
 </html>
